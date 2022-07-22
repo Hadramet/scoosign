@@ -100,7 +100,7 @@ export const HomeHero = (props) => {
                     }}
                 >
                     <NextLink
-                        href="/#"
+                        href="/app/"
                         passHref
                     >
                         <Button

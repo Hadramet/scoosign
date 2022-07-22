@@ -1,12 +1,14 @@
 import { Box, Button, Container, Grid, MenuItem, TextField, Typography } from "@mui/material";
 import Head from "next/head";
 import { AppLayout } from "../../components/app/app-layout";
-import { Reports as ReportsIcon } from "../../components/icons";
+import { Reports as ReportsIcon } from "../../components/icons"
+import { AuthGuard } from "../../components/authentication/auth-guard";
 
 const Overview = () => {
 
     return (
         <>
+
             <Head>
                 <title>
                     App - Dashboard | ScooSign
@@ -69,9 +71,11 @@ const Overview = () => {
 }
 
 Overview.getLayout = (page) => (
-    <AppLayout>
-        {page}
-    </AppLayout>
+    <AuthGuard>
+        <AppLayout>
+            {page}
+        </AppLayout>
+    </AuthGuard>
 );
 
 export default Overview;

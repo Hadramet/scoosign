@@ -26,8 +26,8 @@ export default function MyApp(props) {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <SWRConfig value={{
-          fetcher:fetchJson,
-          onError: (err) => { console.error(`${err}, "fetcher"`)}
+          fetcher: fetchJson,
+          onError: (err) => { console.error(`${err}, "fetcher"`) }
         }}>
           {getLayout(<Component {...pageProps} />)}
         </SWRConfig>
