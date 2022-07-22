@@ -11,7 +11,9 @@ async function Login(req, res) {
 
         const client = await clientPromise
         const db = client.db('userdb')
+
         const users = db.collection('users')
+        const roles = db.collection('roles')
 
         if (req.method === "POST") {
 
@@ -21,9 +23,16 @@ async function Login(req, res) {
             const match = await compare(req.body.password, user.password)
             if (!match) return res.status(403).send({ message: "Please check your email and password." })
 
+            const user_role = await roles.findOne({_id: user.roleId})
+
             const session_user = {
                 id: user._id,
-                isLoggedIn: true
+                isLoggedIn: true,
+                infos:{
+                    name: user.name,
+                    email: user.email,
+                    role: user_role.name
+                }
             }
 
             req.session.user = session_user

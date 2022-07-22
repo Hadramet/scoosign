@@ -23,7 +23,7 @@ export const ISLogin = (props) => {
 
     const loginForm = useFormik({
         initialValues: {
-            email: 'admin@scoosign.cm',
+            email: 'admin@scoosign.com',
             password: 'Supinf0',
             submit: null
         },
