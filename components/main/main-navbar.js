@@ -83,7 +83,7 @@ export const MainNavbar = (props) => {
             </NextLink>
             <Button
               component="a"
-              href="#"
+              href="/app"
               size="medium"
               sx={{ ml: 2 }}
               target="_blank"

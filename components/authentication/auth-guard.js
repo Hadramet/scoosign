@@ -4,13 +4,13 @@ import useSession from "../../lib/useSession"
 export const AuthGuard = (props) => {
 
     const { children } = props 
-    const { user } = useSession({ redirectTo: '/authentication/login' })
+    const { user } = useSession({})
     const router = useRouter()
-
     const [checked, setChecked] = useState(false)
 
     useEffect(() => {
         if (!router.isReady) return
+        if(!user) router.push({pathname:'/authentication/login', query:{returnUrl: router.asPath}}).catch(console.error)
         if (user) setChecked(true)
 
     },[router.isReady])

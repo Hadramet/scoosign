@@ -51,8 +51,12 @@ export const AccountPopover = (props) => {
                 </Avatar>
 
                 <Box sx={{ ml: 1 }}>
-                    <Typography variant="body1"> {user.infos.name} </Typography>
-                    <Typography variant="body2" color="textSecondary" >{user.id}</Typography>
+                    {user && (
+                        <>
+                            <Typography variant="body1"> {user.infos?.name} </Typography>
+                            <Typography variant="body2" color="textSecondary" >{user.id}</Typography>
+                        </>
+                    )}
                 </Box>
             </Box>
             <Divider />

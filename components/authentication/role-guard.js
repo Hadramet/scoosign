@@ -11,14 +11,14 @@ export const RoleGuard = (props) => {
     useEffect(() => {
         if (user) {
 
-            let res = false
-            
-            console.log(permissions)
-            permissions?.map( val => {
-                if ( val === 'all' || val === user.infos.role ) res = true
-            })
-            
-            if (res) setCanView(true)
+            if(user.infos){
+                let res = false
+                permissions?.map( val => {
+                    if ( val === 'all' || val === user.infos.role ) res = true
+                })
+                
+                if (res) setCanView(true)
+            }
         }
 
     },[])

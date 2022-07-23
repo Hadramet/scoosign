@@ -76,6 +76,6 @@ Overview.getLayout = (page) => (
             {page}
         </AppLayout>
     </AuthGuard>
-);
+)
 
 export default Overview;

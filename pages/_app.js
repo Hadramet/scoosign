@@ -1,5 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import Router from 'next/router';
+import nProgress from 'nprogress';
 import Head from 'next/head';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -9,12 +11,16 @@ import createEmotionCache from '../src/createEmotionCache';
 import { SWRConfig } from 'swr';
 import fetchJson from '../lib/fetchJson'
 
-// Client-side cache, shared for the whole session of the user in the browser.
+Router.events.on('routeChangeStart', nProgress.start);
+Router.events.on('routeChangeError', nProgress.done);
+Router.events.on('routeChangeComplete', nProgress.done);
+
 const clientSideEmotionCache = createEmotionCache();
 
 export default function MyApp(props) {
 
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
+  
   const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
