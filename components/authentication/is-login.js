@@ -39,8 +39,6 @@ export const ISLogin = (props) => {
                 .required('Password is required')
         }),
         onSubmit: async (values, helpers) => {
-            // Do something
-            console.log(`email : ${values.email}, password: ${values.password}`)
             try {
 
                 mutateUser(await fetchJson(

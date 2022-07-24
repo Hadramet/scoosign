@@ -63,7 +63,7 @@ export function getSections(t) {
                         },
                         {
                             title: 'Create',
-                            path: '/dashboard/users/new',
+                            path: '/app/users/new',
                             permissions: ['admin'],
                         }
                     ]
@@ -81,7 +81,7 @@ export function getSections(t) {
                         },
                         {
                             title: 'Create',
-                            path: '/dashboard/class/new',
+                            path: '/app/class/new',
                             permissions: ['admin'],
                         }
                     ]

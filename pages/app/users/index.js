@@ -91,7 +91,7 @@ const UserList = () => {
                     </Box>
 
                     <Card>
-                        <Tabs indicatorColor="primary" scrollButton="auto" onChange={handleTabsChange}
+                        <Tabs indicatorColor="primary" scrollButtons="auto" onChange={handleTabsChange}
                             sx={{ px: 3 }} textColor="primary" value={currentTab} variant="scrollable">
                             {tabs.map((tab) => (<Tab key={tab.value} label={tab.label} value={tab.value}></Tab>))}
                         </Tabs>
