@@ -3,22 +3,16 @@ import { HomeHero } from "../components/home/home-hero";
 import { MainLayout } from "../components/main/main-layout";
 
 const Dashboard = () => (
-    <>
-        <Head>
-            <title>
-                ScooSigne | Connect to your student
-            </title>
-        </Head>
-        <main>
-            <HomeHero/>
-        </main>
-    </>
-)
-
-Dashboard.getLayout = (page) => (
-    <MainLayout>
-        {page}
-    </MainLayout>
+  <>
+    <Head>
+      <title>ScooSign | Connect to your student</title>
+    </Head>
+    <main>
+      <HomeHero />
+    </main>
+  </>
 );
 
-export default Dashboard
+Dashboard.getLayout = (page) => <MainLayout>{page}</MainLayout>;
+
+export default Dashboard;

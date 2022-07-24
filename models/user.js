@@ -17,10 +17,18 @@ const UserSchema = mongoose.Schema({
     required: [true, "Please provide an user email."],
     maxLength: [255, "Last name cannot be more than 255 characters"],
   },
-  role:{
+  role: {
     type: String,
-    enum: ['user', 'admin','owner','academic','student','parent','teacher'],
-    default: 'user'
+    enum: [
+      "user",
+      "admin",
+      "owner",
+      "academic",
+      "student",
+      "parent",
+      "teacher",
+    ],
+    default: "user",
   },
   active: {
     type: Boolean,
@@ -42,8 +50,8 @@ const UserSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
-  hash: {type: String},
-  salt: {type: String},
+  hash: { type: String },
+  salt: { type: String },
 });
 
 const salt_length = 64;
@@ -52,14 +60,14 @@ const pw_length = 255;
 const digest = "sha256";
 const encoding = "hex";
 
-UserSchema.methods.setPassword = function(password)  {
+UserSchema.methods.setPassword = function (password) {
   this.salt = crypto.randomBytes(salt_length).toString(encoding);
   this.hash = crypto
     .pbkdf2Sync(password, this.salt, iterations, pw_length, digest)
     .toString(encoding);
 };
 
-UserSchema.methods.validatePassword = function(password) {
+UserSchema.methods.validatePassword = function (password) {
   var hash = crypto
     .pbkdf2Sync(password, this.salt, iterations, pw_length, digest)
     .toString(encoding);

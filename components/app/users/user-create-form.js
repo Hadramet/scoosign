@@ -19,7 +19,6 @@ import {
 import { useFormik } from "formik";
 import { useState } from "react";
 import * as Yup from "yup";
-import fetchJson from "../../../lib/fetchJson";
 
 const saltRounds = 12;
 
@@ -68,20 +67,20 @@ export const UserCreateForm = (props) => {
     }),
     onSubmit: async (values, helpers) => {
       try {
-        const body = {
-          firstName: values.firstName,
-          lastName: values.lastName,
-          email: values.email,
-          password: values.password,
-          role: values.role,
-          sendEmail: values.sendEmail,
-        };
-        const response = await fetchJson("/api/users", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        });
-        console.log(response);
+        // const body = {
+        //   firstName: values.firstName,
+        //   lastName: values.lastName,
+        //   email: values.email,
+        //   password: values.password,
+        //   role: values.role,
+        //   sendEmail: values.sendEmail,
+        // };
+        // const response = await fetchJson("/api/users", {
+        //   method: "POST",
+        //   headers: { "Content-Type": "application/json" },
+        //   body: JSON.stringify(body),
+        // });
+        console.log(values);
       } catch (error) {
         console.error(error);
 

@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
-import { Footer } from './footer';
-import { MainNavbar } from './main-navbar';
-import { MainSidebar } from './main-sidebar';
+import { useState } from "react";
+import PropTypes from "prop-types";
+import { styled } from "@mui/material/styles";
+import { Footer } from "./footer";
+import { MainNavbar } from "./main-navbar";
+import { MainSidebar } from "./main-sidebar";
 
-const MainLayoutRoot = styled('div')(({ theme }) => ({
+const MainLayoutRoot = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
-  height: '100%',
-  paddingTop: 64
+  height: "100%",
+  paddingTop: 64,
 }));
 
 export const MainLayout = ({ children }) => {
@@ -28,5 +28,5 @@ export const MainLayout = ({ children }) => {
 };
 
 MainLayout.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 };
