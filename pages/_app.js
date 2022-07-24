@@ -28,7 +28,7 @@ export default function MyApp(props) {
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <AuthProvider>
-        <ThemeProvider theme={createMyTheme({ mode: 'dark' })}>
+        <ThemeProvider theme={createMyTheme({ mode: 'light' })}>
           <CssBaseline />
           <AuthConsumer>
             {(auth) =>
