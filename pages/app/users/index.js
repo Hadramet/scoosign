@@ -23,6 +23,7 @@ import {
 } from "../../../components/icons";
 import { RoleGuard } from "../../../components/authentication/role-guard";
 import { useRouter } from "next/router";
+import { UserListTable } from "../../../components/app/users/user-list-table";
 
 const tabs = [
   {
@@ -44,6 +45,52 @@ const tabs = [
   {
     label: "Parent",
     value: "areParent",
+  },
+];
+
+const usersFixture = [
+  {
+    id : 1,
+    name: "John Doe",
+    email: "john.doe@scoosign.com",
+    type: "admin",
+    active: true,
+  },
+  {
+    
+    id : 2,
+    name: "John Doe",
+    email: "john.doe@scoosign.com",
+    type: "academic",
+    active: true,
+  },
+  {
+    id : 3,
+    name: "John Doe",
+    email: "john.doe@scoosign.com",
+    type: "student",
+    active: true,
+  },
+  {
+    id : 4,
+    name: "John Doe",
+    email: "john.doe@scoosign.com",
+    type: "parent",
+    active: true,
+  },
+  {
+    id : 5,
+    name: "John Doe",
+    email: "john.doe@scoosign.com",
+    type: "teacher",
+    active: true,
+  },
+  {
+    id : 6,
+    name: "John Doe",
+    email: "john.doe@scoosign.com",
+    type: "student",
+    active: false,
   },
 ];
 
@@ -160,6 +207,7 @@ const UserList = () => {
                 />
               </Box>
             </Box>
+            <UserListTable users={usersFixture} />
           </Card>
         </Container>
       </Box>

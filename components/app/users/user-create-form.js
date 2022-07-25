@@ -1,4 +1,3 @@
-// import { hash } from "bcrypt";
 import { Logout, Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Box,
