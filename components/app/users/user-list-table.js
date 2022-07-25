@@ -20,17 +20,10 @@ import {
   ArrowRight as ArrowRightIcon,
 } from "../../icons";
 import { SeverityBadge } from "../../severityBadge";
+import { getInitials } from "../../../lib/getInitials";
 
 export const UserListTable = (props) => {
   const { users, ...other } = props;
-
-  const getInitials = (name = "") =>
-    name
-      .replace(/\s+/, " ")
-      .split(" ")
-      .slice(0, 2)
-      .map((v) => v && v[0].toUpperCase())
-      .join("");
 
   return (
     <div {...other}>
