@@ -1,5 +1,5 @@
 // import { hash } from "bcrypt";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { Logout, Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -8,6 +8,7 @@ import {
   Divider,
   FormControlLabel,
   Grid,
+  Alert,
   IconButton,
   InputAdornment,
   MenuItem,
@@ -19,6 +20,9 @@ import {
 import { useFormik } from "formik";
 import { useState } from "react";
 import * as Yup from "yup";
+import toast from "react-hot-toast";
+import { useRouter } from "next/router";
+import { useAuth } from "../../../hooks/use-auth";
 
 const saltRounds = 12;
 
@@ -67,30 +71,65 @@ export const UserCreateForm = (props) => {
     }),
     onSubmit: async (values, helpers) => {
       try {
-        // const body = {
-        //   firstName: values.firstName,
-        //   lastName: values.lastName,
-        //   email: values.email,
-        //   password: values.password,
-        //   role: values.role,
-        //   sendEmail: values.sendEmail,
-        // };
-        // const response = await fetchJson("/api/users", {
-        //   method: "POST",
-        //   headers: { "Content-Type": "application/json" },
-        //   body: JSON.stringify(body),
-        // });
-        console.log(values);
+        const body = {
+          firstName: values.firstName,
+          lastName: values.lastName,
+          email: values.email,
+          password: values.password,
+          role: values.role,
+          sendEmail: values.sendEmail,
+        };
+
+        await fetch("/api/v1/users", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Scoosign-Authorization": `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify(body),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              toast.success("User successfully created");
+              router.push("/app/users");
+            } else {
+              if (data.failed === "email") {
+                helpers.setStatus({ success: false });
+                setAlertState({
+                  showAlert: true,
+                  messageAlert: "There are some informations you need to check",
+                });
+                helpers.setErrors({ email: data.message });
+                helpers.setSubmitting(false);
+              } else {
+                throw new Error("Something went wrong");
+              }
+            }
+          })
+          .catch((error) => {
+            console.error("[me Api]", error);
+            toast.error("Something went wrong");
+            throw new Error(error.message);
+          });
       } catch (error) {
         console.error(error);
-
-        if (error.message) {
-          helpers.setStatus({ success: false });
-          helpers.setErrors({ submit: error.message });
-          helpers.setSubmitting(false);
-        }
+        setAlertState({
+          showAlert: true,
+          messageAlert: error.message,
+        });
+        helpers.setStatus({ success: false });
+        helpers.setErrors({ submit: error.message });
+        helpers.setSubmitting(false);
       }
     },
+  });
+
+  const router = useRouter();
+  const { logout } = useAuth();
+  const [alertState, setAlertState] = useState({
+    showAlert: false,
+    messageAlert: "",
   });
 
   const [valuesForm, setValuesForm] = useState({
@@ -101,8 +140,24 @@ export const UserCreateForm = (props) => {
     setValuesForm({ ...valuesForm, showPassword: !valuesForm.showPassword });
   };
 
+  const accessToken = globalThis.localStorage.getItem("accessToken");
+
   return (
     <form onSubmit={userCreateForm.handleSubmit} {...props}>
+      {alertState.showAlert && (
+        <Box sx={{ mt: 2, mb: 3 }}>
+          <Alert
+            severity="error"
+            error={Boolean(
+              userCreateForm.touched.submit && userCreateForm.errors.submit
+            )}
+          >
+            <Typography variant="caption">
+              <div>{alertState.messageAlert}</div>
+            </Typography>
+          </Alert>
+        </Box>
+      )}
       <Card>
         <CardContent>
           <Grid container spacing={3}>
@@ -286,7 +341,13 @@ export const UserCreateForm = (props) => {
           mt: 3,
         }}
       >
-        <Button sx={{ m: 1, ml: "auto" }} variant="outlined">
+        <Button
+          onClick={() => {
+            router.push("/app/users");
+          }}
+          sx={{ m: 1, ml: "auto" }}
+          variant="outlined"
+        >
           Cancel
         </Button>
         <Button

@@ -9,6 +9,7 @@ import { CacheProvider } from "@emotion/react";
 import {createMyTheme} from "../src/theme";
 import createEmotionCache from "../src/createEmotionCache";
 import { AuthConsumer, AuthProvider } from "../contexts/jwt-context";
+import { Toaster } from 'react-hot-toast';
 
 Router.events.on("routeChangeStart", nProgress.start);
 Router.events.on("routeChangeError", nProgress.done);
@@ -30,6 +31,7 @@ export default function MyApp(props) {
       <AuthProvider>
         <ThemeProvider theme={createMyTheme({ mode: 'light' })}>
           <CssBaseline />
+          <Toaster position="top-center"/>
           <AuthConsumer>
             {(auth) =>
               !auth.isInitialized ? (

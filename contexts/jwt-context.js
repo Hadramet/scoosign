@@ -64,14 +64,19 @@ export const AuthProvider = (props) => {
               "X-Scoosign-Authorization": `Bearer ${accessToken}`,
             },
           });
-          const { data } = await res.json();
-          dispatch({
-            type: ActionType.INITIALIZE,
-            payload: {
-              isAuthenticated: true,
-              user: data,
-            },
-          });
+          if (res.ok) {
+            const { data } = await res.json();
+            dispatch({
+              type: ActionType.INITIALIZE,
+              payload: {
+                isAuthenticated: true,
+                user: data,
+              },
+            });
+          }else{ 
+            // The token has expired
+            logout()
+          }
         } else {
           dispatch({
             type: ActionType.INITIALIZE,
@@ -111,7 +116,6 @@ export const AuthProvider = (props) => {
       .then(async (login_data) => {
         if (login_data.success) {
           const authorization = `Bearer ${login_data.data.token}`;
-          console.log(authorization)
           await fetch("/api/v1/authorize/me", {
             method: "POST",
             headers: {
