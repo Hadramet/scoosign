@@ -11,6 +11,7 @@ import {
   TableRow,
   Typography,
   IconButton,
+  TablePagination,
 } from "@mui/material";
 import PropTypes from "prop-types";
 import { Scrollbar } from "../../custom";
@@ -23,7 +24,15 @@ import { SeverityBadge } from "../../severityBadge";
 import { getInitials } from "../../../lib/getInitials";
 
 export const UserListTable = (props) => {
-  const { users, ...other } = props;
+  const {
+    users,
+    usersCount,
+    onPageChange,
+    onRowsPerPageChange,
+    page,
+    rowsPerPage,
+    ...other
+  } = props;
 
   return (
     <div {...other}>
@@ -110,10 +119,24 @@ export const UserListTable = (props) => {
           </TableBody>
         </Table>
       </Scrollbar>
+      <TablePagination
+        component="div"
+        count={usersCount}
+        onPageChange={onPageChange}
+        onRowsPerPageChange={onRowsPerPageChange}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        rowsPerPageOptions={[5, 10, 25]}
+      />
     </div>
   );
 };
 
 UserListTable.propTypes = {
   users: PropTypes.array.isRequired,
+  usersCount: PropTypes.number.isRequired,
+  onPageChange: PropTypes.func.isRequired,
+  onRowsPerPageChange: PropTypes.func,
+  page: PropTypes.number.isRequired,
+  rowsPerPage: PropTypes.number.isRequired,
 };
