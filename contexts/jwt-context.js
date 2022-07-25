@@ -57,13 +57,11 @@ export const AuthProvider = (props) => {
         const accessToken = globalThis.localStorage.getItem("accessToken");
 
         if (accessToken) {
-          // TODO: uri to replace here
-          // TODO: header key to replace here
           const res = await fetch("/api/v1/authorize/me", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "scoosign-tkhk": accessToken,
+              "X-Scoosign-Authorization": `Bearer ${accessToken}`,
             },
           });
           const { data } = await res.json();
@@ -112,11 +110,13 @@ export const AuthProvider = (props) => {
       .then((response) => response.json())
       .then(async (login_data) => {
         if (login_data.success) {
+          const authorization = `Bearer ${login_data.data.token}`;
+          console.log(authorization)
           await fetch("/api/v1/authorize/me", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "scoosign-tkhk": login_data.data.token,
+              "X-Scoosign-Authorization": authorization,
             },
           })
             .then((response) => response.json())
@@ -130,16 +130,16 @@ export const AuthProvider = (props) => {
               });
             })
             .catch((error) => {
-              console.error("[me Api]",error.message);
-              throw new Error(error.message)
+              console.error("[me Api]", error.message);
+              throw new Error(error.message);
             });
-        }else{
-          throw new Error(login_data.message)
+        } else {
+          throw new Error(login_data.message);
         }
       })
       .catch((error) => {
-        console.error("[Auth Api]",error.message)
-        throw new Error(error.message)
+        console.error("[Auth Api]", error.message);
+        throw new Error(error.message);
       });
   };
 

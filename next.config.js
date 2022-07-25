@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  rewrites: () =>[{ source: '/api/:path*', destination: 'http://localhost:5000/api/:path*'}]
+  rewrites: () =>[{ source: '/api/:path*', destination: `${process.env.BACKEND_URI}/:path*`}]
 
 }
 
