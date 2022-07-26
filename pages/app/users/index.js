@@ -25,6 +25,7 @@ import { RoleGuard } from "../../../components/authentication/role-guard";
 import { useRouter } from "next/router";
 import { UserListTable } from "../../../components/app/users/user-list-table";
 import { useMounted } from "../../../hooks/use-mounted";
+import { useAuth } from "../../../hooks/use-auth";
 
 const tabs = [
   {
@@ -140,18 +141,9 @@ const usersFixture = [
   },
 ];
 
-// const sortOptions = [
-//     {
-//         label: 'Last update (newest)',
-//         value: 'updatedAt|desc'
-//     },
-//     {
-//         label: 'Last update (oldest)',
-//         value: 'updatedAt|asc'
-//     },
-// ];
-const applyFilters = (users, filters) =>
-  users.filter((user) => {
+const applyFilters = (users, filters) => {
+  if (!users) return [];
+  return users.filter((user) => {
     if (filters.query) {
       let queryMatched = false;
       const properties = ["email", "name"];
@@ -177,11 +169,12 @@ const applyFilters = (users, filters) =>
 
     return true;
   });
+};
 
 const applyPagination = (users, page, rowsPerPage) =>
   users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
-const UserList = () => {
+const UserList = (props) => {
   const isMounted = useMounted();
   const router = useRouter();
   const queryRef = useRef(null);
@@ -196,23 +189,37 @@ const UserList = () => {
     isParent: undefined,
     isAdmin: undefined,
   });
+
   const [currentTab, setCurrentTab] = useState("all");
 
-  const getUsers = useCallback(() => {
-    try {
-      const data = usersFixture;
+  const getUsers = useCallback(
+    async (filter, rowsPerPage, page) => {
+      try {
+        const accessToken = globalThis.localStorage.getItem("accessToken");
+        const root_url = "/api/v1/users"
+        const response = await fetch(root_url, {
+          method: "GET",
+          headers: {
+            "Content-type": "application/json",
+            "X-Scoosign-Authorization": `Bearer ${accessToken}`,
+          },
+        });
+        const response_json = await response.json();
+        const data = response_json.data;
 
-      if (isMounted()) {
-        setUsers(data);
+        if (isMounted()) {
+          setUsers(data);
+        }
+      } catch (err) {
+        console.error(err);
       }
-    } catch (err) {
-      console.error(err);
-    }
-  }, [isMounted]);
+    }, // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isMounted]
+  );
 
   useEffect(
     () => {
-      getUsers();
+      getUsers('student',5,1);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -227,17 +234,13 @@ const UserList = () => {
       isAdmin: undefined,
     };
 
-    console.log(value);
     if (value !== "all") {
       updatedFilter[value] = true;
-      console.log(updatedFilter);
     }
 
-    console.log(updatedFilter);
+    setPage(0)
     setFilters(updatedFilter);
     setCurrentTab(value);
-    console.log(users);
-    console.log(filteredUsers);
   };
 
   const handleQueryChange = (event) => {
@@ -363,7 +366,6 @@ const UserList = () => {
     </>
   );
 };
-
 UserList.getLayout = (page) => (
   <AuthGuard>
     <RoleGuard permissions={["admin", "academic"]}>

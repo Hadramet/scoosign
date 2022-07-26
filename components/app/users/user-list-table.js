@@ -61,6 +61,7 @@ export const UserListTable = (props) => {
                 <Checkbox></Checkbox>
               </TableCell>
               <TableCell>Name</TableCell>
+              <TableCell>Type</TableCell>
               <TableCell>Status</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
@@ -89,10 +90,15 @@ export const UserListTable = (props) => {
                           </Link>
                         </NextLink>
                         <Typography color="textSecondary" variant="body2">
-                          {user.email}
+                          { user.email}
                         </Typography>
                       </Box>
                     </Box>
+                  </TableCell>
+                  <TableCell>
+                    <Typography color="textSecondary" variant="body2">
+                        {user.type.toUpperCase()}
+                    </Typography>
                   </TableCell>
                   <TableCell>
                     <SeverityBadge

@@ -17,7 +17,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
@@ -124,12 +124,17 @@ export const UserCreateForm = (props) => {
     },
   });
 
+
   const router = useRouter();
   const { logout } = useAuth();
   const [alertState, setAlertState] = useState({
     showAlert: false,
     messageAlert: "",
   });
+
+  useEffect(() => {
+    router.prefetch("/app/users")
+  }, [])
 
   const [valuesForm, setValuesForm] = useState({
     showPassword: false,
