@@ -36,23 +36,6 @@ export const UserListTable = (props) => {
 
   return (
     <div {...other}>
-      <Box
-        sx={{
-          backgroundColor: (theme) =>
-            theme.palette.mode === "dark" ? "neutral.800" : "neutral.100",
-          px: 2,
-          py: 0.5,
-        }}
-      >
-        <Checkbox />
-        <Button size="small" sx={{ ml: 2 }}>
-          Delete
-        </Button>
-        <Button size="small" sx={{ ml: 2 }}>
-          Edit
-        </Button>
-      </Box>
-
       <Scrollbar>
         <Table sx={{ minWidth: 700 }}>
           <TableHead>
@@ -84,7 +67,7 @@ export const UserListTable = (props) => {
                         {getInitials(user.name)}
                       </Avatar>
                       <Box sx={{ ml: 1 }}>
-                        <NextLink href={`/app/user/${user.id}`} passHref>
+                        <NextLink href={`/app/users/${user._id}`} passHref>
                           <Link color="inherit" variant="subtitle2">
                             {user.name}
                           </Link>
@@ -108,12 +91,12 @@ export const UserListTable = (props) => {
                     </SeverityBadge>
                   </TableCell>
                   <TableCell align="right">
-                    <NextLink href={`/app/user/${user.id}/edit`} passHref>
+                    <NextLink href={`/app/users/${user._id}/edit`} passHref>
                       <IconButton component="a">
                         <PencilAltIcon fontSize="small" />
                       </IconButton>
                     </NextLink>
-                    <NextLink href={`/app/user/${user.id}`} passHref>
+                    <NextLink href={`/app/users/${user._id}`} passHref>
                       <IconButton component="a">
                         <ArrowRightIcon fontSize="small" />
                       </IconButton>
