@@ -52,7 +52,7 @@ export const UserListTable = (props) => {
           <TableBody>
             {users.map((user) => {
               return (
-                <TableRow hover key={user.id}>
+                <TableRow hover key={user._id}>
                   <TableCell padding="checkbox">
                     <Checkbox />
                   </TableCell>

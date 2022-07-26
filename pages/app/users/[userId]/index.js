@@ -45,27 +45,39 @@ const userFixture = {
   createdBy: "Jon fo",
 };
 
-const UserDataManagement = (props) => (
-  <Card {...props}>
-    <CardHeader title="Data Management" />
-    <Divider />
-    <CardContent>
-      <Button color="error" variant="outlined">
-        Delete Account
-      </Button>
-      <Box sx={{ mt: 1 }}>
-        <Typography color="textSecondary" variant="body2">
-          Delete this user file if he has requested it under the GDPR
-          regulation law, otherwise be aware that what has been deleted can
-          never be brought back.
-        </Typography>
-      </Box>
-    </CardContent>
-  </Card>
-);
-
-const UserLogs = (props) =>(
+const UserDataManagement = (props) => {
+  const handleDeleteUser = (e) => {
+    e.preventDefault();
+    console.log("TODO delete user");
+  };
+  return (
     <Card {...props}>
+      <CardHeader title="Data Management" />
+      <Divider />
+      <CardContent>
+        <Button
+          onClick={(e) => {
+            handleDeleteUser(e);
+          }}
+          color="error"
+          variant="outlined"
+        >
+          Delete User
+        </Button>
+        <Box sx={{ mt: 1 }}>
+          <Typography color="textSecondary" variant="body2">
+            Delete this user file if he has requested it under the GDPR
+            regulation law, otherwise be aware that what has been deleted can
+            never be brought back.
+          </Typography>
+        </Box>
+      </CardContent>
+    </Card>
+  );
+};
+
+const UserLogs = (props) => (
+  <Card {...props}>
     <CardHeader title="Recent Logs" />
     <Divider />
     <CardContent>
@@ -76,7 +88,7 @@ const UserLogs = (props) =>(
       </Box>
     </CardContent>
   </Card>
-)
+);
 
 const UserDetails = () => {
   const isMounted = useMounted();
@@ -95,6 +107,7 @@ const UserDetails = () => {
     setCurrentTab(value);
   };
 
+  if (!user) return null;
   return (
     <>
       <Head>
@@ -152,11 +165,17 @@ const UserDetails = () => {
                   >
                     <Typography variant="subtitle2">user_id:</Typography>
                     <Chip label={user?.id} size="small" sx={{ ml: 1 }} />
+                    <Chip
+                      label={user.active ? "ACTIVE" : "ARCHIVE"}
+                      color={user.active ? "success" : "warning"}
+                      size="small"
+                      sx={{ ml: 1 }}
+                    />
                   </Box>
                 </div>
               </Grid>
               <Grid item sx={{ m: -1 }}>
-                <NextLink href="/app/user/1/edit" passHref>
+                <NextLink href={`/app/users/${user?.id}/edit`} passHref>
                   <Button
                     component="a"
                     endIcon={<PencilAltIcon fontSize="small" />}
@@ -198,7 +217,7 @@ const UserDetails = () => {
                 </Grid>
               </Grid>
             )}
-            {currentTab === 'logs' && <UserLogs/>}
+            {currentTab === "logs" && <UserLogs />}
           </Box>
         </Container>
       </Box>

@@ -124,7 +124,6 @@ export const UserCreateForm = (props) => {
     },
   });
 
-
   const router = useRouter();
   const { logout } = useAuth();
   const [alertState, setAlertState] = useState({
@@ -133,8 +132,8 @@ export const UserCreateForm = (props) => {
   });
 
   useEffect(() => {
-    router.prefetch("/app/users")
-  }, [])
+    router.prefetch("/app/users");
+  }, []);
 
   const [valuesForm, setValuesForm] = useState({
     showPassword: false,
@@ -152,9 +151,6 @@ export const UserCreateForm = (props) => {
         <Box sx={{ mt: 2, mb: 3 }}>
           <Alert
             severity="error"
-            error={Boolean(
-              userCreateForm.touched.submit && userCreateForm.errors.submit
-            )}
           >
             <Typography variant="caption">
               <div>{alertState.messageAlert}</div>
@@ -242,6 +238,8 @@ export const UserCreateForm = (props) => {
                   control={
                     <Switch
                       name="sendEmail"
+                      color="primary"
+                      edge="start"
                       checked={userCreateForm.values.sendEmail}
                       onBlur={userCreateForm.handleBlur}
                       onChange={userCreateForm.handleChange}
