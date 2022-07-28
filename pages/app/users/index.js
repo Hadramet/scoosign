@@ -65,8 +65,8 @@ const UserList = (props) => {
   const isMounted = useMounted();
   const router = useRouter();
   const queryRef = useRef(null);
-  const [page, setPage] = useState(0);
   const [users, setUsers] = useState([]);
+  const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [filters, setFilters] = useState({
     query: "",
@@ -180,12 +180,12 @@ const UserList = (props) => {
                 </Button>
               </Grid>
             </Grid>
-            <Box sx={{ m: -1, mt: 3 }}>
-              <Button startIcon={<UploadIcon fontSize="small" />} sx={{ m: 1 }}>
+            <Box disabled sx={{ m: -1, mt: 3 }}>
+              <Button disabled startIcon={<UploadIcon fontSize="small" />} sx={{ m: 1 }}>
                 {" "}
                 Import
               </Button>
-              <Button
+              <Button disabled
                 startIcon={<DownloadIcon fontSize="small" />}
                 sx={{ m: 1 }}
               >
@@ -194,7 +194,6 @@ const UserList = (props) => {
               </Button>
             </Box>
           </Box>
-
           <Card>
             <Tabs
               indicatorColor="primary"
