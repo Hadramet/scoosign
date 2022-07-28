@@ -26,120 +26,7 @@ import { useRouter } from "next/router";
 import { UserListTable } from "../../../components/app/users/user-list-table";
 import { useMounted } from "../../../hooks/use-mounted";
 import { useAuth } from "../../../hooks/use-auth";
-
-const tabs = [
-  {
-    label: "All",
-    value: "all",
-  },
-  {
-    label: "Students",
-    value: "isStudent",
-  },
-  {
-    label: "Academic",
-    value: "isAcademic",
-  },
-  {
-    label: "Teacher",
-    value: "isTeacher",
-  },
-  {
-    label: "Parent",
-    value: "isParent",
-  },
-  {
-    label: "Administrator",
-    value: "isAdmin",
-  },
-];
-
-const usersFixture = [
-  {
-    id: 1,
-    name: "Admin Sy",
-    email: "john.doe@scoosign.com",
-    type: "admin",
-    active: true,
-  },
-  {
-    id: 2,
-    name: "Aca Ma",
-    email: "john.doe@scoosign.com",
-    type: "academic",
-    active: true,
-  },
-  {
-    id: 3,
-    name: "Student Mo",
-    email: "john.doe@scoosign.com",
-    type: "student",
-    active: true,
-  },
-  {
-    id: 4,
-    name: "Parent Doe",
-    email: "john.doe@scoosign.com",
-    type: "parent",
-    active: true,
-  },
-  {
-    id: 5,
-    name: "Teacher Cli",
-    email: "john.doe@scoosign.com",
-    type: "teacher",
-    active: true,
-  },
-  {
-    id: 6,
-    name: "Student Ma",
-    email: "john.doe@scoosign.com",
-    type: "student",
-    active: false,
-  },
-  {
-    id: 1,
-    name: "Admin Sy",
-    email: "john.doe@scoosign.com",
-    type: "admin",
-    active: true,
-  },
-  {
-    id: 2,
-    name: "Aca Ma",
-    email: "john.doe@scoosign.com",
-    type: "academic",
-    active: true,
-  },
-  {
-    id: 3,
-    name: "Student Mo",
-    email: "john.doe@scoosign.com",
-    type: "student",
-    active: true,
-  },
-  {
-    id: 4,
-    name: "Parent Doe",
-    email: "john.doe@scoosign.com",
-    type: "parent",
-    active: true,
-  },
-  {
-    id: 5,
-    name: "Teacher Cli",
-    email: "john.doe@scoosign.com",
-    type: "teacher",
-    active: true,
-  },
-  {
-    id: 6,
-    name: "Student Ma",
-    email: "john.doe@scoosign.com",
-    type: "student",
-    active: false,
-  },
-];
+import { userRoleOptionsBool } from "../../../lib/user-options-and-tabs";
 
 const applyFilters = (users, filters) => {
   if (!users) return [];
@@ -196,7 +83,7 @@ const UserList = (props) => {
     async (filter, rowsPerPage, page) => {
       try {
         const accessToken = globalThis.localStorage.getItem("accessToken");
-        const root_url = "/api/v1/users"
+        const root_url = "/api/v1/users";
         const response = await fetch(root_url, {
           method: "GET",
           headers: {
@@ -219,7 +106,7 @@ const UserList = (props) => {
 
   useEffect(
     () => {
-      getUsers('student',5,1);
+      getUsers("student", 5, 1);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -238,7 +125,7 @@ const UserList = (props) => {
       updatedFilter[value] = true;
     }
 
-    setPage(0)
+    setPage(0);
     setFilters(updatedFilter);
     setCurrentTab(value);
   };
@@ -318,7 +205,7 @@ const UserList = (props) => {
               value={currentTab}
               variant="scrollable"
             >
-              {tabs.map((tab) => (
+              {userRoleOptionsBool.map((tab) => (
                 <Tab key={tab.value} label={tab.label} value={tab.value}></Tab>
               ))}
             </Tabs>

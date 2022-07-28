@@ -7,22 +7,20 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import PropTypes from "prop-types";
-import { PropertyList } from "../../propertyList";
-import { PropertyListItem } from "../../propertyListItem";
+import { PropertyList } from "../../property-list";
+import { PropertyListItem } from "../../property-list-items";
 
 export const UserBasicDetails = (props) => {
-  const { email, createdAt, createdBy, ...other } = props;
+  const { email, createdAt, firstName, lastName, createdBy,handleResetPassword, ...other } = props;
   const mdUp = useMediaQuery((theme) => theme.breakpoints.up("md"));
   const align = mdUp ? "horizontal" : "vertical";
-  const handleResetPassword = (e) =>{
-    e.preventDefault()
-    console.log('TODO Reset password')
-  }
   return (
     <Card {...other}>
       <CardHeader title="Basic Details" />
       <Divider />
       <PropertyList>
+        <PropertyListItem align={align} divider label="First Name" value={firstName} />
+        <PropertyListItem align={align} divider label="Last Name" value={lastName} />
         <PropertyListItem align={align} divider label="Email" value={email} />
         <PropertyListItem
           align={align}
@@ -58,7 +56,10 @@ export const UserBasicDetails = (props) => {
 };
 
 UserBasicDetails.propTypes = {
+  firstName: PropTypes.string.isRequired,
+  lastName: PropTypes.string.isRequired,
   email: PropTypes.string.isRequired,
   createdAt: PropTypes.string.isRequired,
-  createdBy: PropTypes.string.isRequired,
+  createdBy: PropTypes.string,
+  handleResetPassword: PropTypes.func
 };

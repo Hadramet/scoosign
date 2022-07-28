@@ -5,7 +5,7 @@ import { Scrollbar } from "../custom";
 import NextLink from "next/link";
 import { useMemo } from "react";
 import { AppSidebarSection } from "./app-sidebar-section";
-import { getSections } from "./getSections";
+import { getSections } from "./app-sidebar-section-options";
 
 export const AppSidebar = (props) => {
   const { onClose, open } = props;

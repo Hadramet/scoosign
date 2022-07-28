@@ -2,9 +2,6 @@ import {
   Avatar,
   Box,
   Button,
-  Card,
-  CardContent,
-  CardHeader,
   Chip,
   Container,
   Divider,
@@ -18,96 +15,99 @@ import NextLink from "next/link";
 import Head from "next/head";
 import { ArrowBack as ArrowBackIcon } from "@mui/icons-material";
 import { PencilAlt as PencilAltIcon } from "../../../../components/icons";
-import { ChevronDown as ChevronDownIcon } from "../../../../components/icons";
-import { getInitials } from "../../../../lib/getInitials";
-import { subDays, subHours, subMinutes, subSeconds } from "date-fns";
+import { getInitials } from "../../../../lib/get-initials";
 import { useCallback, useEffect, useState } from "react";
 import { useMounted } from "../../../../hooks/use-mounted";
 import { AuthGuard } from "../../../../components/authentication/auth-guard";
 import { RoleGuard } from "../../../../components/authentication/role-guard";
 import { AppLayout } from "../../../../components/app/app-layout";
 import { UserBasicDetails } from "../../../../components/app/users/user-basic-details";
-
-const now = new Date();
-
-const tabs = [
-  { label: "Details", value: "details" },
-  { label: "Logs", value: "logs" },
-];
-
-const userFixture = {
-  id: "df56d4f5dsq",
-  name: "John Doe",
-  active: true,
-  email: "john.doe@scoosign.com",
-  type: "student",
-  createdAt: "10-10-2021",
-  createdBy: "Jon fo",
-};
-
-const UserDataManagement = (props) => {
-  const handleDeleteUser = (e) => {
-    e.preventDefault();
-    console.log("TODO delete user");
-  };
-  return (
-    <Card {...props}>
-      <CardHeader title="Data Management" />
-      <Divider />
-      <CardContent>
-        <Button
-          onClick={(e) => {
-            handleDeleteUser(e);
-          }}
-          color="error"
-          variant="outlined"
-        >
-          Delete User
-        </Button>
-        <Box sx={{ mt: 1 }}>
-          <Typography color="textSecondary" variant="body2">
-            Delete this user file if he has requested it under the GDPR
-            regulation law, otherwise be aware that what has been deleted can
-            never be brought back.
-          </Typography>
-        </Box>
-      </CardContent>
-    </Card>
-  );
-};
-
-const UserLogs = (props) => (
-  <Card {...props}>
-    <CardHeader title="Recent Logs" />
-    <Divider />
-    <CardContent>
-      <Box sx={{ mt: 1 }}>
-        <Typography color="textSecondary" variant="body2">
-          TODO : show at least the last 10 user log
-        </Typography>
-      </Box>
-    </CardContent>
-  </Card>
-);
+import { deleteUserApi, getUserApi } from "../../../../lib/user-api";
+import { useRouter } from "next/router";
+import toast from "react-hot-toast";
+import { userDetailsTabs } from "../../../../lib/user-options-and-tabs";
+import { UserDataManagement } from "../../../../components/app/users/user-data-management";
+import { ErrorPageManagement } from "../../../../components/app/error-page";
+import { UserLogs } from "../../../../components/app/users/user-logs";
 
 const UserDetails = () => {
   const isMounted = useMounted();
   const [user, setUser] = useState(null);
   const [currentTab, setCurrentTab] = useState("details");
-  const getUser = useCallback(() => {
-    const data = userFixture;
-    if (isMounted()) setUser(data);
+  const [isFetched, setIsFetched] = useState({
+    fetched: false,
+    error: false,
+    message: "",
+  });
+  const router = useRouter();
+  const { query } = router;
+
+  const getUser = useCallback(async () => {
+    try {
+      const data = await getUserApi(query);
+      if (isMounted()) setUser(data);
+    } catch (error) {
+      console.error(error.message);
+      setIsFetched({ ...isFetched, error: true, message: error.message });
+    }// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMounted]);
 
   useEffect(() => {
     getUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (user) setIsFetched({ fetched: true, error: false });
+  }, [user]);
 
   const handleTabsChange = (event, value) => {
     setCurrentTab(value);
   };
 
+  const handleResetPassword = (e) => {
+    e.preventDefault();
+    // TODO : reset password
+    console.log("TODO Reset password");
+  };
+
+  const handleDeleteUser = async (e) => {
+    e.preventDefault();
+    try {
+      const userId = query.userId;
+      const response = await deleteUserApi(userId);
+      if (response.ok) {
+        const resJson = await response.json();
+        if (resJson.success) {
+          toast.success("User successfully deleted");
+          router.push("/app/users");
+        } else {
+          throw new Error(resJson.message);
+        }
+      } else {
+      }
+    } catch (error) {
+      console.error(error.message);
+      toast.error("Something went wrong");
+    }
+  };
+
+  if (!isFetched.fetched && isFetched.error) {
+    return (
+      <>
+        <ErrorPageManagement
+          message={isFetched.message}
+          description="
+              Either this user does not exist, or you do not have the necessary
+              authorizations."
+          backButtonText="User list"
+          backButtonRoute="/app/users"
+        />
+      </>
+    );
+  }
   if (!user) return null;
+
   return (
     <>
       <Head>
@@ -153,7 +153,7 @@ const UserDetails = () => {
                     width: 64,
                   }}
                 >
-                  {getInitials(user?.name)}
+                  {getInitials(user?.firstName + " " + user?.lastName)}
                 </Avatar>
                 <div>
                   <Typography variant="h4">{user?.email}</Typography>
@@ -196,7 +196,7 @@ const UserDetails = () => {
               value={currentTab}
               variant="scrollable"
             >
-              {tabs.map((tab) => (
+              {userDetailsTabs.map((tab) => (
                 <Tab key={tab.value} label={tab.label} value={tab.value} />
               ))}
             </Tabs>
@@ -207,13 +207,16 @@ const UserDetails = () => {
               <Grid container spacing={3}>
                 <Grid item xs={12}>
                   <UserBasicDetails
+                    firstName={user?.firstName}
+                    lastName={user?.lastName}
                     email={user?.email}
-                    createdAt={user?.createdAt}
-                    createdBy={user?.createdBy}
+                    createdAt={user?.created_at}
+                    createdBy={user?.created_by}
+                    handleResetPassword={handleResetPassword}
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <UserDataManagement />
+                  <UserDataManagement handleDeleteUser={handleDeleteUser} />
                 </Grid>
               </Grid>
             )}

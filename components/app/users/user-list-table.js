@@ -20,8 +20,8 @@ import {
   PencilAlt as PencilAltIcon,
   ArrowRight as ArrowRightIcon,
 } from "../../icons";
-import { SeverityBadge } from "../../severityBadge";
-import { getInitials } from "../../../lib/getInitials";
+import { SeverityBadge } from "../../severity-badge";
+import { getInitials } from "../../../lib/get-initials";
 
 export const UserListTable = (props) => {
   const {
@@ -73,14 +73,14 @@ export const UserListTable = (props) => {
                           </Link>
                         </NextLink>
                         <Typography color="textSecondary" variant="body2">
-                          { user.email}
+                          {user.email}
                         </Typography>
                       </Box>
                     </Box>
                   </TableCell>
                   <TableCell>
                     <Typography color="textSecondary" variant="body2">
-                        {user.type.toUpperCase()}
+                      {user.type.toUpperCase()}
                     </Typography>
                   </TableCell>
                   <TableCell>

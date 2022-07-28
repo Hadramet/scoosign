@@ -22,14 +22,16 @@ const UserCreate = () => {
                 <Link variant="subtitle2">Dashboard</Link>
               </NextLink>
               <NextLink href="/app" passHref>
-                <Link color="primary" variant="subtitle2">Management</Link>
+                <Link color="primary" variant="subtitle2">
+                  Management
+                </Link>
               </NextLink>
               <Typography color="textSecondary" variant="subtitle2">
                 Users
               </Typography>
             </Breadcrumbs>
           </Box>
-          <UserCreateForm/>
+          <UserCreateForm />
         </Container>
       </Box>
     </>
