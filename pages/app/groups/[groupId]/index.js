@@ -1,13 +1,18 @@
 import {
-    Avatar,
+  Avatar,
   Button,
   Card,
+  CardActions,
+  CardContent,
   CardHeader,
+  Checkbox,
   Chip,
   Container,
+  Dialog,
   Divider,
   Grid,
   IconButton,
+  InputAdornment,
   Link,
   Tab,
   Table,
@@ -31,9 +36,11 @@ import {
   ArrowBack as ArrowBackIcon,
   DeleteOutline,
   Lock,
+  LockOpen,
 } from "@mui/icons-material";
 import {
   Plus as PlusIcon,
+  Search as SearchIcon,
   PencilAlt as PencilAltIcon,
   ChevronDown as ChevronDownIcon,
 } from "../../../../components/icons";
@@ -48,8 +55,8 @@ import {
 import { getInitials } from "../../../../lib/get-initials";
 
 const group = {
-  id: "1sqfs",
-  name: "Asociate of science 1",
+  id: "1sqdsqfdq8845fs",
+  name: "Asociate of science 77",
   description: "First class of 5 year program",
   students: ["ddd"],
   root_groups: null,
@@ -64,8 +71,8 @@ const group = {
 
 const groupChild = [
   {
-    id: "1sqfs",
-    name: "Asociate of science 1",
+    id: "1sqf8g4e46ds46dqfqs",
+    name: "Asociate of science 66",
     description: "First class of 5 year program",
     students: [],
     root_groups: null,
@@ -76,8 +83,8 @@ const groupChild = [
     locked: false,
   },
   {
-    id: "1sqfs",
-    name: "Asociate of science 1",
+    id: "1sq2156v1b56fhrrzrerearefs",
+    name: "Asociate of science 19",
     description: "First class of 5 year program",
     students: [],
     root_groups: null,
@@ -88,8 +95,8 @@ const groupChild = [
     locked: false,
   },
   {
-    id: "1sqfs",
-    name: "Asociate of science 1",
+    id: "1sqfhareaare84h61123fdsq3f1axcvs",
+    name: "Asociate of science 8",
     description: "First class of 5 year program",
     students: ["dddd"],
     root_groups: null,
@@ -117,9 +124,24 @@ const GroupBasicDetails = (props) => {
       <Divider />
       <PropertyList>
         <PropertyListItem align={align} label="Description">
-          <Typography color="textSecondary" variant="body2">
-            {group.description}
-          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              mt: 3,
+              alignItems: "center",
+            }}
+          >
+            <TextField
+              defaultValue={group.description}
+              label="Description"
+              size="small"
+              sx={{
+                flexGrow: 1,
+                mr: 3,
+              }}
+            />
+            <Button>Save</Button>
+          </Box>
         </PropertyListItem>
         <Divider />
         <PropertyListItem
@@ -205,14 +227,24 @@ const GroupBasicDetails = (props) => {
   );
 };
 const GroupSubGroupItems = (props) => {
-  const { subGroups, ...other } = props;
+  const {
+    subGroups,
+    canBrowseToGroup,
+    addGroupHandler,
+    removeGroupHandler,
+    ...other
+  } = props;
 
   return (
     <Card {...other}>
       <CardHeader
         title="Sub Groups"
         action={
-          <Button startIcon={<PlusIcon fontSize="small" />} variant="contained">
+          <Button
+            onClick={addGroupHandler}
+            startIcon={<PlusIcon fontSize="small" />}
+            variant="contained"
+          >
             Add Group
           </Button>
         }
@@ -229,25 +261,32 @@ const GroupSubGroupItems = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {subGroups.map((group) => (
-                <TableRow key={group.id}>
+              {subGroups.map((groupItem) => (
+                <TableRow key={groupItem.id}>
                   <TableCell>
-                    <Typography variant="subtitle2">{group.name}</Typography>
+                    <Typography variant="subtitle2">
+                      {groupItem.name}
+                    </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography variant="subtitle2">
-                      {group.students.length}
+                      {groupItem.students.length}
                     </Typography>
                   </TableCell>
                   <TableCell align="right">
-                    <IconButton component="a">
+                    <IconButton
+                      onClick={(e) => removeGroupHandler(e, groupItem.id)}
+                      component="a"
+                    >
                       <DeleteOutline fontSize="small" />
                     </IconButton>
-                    <NextLink href={`/app/groups/${group.id}`} passHref>
-                      <IconButton component="a">
-                        <ArrowRightIcon fontSize="small" />
-                      </IconButton>
-                    </NextLink>
+                    {canBrowseToGroup && (
+                      <NextLink href={`/app/groups/${groupItem.id}`} passHref>
+                        <IconButton component="a">
+                          <ArrowRightIcon fontSize="small" />
+                        </IconButton>
+                      </NextLink>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
@@ -268,13 +307,23 @@ const GroupSubGroupItems = (props) => {
   );
 };
 const GroupStudentItems = (props) => {
-  const { students, ...other } = props;
+  const {
+    students,
+    canBrowseToStudent,
+    addStudentHandler,
+    removeStudentHandler,
+    ...other
+  } = props;
   return (
     <Card {...other}>
       <CardHeader
         title="Students"
         action={
-          <Button startIcon={<PlusIcon fontSize="small" />} variant="contained">
+          <Button
+            onClick={addStudentHandler}
+            startIcon={<PlusIcon fontSize="small" />}
+            variant="contained"
+          >
             Add Student
           </Button>
         }
@@ -293,44 +342,53 @@ const GroupStudentItems = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {students.map((student) => (
-                <TableRow key={student.id}>
+              {students.map((studentItem) => (
+                <TableRow key={studentItem.id}>
                   <TableCell>
-                  <Avatar
-                  sx={{
-                    height: 32,
-                    width: 32,
-                  }}
-                >
-                  {getInitials(student?.firstName + " " + student?.lastName)}
-                </Avatar>
+                    <Avatar
+                      sx={{
+                        height: 32,
+                        width: 32,
+                      }}
+                    >
+                      {getInitials(
+                        studentItem?.firstName + " " + studentItem?.lastName
+                      )}
+                    </Avatar>
                   </TableCell>
                   <TableCell>
                     <Typography variant="subtitle2">
-                      {student.firstName}
+                      {studentItem.firstName}
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography variant="subtitle2">
-                      {student.lastName}
+                      {studentItem.lastName}
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="subtitle2">{student.email}</Typography>
+                    <Typography variant="subtitle2">
+                      {studentItem.email}
+                    </Typography>
                   </TableCell>
                   <TableCell align="right">
-                    <IconButton component="a">
+                    <IconButton
+                      onClick={(e) => removeStudentHandler(e, studentItem.id)}
+                      component="a"
+                    >
                       <DeleteOutline fontSize="small" />
                     </IconButton>
-                    <NextLink
-                      disabled
-                      href={`/app/student/${student.id}`}
-                      passHref
-                    >
-                      <IconButton component="a">
-                        <ArrowRightIcon fontSize="small" />
-                      </IconButton>
-                    </NextLink>
+                    {canBrowseToStudent && (
+                      <NextLink
+                        disabled
+                        href={`/app/student/${studentItem.id}`}
+                        passHref
+                      >
+                        <IconButton component="a">
+                          <ArrowRightIcon fontSize="small" />
+                        </IconButton>
+                      </NextLink>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
@@ -352,8 +410,8 @@ const GroupStudentItems = (props) => {
 };
 const parentList = [
   {
-    id: "1sqfs",
-    name: "Asociate of science 1",
+    id: "1sqaezat5456q1a1erezafs",
+    name: "Asociate of science 2",
     description: "First class of 5 year program",
     students: ["dddd"],
     root_groups: null,
@@ -364,8 +422,8 @@ const parentList = [
     locked: false,
   },
   {
-    id: "1sqfs",
-    name: "Asociate of science 1",
+    id: "1ae9t64613ay4teza5qfs",
+    name: "Asociate of science 3",
     description: "First class of 5 year program",
     students: ["dddd"],
     root_groups: null,
@@ -379,13 +437,13 @@ const parentList = [
 
 const studentList = [
   {
-    id: "1sqdsfqdsqfs",
+    id: "1sqdsfqat949az4e613adsqfs",
     firstName: "John ",
     lastName: "Doe",
     email: "jogn.doe@scoosign.com",
   },
   {
-    id: "1sqddssfqdsqfs",
+    id: "1sqddsa6ez46e1313gassfqdsqfs",
     firstName: "Kurk ",
     lastName: "Cobain",
     email: "kurk.cobain@scoosign.com",
@@ -403,11 +461,261 @@ const groupDetailsTabs = [
 // TODO: get students
 // TODO: Remove group parent
 
+const AddStudentDialog = (props) => {
+  const { open, onClose } = props;
+  return (
+    <Dialog fullWidth maxWidth="sm" onClose={onClose} open={!!open}>
+      <form>
+        <Card>
+          <CardContent>
+            <div>
+              <Typography variant="h6">Add Students</Typography>
+              <Typography color="textSecondary" variant="body2" sx={{ mt: 1 }}>
+                Click on the students checkbox and save your selection.
+              </Typography>
+            </div>
+            <Divider
+              sx={{
+                mt: 3,
+                mb: 3,
+              }}
+            />
+            <Box
+              component="form"
+              onSubmit={(e) => {
+                e.preventDefault();
+              }}
+              sx={{ flexGrow: 1 }}
+            >
+              <TextField
+                defaultValue=""
+                fullWidth
+                disabled
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon fontSize="small" />
+                    </InputAdornment>
+                  ),
+                }}
+                placeholder="Search students"
+              />
+            </Box>
+          </CardContent>
+          <Scrollbar>
+            <Table sx={{ minWidth: 400 }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell padding="checkbox">
+                    <Checkbox />
+                  </TableCell>
+                  <TableCell>Name</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {studentList.map((student) => (
+                  <TableRow hover key={student.id}>
+                    <TableCell padding="checkbox">
+                      <Checkbox />
+                    </TableCell>
+                    <TableCell>
+                      <Box sx={{ alignItems: "center", display: "flex" }}>
+                        <Avatar sx={{ height: 32, width: 32, mr: 1 }}>
+                          {getInitials(
+                            student.firstName + " " + student.lastName
+                          )}
+                        </Avatar>
+                        <div>
+                          <Typography variant="subtitle2">
+                            {student.firstName + " " + student.lastName}
+                          </Typography>
+                          <Typography color="textSecondary" variant="body2">
+                            {student.email}
+                          </Typography>
+                        </div>
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Scrollbar>
+          <TablePagination
+            component="div"
+            count={group.length}
+            onPageChange={() => {}}
+            onRowsPerPageChange={() => {}}
+            page={0}
+            rowsPerPage={5}
+            rowsPerPageOptions={[5, 10, 25]}
+          />
+          <Divider />
+          <Box
+            sx={{
+              alignItems: "center",
+              display: "flex",
+              p: 2,
+            }}
+          >
+            <Box sx={{ flexGrow: 1 }} />
+            <Button onClick={onClose}>Cancel</Button>
+            <Button sx={{ ml: 1 }} type="submit" variant="contained">
+              Confirm
+            </Button>
+          </Box>
+        </Card>
+      </form>
+    </Dialog>
+  );
+};
+
+const AddGroupDialog = (props) => {
+  const { open, onClose } = props;
+  return (
+    <Dialog fullWidth maxWidth="sm" onClose={onClose} open={!!open}>
+      <form>
+        <Card>
+          <CardContent>
+            <div>
+              <Typography variant="h6">Add Groups</Typography>
+              <Typography color="textSecondary" variant="body2" sx={{ mt: 1 }}>
+                Click on the group and save your selections.
+              </Typography>
+            </div>
+            <Divider
+              sx={{
+                mt: 3,
+                mb: 3,
+              }}
+            />
+            <Box
+              component="form"
+              onSubmit={(e) => {
+                e.preventDefault();
+              }}
+              sx={{ flexGrow: 1 }}
+            >
+              <TextField
+                defaultValue=""
+                fullWidth
+                disabled
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon fontSize="small" />
+                    </InputAdornment>
+                  ),
+                }}
+                placeholder="Search groups"
+              />
+            </Box>
+          </CardContent>
+          <Scrollbar>
+            <Table sx={{ minWidth: 400 }} size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell padding="checkbox">
+                    <Checkbox />
+                  </TableCell>
+                  <TableCell>Name</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {groupChild.map((group) => (
+                  <TableRow hover key={group.id}>
+                    <TableCell padding="checkbox">
+                      <Checkbox />
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="subtitle2">{group.name}</Typography>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Scrollbar>
+          <TablePagination
+            component="div"
+            count={group.length}
+            onPageChange={() => {}}
+            onRowsPerPageChange={() => {}}
+            page={0}
+            rowsPerPage={5}
+            rowsPerPageOptions={[5, 10, 25]}
+          />
+          <Divider />
+          <Box
+            sx={{
+              alignItems: "center",
+              display: "flex",
+              p: 2,
+            }}
+          >
+            <Box sx={{ flexGrow: 1 }} />
+            <Button onClick={onClose}>Cancel</Button>
+            <Button sx={{ ml: 1 }} type="submit" variant="contained">
+              Confirm
+            </Button>
+          </Box>
+        </Card>
+      </form>
+    </Dialog>
+  );
+};
+
 const GroupDetails = (props) => {
   const [currentTab, setCurrentTab] = useState("details");
+  const [addGroupDialog, setAddGroupDialog] = useState({
+    isOpen: false,
+    eventId: undefined,
+    range: undefined,
+  });
+  const [addStudentDialog, setAddStudentDialog] = useState({
+    isOpen: false,
+    eventId: undefined,
+    range: undefined,
+  });
+
   const handleTabsChange = (event, value) => {
     setCurrentTab(value);
   };
+
+  const addStudentHandler = (event) => {
+    event.preventDefault();
+    console.log("TODO : add student handle");
+    setAddStudentDialog({
+      isOpen: true,
+    });
+  };
+  const handleCloseAddStudentDialog = () => {
+    setAddStudentDialog({
+      isOpen: false,
+    });
+  };
+
+  const removeStudentHandler = (event, studentId) => {
+    event.preventDefault();
+    console.log("TODO : remove studend id: " + studentId);
+  };
+
+  const addGroupHandler = (event) => {
+    event.preventDefault();
+    console.log("TODO : add group handle");
+    setAddGroupDialog({
+      isOpen: true,
+    });
+  };
+  const handleCloseAddGroupDialog = () => {
+    setAddGroupDialog({
+      isOpen: false,
+    });
+  };
+
+  const removeGroupHandler = (event, groupId) => {
+    event.preventDefault();
+    console.log("TODO : remove group id: " + groupId);
+  };
+
   return (
     <>
       <Head>
@@ -461,13 +769,25 @@ const GroupDetails = (props) => {
                 </Box>
               </Grid>
               <Grid item sx={{ ml: -2 }}>
-                <Button
-                  endIcon={<PencilAltIcon fontSize="small" />}
-                  variant="outlined"
-                  sx={{ ml: 2 }}
-                >
-                  Edit
-                </Button>
+                {!group.locked && (
+                  <Button
+                    endIcon={<ChevronDownIcon fontSize="small" />}
+                    sx={{ m: 1 }}
+                    variant="contained"
+                  >
+                    Actions
+                  </Button>
+                )}
+                {group.locked && (
+                  <Button
+                    endIcon={<LockOpen fontSize="small" />}
+                    variant="contained"
+                    color="primary"
+                    sx={{ ml: 2 }}
+                  >
+                    Unlock
+                  </Button>
+                )}
               </Grid>
             </Grid>
             <Tabs
@@ -496,19 +816,68 @@ const GroupDetails = (props) => {
                 <Grid item xs={12}>
                   <GroupBasicDetails group={group} />
                 </Grid>
+                {!group.locked && (
+                  <Grid item xs={12}>
+                    <GroupSubGroupItems
+                      subGroups={groupChild}
+                      canBrowseToGroup={false}
+                      addGroupHandler={addGroupHandler}
+                      removeGroupHandler={removeGroupHandler}
+                    />
+                  </Grid>
+                )}
+                {(group.students.length > 0) & !group.locked ? (
+                  <Grid item xs={12}>
+                    <GroupStudentItems
+                      addStudentHandler={addStudentHandler}
+                      removeStudentHandler={removeStudentHandler}
+                      students={studentList}
+                      canBrowseToStudent={false}
+                    />
+                  </Grid>
+                ) : (
+                  <></>
+                )}
                 <Grid item xs={12}>
-                  <GroupSubGroupItems subGroups={groupChild} />
-                </Grid>
-                <Grid item xs={12}>
-                  {group.students.length > 0 && (
-                    <GroupStudentItems students={studentList} />
-                  )}
+                  <Card color="error" variant="outlined">
+                    <CardHeader title="Danger Zone" />
+                    <Divider />
+                    <CardContent>
+                      <Box sx={{ mt: 1 }}>
+                        <Typography color="textSecondary" variant="body2">
+                          Describe the danger here.
+                        </Typography>
+                      </Box>
+                    </CardContent>
+                    <CardActions sx={{ flewWrap: "wrap", m: -1 }}>
+                      {!group.locked && (
+                        <Button
+                          sx={{ m: 1, mr: "auto" }}
+                          color="error"
+                          variant="contained"
+                        >
+                          Lock
+                        </Button>
+                      )}
+                      <Button align="right" color="error">
+                        Delete group
+                      </Button>
+                    </CardActions>
+                  </Card>
                 </Grid>
               </Grid>
             )}
           </Box>
         </Container>
       </Box>
+      <AddStudentDialog
+        open={addStudentDialog.isOpen}
+        onClose={handleCloseAddStudentDialog}
+      />
+      <AddGroupDialog
+        open={addGroupDialog.isOpen}
+        onClose={handleCloseAddGroupDialog}
+      />
     </>
   );
 };
