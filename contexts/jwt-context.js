@@ -1,4 +1,5 @@
 import { createContext, useEffect, useReducer } from "react";
+import { authorizeUserApi, meUserApi } from "../lib/user-api";
 import PropTypes from "prop-types";
 
 var ActionType;
@@ -55,15 +56,8 @@ export const AuthProvider = (props) => {
     const initialize = async () => {
       try {
         const accessToken = globalThis.localStorage.getItem("accessToken");
-
         if (accessToken) {
-          const res = await fetch("/api/v1/authorize/me", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "X-Scoosign-Authorization": `Bearer ${accessToken}`,
-            },
-          });
+          const res = await meUserApi(accessToken);
           if (res.ok) {
             const { data } = await res.json();
             dispatch({
@@ -73,9 +67,9 @@ export const AuthProvider = (props) => {
                 user: data,
               },
             });
-          }else{ 
+          } else {
             // The token has expired
-            logout()
+            logout();
           }
         } else {
           dispatch({
@@ -102,49 +96,32 @@ export const AuthProvider = (props) => {
   }, []);
 
   const login = async (email, password) => {
-    await fetch("/api/v1/authorize", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-    })
-      .then((response) => response.json())
-      .then(async (login_data) => {
-        if (login_data.success) {
-          const authorization = `Bearer ${login_data.data.token}`;
-          await fetch("/api/v1/authorize/me", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "X-Scoosign-Authorization": authorization,
-            },
-          })
-            .then((response) => response.json())
-            .then((me_data) => {
-              localStorage.setItem("accessToken", login_data.data.token);
-              dispatch({
-                type: ActionType.LOGIN,
-                payload: {
-                  user: me_data.data,
-                },
-              });
-            })
-            .catch((error) => {
-              console.error("[me Api]", error.message);
-              throw new Error(error.message);
-            });
-        } else {
-          throw new Error(login_data.message);
-        }
-      })
-      .catch((error) => {
-        console.error("[Auth Api]", error.message);
-        throw new Error(error.message);
+    try {
+      const loginResponse = await authorizeUserApi(email, password);
+      const loginResJson = await loginResponse.json();
+      if (!loginResponse.ok)
+        throw new Error(loginResJson.message || loginResponse.statusText);
+
+      const token = loginResJson.data.token;
+      
+      if (!loginResJson.success) throw new Error(loginResJson.message);
+      const authResponse = await meUserApi(token);
+      const authResJson = await authResponse.json();
+      if (!authResponse.ok)
+        throw new Error(authResJson.message || authResponse.statusText);
+      if (!authResJson.success) throw new Error(authResJson.message);
+
+      localStorage.setItem("accessToken", token);
+      dispatch({
+        type: ActionType.LOGIN,
+        payload: {
+          user: authResJson.data,
+        },
       });
+    } catch (error) {
+      console.error(error);
+      throw new Error(error.message);
+    }
   };
 
   const logout = async () => {

@@ -35,9 +35,9 @@ export const HomeHero = (props) => {
           sx={{ py: 3 }}
         >
           OLorem Ipsum is simply dummy text of the printing and typesetting
-          industry. Lorem Ipsum has been the industrials standard dummy text ever
-          since the 1500s, when an unknown printer took a galley of type and
-          scrambled it to make a type specimen book.
+          industry. Lorem Ipsum has been the industrials standard dummy text
+          ever since the 1500s, when an unknown printer took a galley of type
+          and scrambled it to make a type specimen book.
         </Typography>
         <Box
           sx={{
@@ -86,8 +86,7 @@ export const HomeHero = (props) => {
               m: 1,
             },
           }}
-        >
-        </Box>
+        ></Box>
       </Container>
     </Box>
   );

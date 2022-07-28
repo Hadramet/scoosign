@@ -38,7 +38,7 @@ export const JWTLogin = (props) => {
           router.push(returnUrl).catch(console.error);
         }
       } catch (error) {
-        console.error("[Login comp]",error.message);
+        console.error("[Login comp]", error.message);
         if (isMounted()) {
           helpers.setStatus({ success: false });
           helpers.setErrors({ submit: error.message });
