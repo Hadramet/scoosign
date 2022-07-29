@@ -10,11 +10,15 @@ import {
   Container,
   Dialog,
   Divider,
+  FormControl,
   Grid,
   IconButton,
   InputAdornment,
   Link,
+  ListItemText,
   MenuItem,
+  OutlinedInput,
+  Select,
   Tab,
   Table,
   TableBody,
@@ -56,7 +60,7 @@ import {
 import { getInitials } from "../../../../lib/get-initials";
 import { useMounted } from "../../../../hooks/use-mounted";
 import PropTypes from "prop-types";
-import { useFormik } from "formik";
+import { FieldArray, useFormik } from "formik";
 import * as Yup from "yup";
 
 const groupFixture = {
@@ -136,6 +140,234 @@ const groupChild = [
   },
   {
     id: "1sqfhareaare84h611z23fdsq3f1axcvs",
+    name: "Asociate of science 8",
+    description: "First class of 5 year program",
+    students: ["dddd"],
+    root_groups: null,
+    child_count: 5,
+    created_by: "Kurk Cobain",
+    created_at: "2020-01-20T15:22:20.000Z",
+    last_update: "2020-01-20T15:22:20.000Z",
+    locked: false,
+  },
+  {
+    id: "1sqfhareaare84h611az23fdsq3f1axcvs",
+    name: "Asociate of science 8",
+    description: "First class of 5 year program",
+    students: ["dddd"],
+    root_groups: null,
+    child_count: 5,
+    created_by: "Kurk Cobain",
+    created_at: "2020-01-20T15:22:20.000Z",
+    last_update: "2020-01-20T15:22:20.000Z",
+    locked: false,
+  },
+  {
+    id: "1sqfhareaare84h6r11z23fdsq3f1axcvs",
+    name: "Asociate of science 8",
+    description: "First class of 5 year program",
+    students: ["dddd"],
+    root_groups: null,
+    child_count: 5,
+    created_by: "Kurk Cobain",
+    created_at: "2020-01-20T15:22:20.000Z",
+    last_update: "2020-01-20T15:22:20.000Z",
+    locked: false,
+  },
+  {
+    id: "1sqfhareaare84sh611z23fdsq3f1axcvs",
+    name: "Asociate of science 8",
+    description: "First class of 5 year program",
+    students: ["dddd"],
+    root_groups: null,
+    child_count: 5,
+    created_by: "Kurk Cobain",
+    created_at: "2020-01-20T15:22:20.000Z",
+    last_update: "2020-01-20T15:22:20.000Z",
+    locked: false,
+  },
+  {
+    id: "1sqfharesaare84h611z23fdsq3f1a33xcvs",
+    name: "Asociate of science 8",
+    description: "First class of 5 year program",
+    students: ["dddd"],
+    root_groups: null,
+    child_count: 5,
+    created_by: "Kurk Cobain",
+    created_at: "2020-01-20T15:22:20.000Z",
+    last_update: "2020-01-20T15:22:20.000Z",
+    locked: false,
+  },,
+  {
+    id: "1sqfharesaare84h611z23fdsq113f1axcvs",
+    name: "Asociate of science 8",
+    description: "First class of 5 year program",
+    students: ["dddd"],
+    root_groups: null,
+    child_count: 5,
+    created_by: "Kurk Cobain",
+    created_at: "2020-01-20T15:22:20.000Z",
+    last_update: "2020-01-20T15:22:20.000Z",
+    locked: false,
+  },,
+  {
+    id: "1sqfharesaare84h611z23fdsq3f133axcvs",
+    name: "Asociate of science 8",
+    description: "First class of 5 year program",
+    students: ["dddd"],
+    root_groups: null,
+    child_count: 5,
+    created_by: "Kurk Cobain",
+    created_at: "2020-01-20T15:22:20.000Z",
+    last_update: "2020-01-20T15:22:20.000Z",
+    locked: false,
+  },,
+  {
+    id: "1sqfharesaare84h611z23fd44sq3f1axcvs",
+    name: "Asociate of science 8",
+    description: "First class of 5 year program",
+    students: ["dddd"],
+    root_groups: null,
+    child_count: 5,
+    created_by: "Kurk Cobain",
+    created_at: "2020-01-20T15:22:20.000Z",
+    last_update: "2020-01-20T15:22:20.000Z",
+    locked: false,
+  },,
+  {
+    id: "1sqfharesaare84h611z23fdsq3f1a66xcvs",
+    name: "Asociate of science 8",
+    description: "First class of 5 year program",
+    students: ["dddd"],
+    root_groups: null,
+    child_count: 5,
+    created_by: "Kurk Cobain",
+    created_at: "2020-01-20T15:22:20.000Z",
+    last_update: "2020-01-20T15:22:20.000Z",
+    locked: false,
+  },,
+  {
+    id: "1sqfharesaare84h611z23fdsq3f144axcvs",
+    name: "Asociate of science 8",
+    description: "First class of 5 year program",
+    students: ["dddd"],
+    root_groups: null,
+    child_count: 5,
+    created_by: "Kurk Cobain",
+    created_at: "2020-01-20T15:22:20.000Z",
+    last_update: "2020-01-20T15:22:20.000Z",
+    locked: false,
+  },,
+  {
+    id: "1sqfharesaare84h611z23fdsq3f166axcvs",
+    name: "Asociate of science 8",
+    description: "First class of 5 year program",
+    students: ["dddd"],
+    root_groups: null,
+    child_count: 5,
+    created_by: "Kurk Cobain",
+    created_at: "2020-01-20T15:22:20.000Z",
+    last_update: "2020-01-20T15:22:20.000Z",
+    locked: false,
+  },,
+  {
+    id: "1sqfharesaare84h611z23fdsq3f441axcvs",
+    name: "Asociate of science 8",
+    description: "First class of 5 year program",
+    students: ["dddd"],
+    root_groups: null,
+    child_count: 5,
+    created_by: "Kurk Cobain",
+    created_at: "2020-01-20T15:22:20.000Z",
+    last_update: "2020-01-20T15:22:20.000Z",
+    locked: false,
+  },,
+  {
+    id: "1sqfharesaare84h611z23fdsq3f5531axcvs",
+    name: "Asociate of science 8",
+    description: "First class of 5 year program",
+    students: ["dddd"],
+    root_groups: null,
+    child_count: 5,
+    created_by: "Kurk Cobain",
+    created_at: "2020-01-20T15:22:20.000Z",
+    last_update: "2020-01-20T15:22:20.000Z",
+    locked: false,
+  },,
+  {
+    id: "1sqfharesaare84h611z23fdsq3f551axcvs",
+    name: "Asociate of science 8",
+    description: "First class of 5 year program",
+    students: ["dddd"],
+    root_groups: null,
+    child_count: 5,
+    created_by: "Kurk Cobain",
+    created_at: "2020-01-20T15:22:20.000Z",
+    last_update: "2020-01-20T15:22:20.000Z",
+    locked: false,
+  },,
+  {
+    id: "1sqfharesaare84h611z23fdsq399f1axcvs",
+    name: "Asociate of science 8",
+    description: "First class of 5 year program",
+    students: ["dddd"],
+    root_groups: null,
+    child_count: 5,
+    created_by: "Kurk Cobain",
+    created_at: "2020-01-20T15:22:20.000Z",
+    last_update: "2020-01-20T15:22:20.000Z",
+    locked: false,
+  },,
+  {
+    id: "1sqfharesaare84h611z23fdsq773f1axcvs",
+    name: "Asociate of science 8",
+    description: "First class of 5 year program",
+    students: ["dddd"],
+    root_groups: null,
+    child_count: 5,
+    created_by: "Kurk Cobain",
+    created_at: "2020-01-20T15:22:20.000Z",
+    last_update: "2020-01-20T15:22:20.000Z",
+    locked: false,
+  },,
+  {
+    id: "1sqfharesaare84h611z2399fdsq3f1axcvs",
+    name: "Asociate of science 8",
+    description: "First class of 5 year program",
+    students: ["dddd"],
+    root_groups: null,
+    child_count: 5,
+    created_by: "Kurk Cobain",
+    created_at: "2020-01-20T15:22:20.000Z",
+    last_update: "2020-01-20T15:22:20.000Z",
+    locked: false,
+  },,
+  {
+    id: "1sqfharesaare84h611z893fdsq3f1axcvs",
+    name: "Asociate of science 8",
+    description: "First class of 5 year program",
+    students: ["dddd"],
+    root_groups: null,
+    child_count: 5,
+    created_by: "Kurk Cobain",
+    created_at: "2020-01-20T15:22:20.000Z",
+    last_update: "2020-01-20T15:22:20.000Z",
+    locked: false,
+  },,
+  {
+    id: "1sqfharesaare84h611z878723fdsq3f1axcvs",
+    name: "Asociate of science 8",
+    description: "First class of 5 year program",
+    students: ["dddd"],
+    root_groups: null,
+    child_count: 5,
+    created_by: "Kurk Cobain",
+    created_at: "2020-01-20T15:22:20.000Z",
+    last_update: "2020-01-20T15:22:20.000Z",
+    locked: false,
+  },,
+  {
+    id: "1sqfharesaare84h611z2873fdsq3f1axcvs",
     name: "Asociate of science 8",
     description: "First class of 5 year program",
     students: ["dddd"],
@@ -413,7 +645,7 @@ GroupSubGroupItems.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
   onPageChange: PropTypes.func.isRequired,
   onRowsPerPageChange: PropTypes.func.isRequired,
-  count: PropTypes.number.isRequired
+  count: PropTypes.number.isRequired,
 };
 
 const GroupStudentItems = (props) => {
@@ -534,7 +766,7 @@ GroupStudentItems.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
   onPageChange: PropTypes.func.isRequired,
   onRowsPerPageChange: PropTypes.func.isRequired,
-  count: PropTypes.number.isRequired
+  count: PropTypes.number.isRequired,
 };
 
 const parentList = [
@@ -719,12 +951,48 @@ const AddStudentDialog = (props) => {
     </Dialog>
   );
 };
+
 const AddGroupDialog = (props) => {
-  const { open, onClose } = props;
+  const { open, onClose, ...other } = props;
+  const [availableGroup, setAvailableGroup] = useState([]);
+  useEffect(() => {
+    if (open) {
+      setAvailableGroup([]);
+      groupForms.resetForm();
+      getAvailableGroup();
+    }
+  }, [open, groupForms]);
+
+  const getAvailableGroup = async () => {
+    const response = await new Promise((resolve) => resolve(groupChild));
+    console.log("TODO get available groups");
+    setAvailableGroup(response);
+  };
+  const groupForms = useFormik({
+    initialValues: {
+      groupsToAdd: [],
+    },
+    validationSchema: Yup.object({
+      groupsToAdd: Yup.array(),
+    }),
+    onSubmit: async (values, helpers) => {
+      try {
+        const value_to_add = [];
+        values.groupsToAdd.map((group) => value_to_add.push({ id: group.id }));
+        console.log(value_to_add);
+        onClose();
+      } catch (error) {
+        console.error(error);
+        helpers.setStatus({ success: false });
+        helpers.setErrors({ submit: error.message });
+        helpers.setSubmitting(false);
+      }
+    },
+  });
   return (
-    <Dialog fullWidth maxWidth="sm" onClose={onClose} open={!!open}>
-      <form>
-        <Card>
+    <Dialog fullWidth maxWidth="sm" onClose={onClose} open={!!open} {...other}>
+      <Card>
+        <form onSubmit={groupForms.handleSubmit}>
           <CardContent>
             <div>
               <Typography variant="h6">Add Groups</Typography>
@@ -738,77 +1006,53 @@ const AddGroupDialog = (props) => {
                 mb: 3,
               }}
             />
-            <Box
-              component="form"
-              onSubmit={(e) => {
-                e.preventDefault();
-              }}
-              sx={{ flexGrow: 1 }}
+            <Select
+              label="Groups"
+              displayEmpty
+              //   value={groups}
+              onBlur={groupForms.handleBlur}
+              onChange={groupForms.handleChange}
+              error={Boolean(
+                groupForms.touched.parent && groupForms.errors.parent
+              )}
+              value={groupForms.values.groupsToAdd}
+              name="groupsToAdd"
+              fullWidth
+              multiple
+              renderValue={(selected) => (
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                  <Typography color="textSecondary" variant="body2">
+                    Groups selected : {selected.length}
+                  </Typography>
+                </Box>
+              )}
             >
-              <TextField
-                defaultValue=""
-                fullWidth
-                disabled
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon fontSize="small" />
-                    </InputAdornment>
-                  ),
-                }}
-                placeholder="Search groups"
-              />
-            </Box>
-          </CardContent>
-          <Scrollbar>
-            <Table sx={{ minWidth: 400 }} size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell padding="checkbox">
-                    <Checkbox />
-                  </TableCell>
-                  <TableCell>Name</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {groupChild.map((group) => (
-                  <TableRow hover key={group.id}>
-                    <TableCell padding="checkbox">
-                      <Checkbox />
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="subtitle2">{group.name}</Typography>
-                    </TableCell>
-                  </TableRow>
+              <MenuItem disabled value="">
+                <em>Select groups</em>
+              </MenuItem>
+              {availableGroup &&
+                availableGroup.map((group) => (
+                  <MenuItem key={group.id} value={group}>
+                    <Checkbox
+                      checked={
+                        groupForms.values.groupsToAdd.indexOf(group) > -1
+                      }
+                    />
+                    <ListItemText primary={group.name} />
+                  </MenuItem>
                 ))}
-              </TableBody>
-            </Table>
-          </Scrollbar>
-          <TablePagination
-            component="div"
-            count={10}
-            onPageChange={() => {}}
-            onRowsPerPageChange={() => {}}
-            page={0}
-            rowsPerPage={5}
-            rowsPerPageOptions={[5, 10, 25]}
-          />
-          <Divider />
-          <Box
-            sx={{
-              alignItems: "center",
-              display: "flex",
-              p: 2,
-            }}
-          >
-            <Box sx={{ flexGrow: 1 }} />
-            <Button onClick={onClose}>Cancel</Button>
+            </Select>
+          </CardContent>
+          <CardActions>
+            <Button sx={{ ml: "auto" }} onClick={onClose}>
+              Cancel
+            </Button>
             <Button sx={{ ml: 1 }} type="submit" variant="contained">
               Confirm
             </Button>
-          </Box>
-        </Card>
-      </form>
+          </CardActions>
+        </form>
+      </Card>
     </Dialog>
   );
 };
