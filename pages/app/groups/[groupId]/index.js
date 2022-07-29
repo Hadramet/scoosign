@@ -76,7 +76,6 @@ const groupFixture = {
   locked_by: "Kurk Cobain",
   locked_at: "2020-01-20T15:22:20.000Z",
 };
-
 const groupChild = [
   {
     id: "1sqf8g4e46ds46dqfqs",
@@ -197,7 +196,8 @@ const groupChild = [
     created_at: "2020-01-20T15:22:20.000Z",
     last_update: "2020-01-20T15:22:20.000Z",
     locked: false,
-  },,
+  },
+  ,
   {
     id: "1sqfharesaare84h611z23fdsq113f1axcvs",
     name: "Asociate of science 8",
@@ -209,7 +209,8 @@ const groupChild = [
     created_at: "2020-01-20T15:22:20.000Z",
     last_update: "2020-01-20T15:22:20.000Z",
     locked: false,
-  },,
+  },
+  ,
   {
     id: "1sqfharesaare84h611z23fdsq3f133axcvs",
     name: "Asociate of science 8",
@@ -221,7 +222,8 @@ const groupChild = [
     created_at: "2020-01-20T15:22:20.000Z",
     last_update: "2020-01-20T15:22:20.000Z",
     locked: false,
-  },,
+  },
+  ,
   {
     id: "1sqfharesaare84h611z23fd44sq3f1axcvs",
     name: "Asociate of science 8",
@@ -233,7 +235,8 @@ const groupChild = [
     created_at: "2020-01-20T15:22:20.000Z",
     last_update: "2020-01-20T15:22:20.000Z",
     locked: false,
-  },,
+  },
+  ,
   {
     id: "1sqfharesaare84h611z23fdsq3f1a66xcvs",
     name: "Asociate of science 8",
@@ -245,7 +248,8 @@ const groupChild = [
     created_at: "2020-01-20T15:22:20.000Z",
     last_update: "2020-01-20T15:22:20.000Z",
     locked: false,
-  },,
+  },
+  ,
   {
     id: "1sqfharesaare84h611z23fdsq3f144axcvs",
     name: "Asociate of science 8",
@@ -257,7 +261,8 @@ const groupChild = [
     created_at: "2020-01-20T15:22:20.000Z",
     last_update: "2020-01-20T15:22:20.000Z",
     locked: false,
-  },,
+  },
+  ,
   {
     id: "1sqfharesaare84h611z23fdsq3f166axcvs",
     name: "Asociate of science 8",
@@ -269,7 +274,8 @@ const groupChild = [
     created_at: "2020-01-20T15:22:20.000Z",
     last_update: "2020-01-20T15:22:20.000Z",
     locked: false,
-  },,
+  },
+  ,
   {
     id: "1sqfharesaare84h611z23fdsq3f441axcvs",
     name: "Asociate of science 8",
@@ -281,7 +287,8 @@ const groupChild = [
     created_at: "2020-01-20T15:22:20.000Z",
     last_update: "2020-01-20T15:22:20.000Z",
     locked: false,
-  },,
+  },
+  ,
   {
     id: "1sqfharesaare84h611z23fdsq3f5531axcvs",
     name: "Asociate of science 8",
@@ -293,7 +300,8 @@ const groupChild = [
     created_at: "2020-01-20T15:22:20.000Z",
     last_update: "2020-01-20T15:22:20.000Z",
     locked: false,
-  },,
+  },
+  ,
   {
     id: "1sqfharesaare84h611z23fdsq3f551axcvs",
     name: "Asociate of science 8",
@@ -305,7 +313,8 @@ const groupChild = [
     created_at: "2020-01-20T15:22:20.000Z",
     last_update: "2020-01-20T15:22:20.000Z",
     locked: false,
-  },,
+  },
+  ,
   {
     id: "1sqfharesaare84h611z23fdsq399f1axcvs",
     name: "Asociate of science 8",
@@ -317,7 +326,8 @@ const groupChild = [
     created_at: "2020-01-20T15:22:20.000Z",
     last_update: "2020-01-20T15:22:20.000Z",
     locked: false,
-  },,
+  },
+  ,
   {
     id: "1sqfharesaare84h611z23fdsq773f1axcvs",
     name: "Asociate of science 8",
@@ -329,7 +339,8 @@ const groupChild = [
     created_at: "2020-01-20T15:22:20.000Z",
     last_update: "2020-01-20T15:22:20.000Z",
     locked: false,
-  },,
+  },
+  ,
   {
     id: "1sqfharesaare84h611z2399fdsq3f1axcvs",
     name: "Asociate of science 8",
@@ -341,7 +352,8 @@ const groupChild = [
     created_at: "2020-01-20T15:22:20.000Z",
     last_update: "2020-01-20T15:22:20.000Z",
     locked: false,
-  },,
+  },
+  ,
   {
     id: "1sqfharesaare84h611z893fdsq3f1axcvs",
     name: "Asociate of science 8",
@@ -353,7 +365,8 @@ const groupChild = [
     created_at: "2020-01-20T15:22:20.000Z",
     last_update: "2020-01-20T15:22:20.000Z",
     locked: false,
-  },,
+  },
+  ,
   {
     id: "1sqfharesaare84h611z878723fdsq3f1axcvs",
     name: "Asociate of science 8",
@@ -365,7 +378,8 @@ const groupChild = [
     created_at: "2020-01-20T15:22:20.000Z",
     last_update: "2020-01-20T15:22:20.000Z",
     locked: false,
-  },,
+  },
+  ,
   {
     id: "1sqfharesaare84h611z2873fdsq3f1axcvs",
     name: "Asociate of science 8",
@@ -379,6 +393,76 @@ const groupChild = [
     locked: false,
   },
 ];
+const parentList = [
+  {
+    id: "1sqaezat5456q1a1erezafs",
+    name: "Asociate of science 2",
+    description: "First class of 5 year program",
+    students: ["dddd"],
+    root_groups: null,
+    child_count: 5,
+    created_by: "Kurk Cobain",
+    created_at: "2020-01-20T15:22:20.000Z",
+    last_update: "2020-01-20T15:22:20.000Z",
+    locked: false,
+  },
+  {
+    id: "1ae9t64613ay4teza5qfs",
+    name: "Asociate of science 3",
+    description: "First class of 5 year program",
+    students: ["dddd"],
+    root_groups: null,
+    child_count: 5,
+    created_by: "Kurk Cobain",
+    created_at: "2020-01-20T15:22:20.000Z",
+    last_update: "2020-01-20T15:22:20.000Z",
+    locked: false,
+  },
+];
+const studentList = [
+  {
+    id: "1sqdsfqat949az4e613adsqfs",
+    firstName: "John ",
+    lastName: "Doe",
+    email: "jogn.doe@scoosign.com",
+  },
+  {
+    id: "1sqddsa6ez46e1313gassfqdsqfs",
+    firstName: "Kurk ",
+    lastName: "Cobain",
+    email: "kurk.cobain@scoosign.com",
+  },
+  {
+    id: "1sqddsa6ez46e13e13gassfqdsqfs",
+    firstName: "Kurk a",
+    lastName: "Cobain",
+    email: "kurk.cobain@scoosign.com",
+  },
+  {
+    id: "1sqddsa6ez46e131q3gassfqdsqfs",
+    firstName: "Kurk ",
+    lastName: "Cobain",
+    email: "kurk.cobain@scoosign.com",
+  },
+  {
+    id: "1sqddsa6ez46e1s313gassfqdsqfs",
+    firstName: "Kurk ",
+    lastName: "Cobain",
+    email: "kurk.cobain@scoosign.com",
+  },
+  {
+    id: "1sqddsa6ez46e1b313gassfqdsqfs",
+    firstName: "Kurk ",
+    lastName: "Cobain",
+    email: "kurk.cobain@scoosign.com",
+  },
+];
+const groupDetailsTabs = [
+  { label: "Details", value: "details", disabled: false },
+  { label: "Courses", value: "courses", disabled: true },
+  { label: "Calendar", value: "calendar", disabled: true },
+];
+
 
 const GroupBasicDetails = (props) => {
   const { group, setGroupInfosHandler, ...other } = props;
@@ -769,92 +853,57 @@ GroupStudentItems.propTypes = {
   count: PropTypes.number.isRequired,
 };
 
-const parentList = [
-  {
-    id: "1sqaezat5456q1a1erezafs",
-    name: "Asociate of science 2",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  {
-    id: "1ae9t64613ay4teza5qfs",
-    name: "Asociate of science 3",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-];
-const studentList = [
-  {
-    id: "1sqdsfqat949az4e613adsqfs",
-    firstName: "John ",
-    lastName: "Doe",
-    email: "jogn.doe@scoosign.com",
-  },
-  {
-    id: "1sqddsa6ez46e1313gassfqdsqfs",
-    firstName: "Kurk ",
-    lastName: "Cobain",
-    email: "kurk.cobain@scoosign.com",
-  },
-  {
-    id: "1sqddsa6ez46e13e13gassfqdsqfs",
-    firstName: "Kurk a",
-    lastName: "Cobain",
-    email: "kurk.cobain@scoosign.com",
-  },
-  {
-    id: "1sqddsa6ez46e131q3gassfqdsqfs",
-    firstName: "Kurk ",
-    lastName: "Cobain",
-    email: "kurk.cobain@scoosign.com",
-  },
-  {
-    id: "1sqddsa6ez46e1s313gassfqdsqfs",
-    firstName: "Kurk ",
-    lastName: "Cobain",
-    email: "kurk.cobain@scoosign.com",
-  },
-  {
-    id: "1sqddsa6ez46e1b313gassfqdsqfs",
-    firstName: "Kurk ",
-    lastName: "Cobain",
-    email: "kurk.cobain@scoosign.com",
-  },
-];
-const groupDetailsTabs = [
-  { label: "Details", value: "details", disabled: false },
-  { label: "Courses", value: "courses", disabled: true },
-  { label: "Calendar", value: "calendar", disabled: true },
-];
-
 // TODO: get group fixture
 // TODO: get sub-group
 // TODO: get students
 // TODO: Remove group parent
 
 const AddStudentDialog = (props) => {
-  const { open, onClose } = props;
+  const { open, onClose, ...other } = props;
+  const [availableStudents, setAvailableStudents] = useState([]);
+  useEffect(() => {
+    if (open) {
+      setAvailableStudents([]);
+      form.resetForm();
+      getAvailableStudents();
+    }
+  }, [open, form]);
+
+  const getAvailableStudents = async () => {
+    const response = await new Promise((resolve) => resolve(studentList));
+    console.log("TODO get available students");
+    setAvailableStudents(response);
+  };
+  const form = useFormik({
+    initialValues: {
+      studentsToAdd: [],
+    },
+    validationSchema: Yup.object({
+      studentsToAdd: Yup.array(),
+    }),
+    onSubmit: async (values, helpers) => {
+      try {
+        const value_to_add = [];
+        values.studentsToAdd.map((o) => value_to_add.push({ id: o.id }));
+        console.log(value_to_add);
+        onClose();
+      } catch (error) {
+        console.error(error);
+        helpers.setStatus({ success: false });
+        helpers.setErrors({ submit: error.message });
+        helpers.setSubmitting(false);
+      }
+    },
+  });
   return (
-    <Dialog fullWidth maxWidth="sm" onClose={onClose} open={!!open}>
-      <form>
-        <Card>
+    <Dialog fullWidth maxWidth="sm" onClose={onClose} open={!!open} {...other}>
+      <Card>
+        <form onSubmit={form.handleSubmit}>
           <CardContent>
             <div>
               <Typography variant="h6">Add Students</Typography>
               <Typography color="textSecondary" variant="body2" sx={{ mt: 1 }}>
-                Click on the students checkbox and save your selection.
+                Click on the student and save your selections.
               </Typography>
             </div>
             <Divider
@@ -863,95 +912,58 @@ const AddStudentDialog = (props) => {
                 mb: 3,
               }}
             />
-            <Box
-              component="form"
-              onSubmit={(e) => {
-                e.preventDefault();
-              }}
-              sx={{ flexGrow: 1 }}
+            <Select
+              label="Students"
+              displayEmpty
+              //   value={groups}
+              onBlur={form.handleBlur}
+              onChange={form.handleChange}
+              error={Boolean(
+                form.touched.studentsToAdd && form.errors.studentsToAdd
+              )}
+              value={form.values.studentsToAdd}
+              name="studentsToAdd"
+              fullWidth
+              multiple
+              renderValue={(selected) => (
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                  <Typography color="textSecondary" variant="body2">
+                    Students selected : {selected.length}
+                  </Typography>
+                </Box>
+              )}
             >
-              <TextField
-                defaultValue=""
-                fullWidth
-                disabled
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon fontSize="small" />
-                    </InputAdornment>
-                  ),
-                }}
-                placeholder="Search students"
-              />
-            </Box>
-          </CardContent>
-          <Scrollbar>
-            <Table sx={{ minWidth: 400 }}>
-              <TableHead>
-                <TableRow>
-                  <TableCell padding="checkbox">
-                    <Checkbox />
-                  </TableCell>
-                  <TableCell>Name</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {studentList.map((student) => (
-                  <TableRow hover key={student.id}>
-                    <TableCell padding="checkbox">
-                      <Checkbox />
-                    </TableCell>
-                    <TableCell>
-                      <Box sx={{ alignItems: "center", display: "flex" }}>
-                        <Avatar sx={{ height: 32, width: 32, mr: 1 }}>
-                          {getInitials(
-                            student.firstName + " " + student.lastName
-                          )}
-                        </Avatar>
-                        <div>
-                          <Typography variant="subtitle2">
-                            {student.firstName + " " + student.lastName}
-                          </Typography>
-                          <Typography color="textSecondary" variant="body2">
-                            {student.email}
-                          </Typography>
-                        </div>
-                      </Box>
-                    </TableCell>
-                  </TableRow>
+              <MenuItem disabled value="">
+                <em>Select students</em>
+              </MenuItem>
+              {availableStudents &&
+                availableStudents.map((o) => (
+                  <MenuItem key={o.id} value={o}>
+                    <Checkbox
+                      checked={form.values.studentsToAdd.indexOf(o) > -1}
+                    />
+                    <ListItemText primary={o.firstName + " " + o.lastName} />
+                  </MenuItem>
                 ))}
-              </TableBody>
-            </Table>
-          </Scrollbar>
-          <TablePagination
-            component="div"
-            count={0}
-            onPageChange={() => {}}
-            onRowsPerPageChange={() => {}}
-            page={0}
-            rowsPerPage={5}
-            rowsPerPageOptions={[5, 10, 25]}
-          />
-          <Divider />
-          <Box
-            sx={{
-              alignItems: "center",
-              display: "flex",
-              p: 2,
-            }}
-          >
-            <Box sx={{ flexGrow: 1 }} />
-            <Button onClick={onClose}>Cancel</Button>
+            </Select>
+          </CardContent>
+          <CardActions>
+            <Button sx={{ ml: "auto" }} onClick={onClose}>
+              Cancel
+            </Button>
             <Button sx={{ ml: 1 }} type="submit" variant="contained">
               Confirm
             </Button>
-          </Box>
-        </Card>
-      </form>
+          </CardActions>
+        </form>
+      </Card>
     </Dialog>
   );
 };
-
+AddStudentDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+};
 const AddGroupDialog = (props) => {
   const { open, onClose, ...other } = props;
   const [availableGroup, setAvailableGroup] = useState([]);
@@ -1056,7 +1068,10 @@ const AddGroupDialog = (props) => {
     </Dialog>
   );
 };
-
+AddGroupDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+};
 // TODO : refactor this to be global
 const applyPagination = (tabs, page, rowsPerPage) =>
   tabs.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
