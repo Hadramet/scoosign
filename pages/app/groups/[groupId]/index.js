@@ -14,6 +14,7 @@ import {
   IconButton,
   InputAdornment,
   Link,
+  MenuItem,
   Tab,
   Table,
   TableBody,
@@ -44,7 +45,7 @@ import {
   PencilAlt as PencilAltIcon,
   ChevronDown as ChevronDownIcon,
 } from "../../../../components/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PropertyList } from "../../../../components/property-list";
 import { PropertyListItem } from "../../../../components/property-list-items";
 import { Scrollbar } from "../../../../components/custom";
@@ -53,14 +54,17 @@ import {
   ArrowRight as ArrowRightIcon,
 } from "../../../../components/icons";
 import { getInitials } from "../../../../lib/get-initials";
+import { useMounted } from "../../../../hooks/use-mounted";
+import PropTypes from "prop-types";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
-const group = {
+const groupFixture = {
   id: "1sqdsqfdq8845fs",
   name: "Asociate of science 77",
   description: "First class of 5 year program",
   students: ["ddd"],
   root_groups: null,
-  child_count: 3,
   created_by: "Kurk Cobain",
   created_at: "2020-01-20T15:22:20.000Z",
   last_update: "2020-01-20T15:22:20.000Z",
@@ -95,7 +99,43 @@ const groupChild = [
     locked: false,
   },
   {
-    id: "1sqfhareaare84h61123fdsq3f1axcvs",
+    id: "1sqfhareaare84h6e1123fdsq3f1axcvs",
+    name: "Asociate of science 8",
+    description: "First class of 5 year program",
+    students: ["dddd"],
+    root_groups: null,
+    child_count: 5,
+    created_by: "Kurk Cobain",
+    created_at: "2020-01-20T15:22:20.000Z",
+    last_update: "2020-01-20T15:22:20.000Z",
+    locked: false,
+  },
+  {
+    id: "1sqfhareaare84h6a1123fdsq3f1axcvs",
+    name: "Asociate of science 8",
+    description: "First class of 5 year program",
+    students: ["dddd"],
+    root_groups: null,
+    child_count: 5,
+    created_by: "Kurk Cobain",
+    created_at: "2020-01-20T15:22:20.000Z",
+    last_update: "2020-01-20T15:22:20.000Z",
+    locked: false,
+  },
+  {
+    id: "1sqfhareaare84th61123fdsq3f1axcvs",
+    name: "Asociate of science 8",
+    description: "First class of 5 year program",
+    students: ["dddd"],
+    root_groups: null,
+    child_count: 5,
+    created_by: "Kurk Cobain",
+    created_at: "2020-01-20T15:22:20.000Z",
+    last_update: "2020-01-20T15:22:20.000Z",
+    locked: false,
+  },
+  {
+    id: "1sqfhareaare84h611z23fdsq3f1axcvs",
     name: "Asociate of science 8",
     description: "First class of 5 year program",
     students: ["dddd"],
@@ -109,129 +149,187 @@ const groupChild = [
 ];
 
 const GroupBasicDetails = (props) => {
-  const { group, ...other } = props;
+  const { group, setGroupInfosHandler, ...other } = props;
+  const isMounted = useMounted();
   const smDown = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const align = smDown ? "vertical" : "horizontal";
-  const [parent, setParent] = useState(null);
+  const [availableParent, setAvailableParent] = useState([]);
 
-  const handleChange = (event) => {
-    setParent(event.target.value);
+  useEffect(() => {
+    if (isMounted) getAvailableParent();
+  }, [isMounted]);
+
+  // Fetch available parent from api
+  const getAvailableParent = async () => {
+    const response = await new Promise((resolve) => resolve(parentList));
+    console.log("[LOAD AVAILABLE PARENT]", response);
+    setAvailableParent(response);
   };
 
+  const groupForms = useFormik({
+    initialValues: {
+      parent: group.root_groups || "",
+      description: group.description,
+    },
+    validationSchema: Yup.object({
+      parent: Yup.string(),
+      description: Yup.string().max(255),
+    }),
+    onSubmit: async (values, helpers) => {
+      try {
+        await setGroupInfosHandler(values);
+      } catch (error) {
+        console.error(error);
+        helpers.setStatus({ success: false });
+        helpers.setErrors({ submit: error.message });
+        helpers.setSubmitting(false);
+      }
+    },
+  });
+
   return (
-    <Card {...other}>
-      <CardHeader title="Basic info" />
-      <Divider />
-      <PropertyList>
-        <PropertyListItem align={align} label="Description">
-          <Box
-            sx={{
-              display: "flex",
-              mt: 3,
-              alignItems: "center",
-            }}
-          >
-            <TextField
-              defaultValue={group.description}
-              label="Description"
-              size="small"
+    <form onSubmit={groupForms.handleSubmit} {...other}>
+      <Card>
+        <CardHeader title="Basic info" />
+        <Divider />
+        <PropertyList>
+          <PropertyListItem align={align} label="Description">
+            <Box
               sx={{
-                flexGrow: 1,
-                mr: 3,
+                display: "flex",
+                mt: 3,
+                alignItems: "center",
               }}
-            />
-            <Button>Save</Button>
-          </Box>
-        </PropertyListItem>
+            >
+              <TextField
+                label="Description"
+                name="description"
+                onBlur={groupForms.handleBlur}
+                onChange={groupForms.handleChange}
+                error={Boolean(
+                  groupForms.touched.description &&
+                    groupForms.errors.description
+                )}
+                helperText={
+                  groupForms.touched.description &&
+                  groupForms.errors.description
+                }
+                value={groupForms.values.description}
+                size="small"
+                sx={{
+                  flexGrow: 1,
+                  mr: 3,
+                }}
+              />
+            </Box>
+          </PropertyListItem>
+          <Divider />
+          <PropertyListItem
+            align={align}
+            label="Created By"
+            value={group.created_by}
+          />
+          <Divider />
+          <PropertyListItem
+            align={align}
+            label="Created At"
+            value={group.created_at}
+          />
+          <Divider />
+          {group.locked && (
+            <>
+              <PropertyListItem
+                align={align}
+                label="Locked By"
+                value={group.locked_by}
+              />
+              <Divider />
+              <PropertyListItem
+                align={align}
+                label="Locked At"
+                value={group.locked_at}
+              />
+              <Divider />
+            </>
+          )}
+          {group.locked ? (
+            <></>
+          ) : (
+            <PropertyListItem align={align} label="Set Parent">
+              <Box
+                sx={{
+                  alignItems: {
+                    sm: "center",
+                  },
+                  display: "flex",
+                  flexDirection: {
+                    xs: "column",
+                    sm: "row",
+                  },
+                  mx: -1,
+                }}
+              >
+                <TextField
+                  label="Parent"
+                  margin="normal"
+                  name="parent"
+                  select
+                  onBlur={groupForms.handleBlur}
+                  onChange={groupForms.handleChange}
+                  error={Boolean(
+                    groupForms.touched.parent && groupForms.errors.parent
+                  )}
+                  value={groupForms.values.parent}
+                  SelectProps={{ native: true }}
+                  sx={{
+                    flexGrow: 1,
+                    m: 1,
+                    minWidth: 150,
+                  }}
+                >
+                  <option></option>
+                  {availableParent &&
+                    availableParent.map((parent) => (
+                      <option key={parent.id} value={parent.id}>
+                        {parent.name}
+                      </option>
+                    ))}
+                </TextField>
+              </Box>
+            </PropertyListItem>
+          )}
+        </PropertyList>
         <Divider />
-        <PropertyListItem
-          align={align}
-          label="Created By"
-          value={group.created_by}
-        />
-        <Divider />
-        <PropertyListItem
-          align={align}
-          label="Created At"
-          value={group.created_at}
-        />
-        <Divider />
-        {group.locked && (
-          <>
-            <PropertyListItem
-              align={align}
-              label="Locked By"
-              value={group.locked_by}
-            />
-            <Divider />
-            <PropertyListItem
-              align={align}
-              label="Locked At"
-              value={group.locked_at}
-            />
-            <Divider />
-          </>
-        )}
-        <PropertyListItem align={align} label="Set Parent">
-          <Box
-            sx={{
-              alignItems: {
-                sm: "center",
-              },
-              display: "flex",
-              flexDirection: {
-                xs: "column",
-                sm: "row",
-              },
-              mx: -1,
-            }}
+        <CardActions>
+          <Button
+            sx={{ mr: -1, ml: "auto" }}
+            type="submit"
+            disabled={groupForms.isSubmitting}
+            variant="contained"
           >
-            <TextField
-              label="Parent"
-              margin="normal"
-              name="parent"
-              disabled={() => group.child_count >> 0 || group.locked}
-              select
-              onChange={handleChange}
-              SelectProps={{ native: true }}
-              sx={{
-                flexGrow: 1,
-                m: 1,
-                minWidth: 150,
-              }}
-              value={parent}
-            >
-              {parentList.map((parent) => (
-                <option key={parent.id} value={parent.id}>
-                  {parent.name}
-                </option>
-              ))}
-            </TextField>
-            <Button
-              disabled={() => group.child_count >> 0 || group.locked}
-              sx={{ m: 1 }}
-              variant="contained"
-            >
-              Save
-            </Button>
-            <Button
-              disabled={() => group.child_count >> 0 || group.locked}
-              sx={{ m: 1 }}
-            >
-              Cancel
-            </Button>
-          </Box>
-        </PropertyListItem>
-      </PropertyList>
-    </Card>
+            Save
+          </Button>
+        </CardActions>
+      </Card>
+    </form>
   );
 };
+GroupBasicDetails.propTypes = {
+  group: PropTypes.object,
+  setGroupInfosHandler: PropTypes.func.isRequired,
+};
+
 const GroupSubGroupItems = (props) => {
   const {
     subGroups,
     canBrowseToGroup,
     addGroupHandler,
     removeGroupHandler,
+    page,
+    rowsPerPage,
+    onPageChange,
+    onRowsPerPageChange,
+    count,
     ...other
   } = props;
 
@@ -296,24 +394,42 @@ const GroupSubGroupItems = (props) => {
       </Scrollbar>
       <TablePagination
         component="div"
-        count={group.length}
-        onPageChange={() => {}}
-        onRowsPerPageChange={() => {}}
-        page={0}
-        rowsPerPage={5}
+        count={count}
+        onPageChange={onPageChange}
+        onRowsPerPageChange={onRowsPerPageChange}
+        page={page}
+        rowsPerPage={rowsPerPage}
         rowsPerPageOptions={[5, 10, 25]}
       />
     </Card>
   );
 };
+GroupSubGroupItems.propTypes = {
+  subGroups: PropTypes.array.isRequired,
+  canBrowseToGroup: PropTypes.bool.isRequired,
+  addGroupHandler: PropTypes.func.isRequired,
+  removeGroupHandler: PropTypes.func.isRequired,
+  page: PropTypes.number.isRequired,
+  rowsPerPage: PropTypes.number.isRequired,
+  onPageChange: PropTypes.func.isRequired,
+  onRowsPerPageChange: PropTypes.func.isRequired,
+  count: PropTypes.number.isRequired
+};
+
 const GroupStudentItems = (props) => {
   const {
     students,
     canBrowseToStudent,
     addStudentHandler,
     removeStudentHandler,
+    page,
+    rowsPerPage,
+    onPageChange,
+    onRowsPerPageChange,
+    count,
     ...other
   } = props;
+
   return (
     <Card {...other}>
       <CardHeader
@@ -342,72 +458,85 @@ const GroupStudentItems = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {students.map((studentItem) => (
-                <TableRow key={studentItem.id}>
-                  <TableCell>
-                    <Avatar
-                      sx={{
-                        height: 32,
-                        width: 32,
-                      }}
-                    >
-                      {getInitials(
-                        studentItem?.firstName + " " + studentItem?.lastName
-                      )}
-                    </Avatar>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="subtitle2">
-                      {studentItem.firstName}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="subtitle2">
-                      {studentItem.lastName}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="subtitle2">
-                      {studentItem.email}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="right">
-                    <IconButton
-                      onClick={(e) => removeStudentHandler(e, studentItem.id)}
-                      component="a"
-                    >
-                      <DeleteOutline fontSize="small" />
-                    </IconButton>
-                    {canBrowseToStudent && (
-                      <NextLink
-                        disabled
-                        href={`/app/student/${studentItem.id}`}
-                        passHref
+              {students &&
+                students.map((studentItem) => (
+                  <TableRow key={studentItem.id}>
+                    <TableCell>
+                      <Avatar
+                        sx={{
+                          height: 32,
+                          width: 32,
+                        }}
                       >
-                        <IconButton component="a">
-                          <ArrowRightIcon fontSize="small" />
-                        </IconButton>
-                      </NextLink>
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
+                        {getInitials(
+                          studentItem?.firstName + " " + studentItem?.lastName
+                        )}
+                      </Avatar>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="subtitle2">
+                        {studentItem.firstName}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="subtitle2">
+                        {studentItem.lastName}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="subtitle2">
+                        {studentItem.email}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      <IconButton
+                        onClick={(e) => removeStudentHandler(e, studentItem.id)}
+                        component="a"
+                      >
+                        <DeleteOutline fontSize="small" />
+                      </IconButton>
+                      {canBrowseToStudent && (
+                        <NextLink
+                          disabled
+                          href={`/app/student/${studentItem.id}`}
+                          passHref
+                        >
+                          <IconButton component="a">
+                            <ArrowRightIcon fontSize="small" />
+                          </IconButton>
+                        </NextLink>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </Box>
       </Scrollbar>
       <TablePagination
         component="div"
-        count={group.length}
-        onPageChange={() => {}}
-        onRowsPerPageChange={() => {}}
-        page={0}
-        rowsPerPage={5}
+        count={count}
+        onPageChange={onPageChange}
+        onRowsPerPageChange={onRowsPerPageChange}
+        page={page}
+        rowsPerPage={rowsPerPage}
         rowsPerPageOptions={[5, 10, 25]}
       />
     </Card>
   );
 };
+GroupStudentItems.propTypes = {
+  students: PropTypes.array.isRequired,
+  canBrowseToStudent: PropTypes.bool.isRequired,
+  addStudentHandler: PropTypes.func.isRequired,
+  removeStudentHandler: PropTypes.func.isRequired,
+  page: PropTypes.number.isRequired,
+  rowsPerPage: PropTypes.number.isRequired,
+  onPageChange: PropTypes.func.isRequired,
+  onRowsPerPageChange: PropTypes.func.isRequired,
+  count: PropTypes.number.isRequired
+};
+
 const parentList = [
   {
     id: "1sqaezat5456q1a1erezafs",
@@ -434,7 +563,6 @@ const parentList = [
     locked: false,
   },
 ];
-
 const studentList = [
   {
     id: "1sqdsfqat949az4e613adsqfs",
@@ -448,8 +576,31 @@ const studentList = [
     lastName: "Cobain",
     email: "kurk.cobain@scoosign.com",
   },
+  {
+    id: "1sqddsa6ez46e13e13gassfqdsqfs",
+    firstName: "Kurk a",
+    lastName: "Cobain",
+    email: "kurk.cobain@scoosign.com",
+  },
+  {
+    id: "1sqddsa6ez46e131q3gassfqdsqfs",
+    firstName: "Kurk ",
+    lastName: "Cobain",
+    email: "kurk.cobain@scoosign.com",
+  },
+  {
+    id: "1sqddsa6ez46e1s313gassfqdsqfs",
+    firstName: "Kurk ",
+    lastName: "Cobain",
+    email: "kurk.cobain@scoosign.com",
+  },
+  {
+    id: "1sqddsa6ez46e1b313gassfqdsqfs",
+    firstName: "Kurk ",
+    lastName: "Cobain",
+    email: "kurk.cobain@scoosign.com",
+  },
 ];
-
 const groupDetailsTabs = [
   { label: "Details", value: "details", disabled: false },
   { label: "Courses", value: "courses", disabled: true },
@@ -542,7 +693,7 @@ const AddStudentDialog = (props) => {
           </Scrollbar>
           <TablePagination
             component="div"
-            count={group.length}
+            count={0}
             onPageChange={() => {}}
             onRowsPerPageChange={() => {}}
             page={0}
@@ -568,7 +719,6 @@ const AddStudentDialog = (props) => {
     </Dialog>
   );
 };
-
 const AddGroupDialog = (props) => {
   const { open, onClose } = props;
   return (
@@ -636,7 +786,7 @@ const AddGroupDialog = (props) => {
           </Scrollbar>
           <TablePagination
             component="div"
-            count={group.length}
+            count={10}
             onPageChange={() => {}}
             onRowsPerPageChange={() => {}}
             page={0}
@@ -663,8 +813,16 @@ const AddGroupDialog = (props) => {
   );
 };
 
+// TODO : refactor this to be global
+const applyPagination = (tabs, page, rowsPerPage) =>
+  tabs.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+
 const GroupDetails = (props) => {
+  const isMounted = useMounted();
+  const [group, setGroup] = useState(null);
   const [currentTab, setCurrentTab] = useState("details");
+  const [groupStudents, setGroupStudents] = useState([]);
+  const [groupSubGroups, setGroupSubGroups] = useState([]);
   const [addGroupDialog, setAddGroupDialog] = useState({
     isOpen: false,
     eventId: undefined,
@@ -675,6 +833,70 @@ const GroupDetails = (props) => {
     eventId: undefined,
     range: undefined,
   });
+  const [groupPagination, setGroupPagination] = useState({
+    page: 0,
+    rowsPerPage: 5,
+  });
+  const [studentsPagination, setStudentsPagination] = useState({
+    page: 0,
+    rowsPerPage: 5,
+  });
+
+  const onGroupsPageChanged = (event, newPage) => {
+    setGroupPagination({ ...groupPagination, page: newPage });
+  };
+  const onGroupsRowsPerPageChanged = (event) => {
+    setGroupPagination({
+      ...groupPagination,
+      rowsPerPage: parseInt(event.target.value, 10),
+    });
+  };
+  const onStudentsPageChanged = (event, newPage) => {
+    setStudentsPagination({ ...studentsPagination, page: newPage });
+  };
+  const onStudentsRowsPerPageChanged = (event) => {
+    setStudentsPagination({
+      ...studentsPagination,
+      rowsPerPage: parseInt(event.target.value, 10),
+    });
+  };
+
+  useEffect(() => {
+    if (isMounted()) {
+      getGroup();
+      getGroupStudents();
+      getGroupSubGroups();
+    }
+  }, [isMounted, group]);
+
+  // Fetch group from api
+  const getGroup = async () => {
+    const response = await new Promise((resolve) => {
+      resolve(groupFixture);
+    });
+    console.log("[LOAD GROUP]", response);
+    setGroup(response);
+  };
+  // Fetch group students from api
+  const getGroupStudents = async () => {
+    const response = await new Promise((resolve) => {
+      resolve(studentList);
+    });
+    console.log("[LOAD GROUP-STUDENTS]", response);
+    setGroupStudents(response);
+  };
+  // Fetch group sub-groups from api
+  const getGroupSubGroups = async () => {
+    const response = await new Promise((resolve) => {
+      resolve(groupChild);
+    });
+    console.log("[LOAD GROUP-SUB-GROUPS]", response);
+    setGroupSubGroups(response);
+  };
+
+  const setGroupInfosHandler = async (body) => {
+    console.log("[SET GROUP INFOS", body);
+  };
 
   const handleTabsChange = (event, value) => {
     setCurrentTab(value);
@@ -716,6 +938,33 @@ const GroupDetails = (props) => {
     console.log("TODO : remove group id: " + groupId);
   };
 
+  const handleDelete = (event) => {
+    event.preventDefault();
+    console.log("TODO : danger delete");
+  };
+
+  const handleLock = (event) => {
+    event.preventDefault();
+    console.log("TODO : danger lock");
+  };
+
+  const handleUnlock = (event) => {
+    event.preventDefault();
+    console.log("TODO : unlock");
+  };
+
+  if (!group) return null;
+
+  const paginatedSubGroups = applyPagination(
+    groupSubGroups,
+    groupPagination.page,
+    groupPagination.rowsPerPage
+  );
+  const paginatedStudents = applyPagination(
+    groupStudents,
+    studentsPagination.page,
+    studentsPagination.rowsPerPage
+  );
   return (
     <>
       <Head>
@@ -761,8 +1010,8 @@ const GroupDetails = (props) => {
                 >
                   <Typography variant="subtitle2">Type :</Typography>
                   <Chip
-                    label={group.child_count >> 0 ? "ROOT-GROUP" : "SUB-GROUP"}
-                    color={group.child_count >> 0 ? "primary" : "secondary"}
+                    label={!group.root_groups ? "ROOT-GROUP" : "SUB-GROUP"}
+                    color={!group.root_groups ? "primary" : "secondary"}
                     size="small"
                     sx={{ ml: 1 }}
                   />
@@ -771,6 +1020,7 @@ const GroupDetails = (props) => {
               <Grid item sx={{ ml: -2 }}>
                 {!group.locked && (
                   <Button
+                    disabled
                     endIcon={<ChevronDownIcon fontSize="small" />}
                     sx={{ m: 1 }}
                     variant="contained"
@@ -780,6 +1030,7 @@ const GroupDetails = (props) => {
                 )}
                 {group.locked && (
                   <Button
+                    onClick={handleUnlock}
                     endIcon={<LockOpen fontSize="small" />}
                     variant="contained"
                     color="primary"
@@ -814,25 +1065,40 @@ const GroupDetails = (props) => {
             {currentTab === "details" && (
               <Grid container spacing={3}>
                 <Grid item xs={12}>
-                  <GroupBasicDetails group={group} />
+                  <GroupBasicDetails
+                    group={group}
+                    setGroupInfosHandler={setGroupInfosHandler}
+                  />
                 </Grid>
-                {!group.locked && (
+                {group.locked || group.root_groups ? (
+                  <></>
+                ) : (
                   <Grid item xs={12}>
                     <GroupSubGroupItems
-                      subGroups={groupChild}
+                      subGroups={paginatedSubGroups}
+                      count={groupSubGroups.length}
                       canBrowseToGroup={false}
                       addGroupHandler={addGroupHandler}
                       removeGroupHandler={removeGroupHandler}
+                      page={groupPagination.page}
+                      rowsPerPage={groupPagination.rowsPerPage}
+                      onPageChange={onGroupsPageChanged}
+                      onRowsPerPageChange={onGroupsRowsPerPageChanged}
                     />
                   </Grid>
                 )}
-                {(group.students.length > 0) & !group.locked ? (
+                {!group.locked ? (
                   <Grid item xs={12}>
                     <GroupStudentItems
                       addStudentHandler={addStudentHandler}
                       removeStudentHandler={removeStudentHandler}
-                      students={studentList}
+                      students={paginatedStudents}
                       canBrowseToStudent={false}
+                      count={groupStudents.length}
+                      page={studentsPagination.page}
+                      rowsPerPage={studentsPagination.rowsPerPage}
+                      onPageChange={onStudentsPageChanged}
+                      onRowsPerPageChange={onStudentsRowsPerPageChanged}
                     />
                   </Grid>
                 ) : (
@@ -845,13 +1111,17 @@ const GroupDetails = (props) => {
                     <CardContent>
                       <Box sx={{ mt: 1 }}>
                         <Typography color="textSecondary" variant="body2">
-                          Describe the danger here.
+                          You have two possible actions, if you decide to lock
+                          the group, this group will no longer be visible to
+                          users. But you can always unlock it afterwards,.But If
+                          you delete it, however, this action is irreversible.
                         </Typography>
                       </Box>
                     </CardContent>
                     <CardActions sx={{ flewWrap: "wrap", m: -1 }}>
                       {!group.locked && (
                         <Button
+                          onClick={handleLock}
                           sx={{ m: 1, mr: "auto" }}
                           color="error"
                           variant="contained"
@@ -859,7 +1129,11 @@ const GroupDetails = (props) => {
                           Lock
                         </Button>
                       )}
-                      <Button align="right" color="error">
+                      <Button
+                        align="right"
+                        onClick={handleDelete}
+                        color="error"
+                      >
                         Delete group
                       </Button>
                     </CardActions>
