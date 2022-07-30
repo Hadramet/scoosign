@@ -20,26 +20,22 @@ import {
 } from "@mui/material";
 import NextLink from "next/link";
 import Head from "next/head";
-import { AppLayout } from "../../../components/app/app-layout";
-import { AuthGuard } from "../../../components/authentication/auth-guard";
-import { RoleGuard } from "../../../components/authentication/role-guard";
+import { AppLayout } from "@/components/app/app-layout";
+import { AuthGuard } from "@/components/authentication/auth-guard";
+import { RoleGuard } from "@/components/authentication/role-guard";
 import {
   Plus as PlusIcon,
   Upload as UploadIcon,
   Search as SearchIcon,
   Download as DownloadIcon,
-} from "../../../components/icons";
+} from "@/components/icons";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { Scrollbar } from "../../../components/custom";
-import {
-  ChevronRight as ChevronRightIcon,
-  ChevronDown as ChevronDownIcon,
-  PencilAlt as PencilAltIcon,
-  ArrowRight as ArrowRightIcon,
-} from "../../../components/icons";
-import { useMounted } from "../../../hooks/use-mounted";
-import { getRandomGroups } from "../../../faker/fakeDatas";
+import { Scrollbar } from "@/components/custom";
+import { ArrowRight as ArrowRightIcon } from "@/components/icons";
+import { useMounted } from "@/hooks/use-mounted";
+import { getRandomGroups } from "@/faker/fakeDatas";
+import { applyPagination } from "@/components/app/apply-pagination";
 
 const GroupListTable = (props) => {
   const {
@@ -127,9 +123,6 @@ GroupListTable.propTypes = {
   onRowPerPageChanged: PropTypes.func,
   onPageChanged: PropTypes.func,
 };
-
-const applyPagination = (groups, page, rowsPerPage) =>
-  groups.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
 const GroupList = (props) => {
   const isMounted = useMounted();
@@ -253,7 +246,6 @@ const GroupList = (props) => {
     </>
   );
 };
-
 GroupList.getLayout = (page) => (
   <AuthGuard>
     <RoleGuard permissions={["admin", "academic"]}>

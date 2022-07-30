@@ -14,21 +14,21 @@ import {
 import NextLink from "next/link";
 import Head from "next/head";
 import { ArrowBack as ArrowBackIcon } from "@mui/icons-material";
-import { PencilAlt as PencilAltIcon } from "../../../../components/icons";
-import { getInitials } from "../../../../lib/get-initials";
+import { PencilAlt as PencilAltIcon } from "@/components/icons";
+import { getInitials } from "@/lib/get-initials";
 import { useCallback, useEffect, useState } from "react";
-import { useMounted } from "../../../../hooks/use-mounted";
-import { AuthGuard } from "../../../../components/authentication/auth-guard";
-import { RoleGuard } from "../../../../components/authentication/role-guard";
-import { AppLayout } from "../../../../components/app/app-layout";
-import { UserBasicDetails } from "../../../../components/app/users/user-basic-details";
-import { deleteUserApi, getUserApi } from "../../../../lib/user-api";
+import { useMounted } from "@/hooks/use-mounted";
+import { AuthGuard } from "@/components/authentication/auth-guard";
+import { RoleGuard } from "@/components/authentication/role-guard";
+import { AppLayout } from "@/components/app/app-layout";
+import { UserBasicDetails } from "@/components/app/users/user-basic-details";
+import { deleteUserApi, getUserApi } from "@/lib/user-api";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
-import { userDetailsTabs } from "../../../../lib/user-options-and-tabs";
-import { UserDataManagement } from "../../../../components/app/users/user-data-management";
-import { ErrorPageManagement } from "../../../../components/app/error-page";
-import { UserLogs } from "../../../../components/app/users/user-logs";
+import { userDetailsTabs } from "@/lib/user-options-and-tabs";
+import { UserDataManagement } from "@/components/app/users/user-data-management";
+import { ErrorPageManagement } from "@/components/app/error-page";
+import { UserLogs } from "@/components/app/users/user-logs";
 
 const UserDetails = () => {
   const isMounted = useMounted();

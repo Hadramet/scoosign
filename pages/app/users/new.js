@@ -1,10 +1,10 @@
 import { Box, Breadcrumbs, Container, Link, Typography } from "@mui/material";
 import Head from "next/head";
 import NextLink from "next/link";
-import { AppLayout } from "../../../components/app/app-layout";
-import { UserCreateForm } from "../../../components/app/users/user-create-form";
-import { AuthGuard } from "../../../components/authentication/auth-guard";
-import { RoleGuard } from "../../../components/authentication/role-guard";
+import { AppLayout } from "@/components/app/app-layout";
+import { UserCreateForm } from "@/components/app/users/user-create-form";
+import { AuthGuard } from "@/components/authentication/auth-guard";
+import { RoleGuard } from "@/components/authentication/role-guard";
 
 const UserCreate = () => {
   return (

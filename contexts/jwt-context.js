@@ -1,5 +1,5 @@
 import { createContext, useEffect, useReducer } from "react";
-import { authorizeUserApi, meUserApi } from "../lib/user-api";
+import { authorizeUserApi, meUserApi } from "@/lib/user-api";
 import PropTypes from "prop-types";
 
 var ActionType;

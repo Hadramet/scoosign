@@ -8,9 +8,9 @@ import {
   Typography,
 } from "@mui/material";
 import Head from "next/head";
-import { AppLayout } from "../../components/app/app-layout";
-import { Reports as ReportsIcon } from "../../components/icons";
-import { AuthGuard } from "../../components/authentication/auth-guard";
+import { AppLayout } from "@/components/app/app-layout";
+import { Reports as ReportsIcon } from "@/components/icons";
+import { AuthGuard } from "@/components/authentication/auth-guard";
 
 const Overview = () => {
   return (

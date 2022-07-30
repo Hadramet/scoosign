@@ -12,7 +12,7 @@ import { UserCircle as UserCircleIcon } from "../icons";
 import PropTypes from "prop-types";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useRouter } from "next/router";
-import { useAuth } from "../../hooks/use-auth";
+import { useAuth } from "@/hooks/use-auth";
 
 export const AccountPopover = (props) => {
   const { anchorEl, onClose, open, ...other } = props;

@@ -27,6 +27,7 @@ import { UserListTable } from "../../../components/app/users/user-list-table";
 import { useMounted } from "../../../hooks/use-mounted";
 import { useAuth } from "../../../hooks/use-auth";
 import { userRoleOptionsBool } from "../../../lib/user-options-and-tabs";
+import { applyPagination } from "../../../components/app/apply-pagination";
 
 const applyFilters = (users, filters) => {
   if (!users) return [];
@@ -58,8 +59,6 @@ const applyFilters = (users, filters) => {
   });
 };
 
-const applyPagination = (users, page, rowsPerPage) =>
-  users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
 const UserList = (props) => {
   const isMounted = useMounted();
