@@ -36,6 +36,7 @@ import { ArrowRight as ArrowRightIcon } from "@/components/icons";
 import { useMounted } from "@/hooks/use-mounted";
 import { getRandomGroups } from "@/faker/fakeDatas";
 import { applyPagination } from "@/components/app/apply-pagination";
+import { useRouter } from "next/router";
 
 const GroupListTable = (props) => {
   const {
@@ -126,6 +127,7 @@ GroupListTable.propTypes = {
 
 const GroupList = (props) => {
   const isMounted = useMounted();
+  const router = useRouter();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [groups, setGroups] = useState([]);
@@ -169,7 +171,6 @@ const GroupList = (props) => {
               </Grid>
               <Grid item>
                 <Button
-                  disabled
                   onClick={() => {
                     router.push("/app/groups/new");
                   }}
