@@ -14,7 +14,7 @@ import * as Yup from "yup";
 import { getRandomGroups } from "@/faker/fakeDatas";
 
 export const AddGroupDialog = (props) => {
-  const { open, onClose, ...other } = props;
+  const { open, onClose, handleGroupResult, ...other } = props;
   const [availableGroup, setAvailableGroup] = useState([]);
   useEffect(() => {
     if (open) {
@@ -25,7 +25,7 @@ export const AddGroupDialog = (props) => {
   }, [open, groupForms]);
 
   const getAvailableGroup = async () => {
-    const response = await new Promise(async (resolve) => resolve(await getRandomGroups(200))
+    const response = await new Promise(async (resolve) => resolve(await getRandomGroups(5))
     );
     console.log("TODO get available groups");
     setAvailableGroup(response);
@@ -40,8 +40,9 @@ export const AddGroupDialog = (props) => {
     onSubmit: async (values, helpers) => {
       try {
         const value_to_add = [];
-        values.groupsToAdd.map((group) => value_to_add.push({ id: group.id }));
+        values.groupsToAdd.map((group) => value_to_add.push({ id: group.id, name:group.name }));
         console.log(value_to_add);
+        handleGroupResult(value_to_add)
         onClose();
       } catch (error) {
         console.error(error);
@@ -117,4 +118,5 @@ export const AddGroupDialog = (props) => {
 AddGroupDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  handleGroupResult: PropTypes.func.isRequired,
 };
