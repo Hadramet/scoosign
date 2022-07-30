@@ -36,26 +36,41 @@ const { RoleGuard } = require("@/components/authentication/role-guard");
 import { Plus as PlusIcon } from "@/components/icons";
 import { Groups, RemoveCircleOutline } from "@mui/icons-material";
 import { AddGroupDialog } from "@/components/app/add-group-dialog";
+import { AddStudentDialog } from "@/components/app/add-student-dialog";
 const { default: Head } = require("next/head");
 
 const CreateGroupForm = (props) => {
   const isMounted = useMounted();
+
   const [availableParent, setAvailableParent] = useState([]);
+
   const [subGroups, setGroups] = useState([]);
+  const [students, setStudents] = useState([]);
+
   const [addGroupDialog, setAddGroupDialog] = useState({
+    isOpen: false,
+    eventId: undefined,
+    range: undefined,
+  });
+  const [addStudentDialog, setAddStudentDialog] = useState({
     isOpen: false,
     eventId: undefined,
     range: undefined,
   });
 
   useEffect(() => {
-    if (isMounted) getAvailableParent();
+    if (isMounted) {
+      getAvailableParent();
+    }
   }, [isMounted]);
-
   useEffect(() => {
     form.setFieldValue("subGroups", subGroups, true);
   }, [subGroups]);
-  // Fetch available parent from api
+  useEffect(() => {
+    form.setFieldValue("students", students, true);
+  }, [students]);
+
+  // Fetch available  from api
   const getAvailableParent = async () => {
     const response = await new Promise((resolve) =>
       resolve(getRandomGroups(50))
@@ -70,23 +85,40 @@ const CreateGroupForm = (props) => {
       isOpen: true,
     });
   };
-
   const handleCloseAddGroupDialog = () => {
     setAddGroupDialog({
       isOpen: false,
     });
   };
-
+  const addStudentHandler = (event) => {
+    event.preventDefault();
+    console.log("TODO : add student handle");
+    setAddStudentDialog({
+      isOpen: true,
+    });
+  };
+  const handleCloseAddStudentDialog = () => {
+    setAddStudentDialog({
+      isOpen: false,
+    });
+  };
   const handleGroupResult = (groups) => {
     setGroups((prevGroups) => [...prevGroups, ...groups]);
   };
-
   const removeItem = (id) => {
     setGroups((prev) => prev.filter((g) => g.id !== id));
   };
-
+  const handleStudentsResult = (groups) => {
+    setStudents((prevGroups) => [...prevGroups, ...groups]);
+  };
+  const removeStudent = (id) => {
+    setStudents((prev) => prev.filter((s) => s.id !== id));
+  };
   const onRemoveAll = () => {
     setGroups([]);
+  };
+  const onRemoveAllStudents = () => {
+    setStudents([]);
   };
   const form = useFormik({
     initialValues: {
@@ -155,31 +187,17 @@ const CreateGroupForm = (props) => {
                 onChange={form.handleChange}
                 value={form.values.name}
               />
-              <Typography
-                color="textSecondary"
-                sx={{
-                  mb: 2,
-                  mt: 3,
-                }}
-                variant="subtitle2"
-              >
-                Description
-              </Typography>
-              <QuillEditor
-                onChange={(value) => {
-                  form.setFieldValue("description", value);
-                }}
-                placeholder="Write something"
-                sx={{ height: 250 }}
+              <TextField
+                error={Boolean(form.touched.description && form.errors.description)}
+                fullWidth
+                helperText={form.touched.description && form.errors.description}
+                label="Description"
+                name="description"       
+                sx={{ mb: 2, mt: 3 }}
+                onBlur={form.handleBlur}
+                onChange={form.handleChange}
                 value={form.values.description}
               />
-              {Boolean(form.touched.description && form.errors.description) && (
-                <Box sx={{ mt: 2 }}>
-                  <FormHelperText error>
-                    {form.errors.description}
-                  </FormHelperText>
-                </Box>
-              )}
               <Box sx={{ mt: 2, ml: 1 }}>
                 <FormControlLabel
                   control={
@@ -317,6 +335,112 @@ const CreateGroupForm = (props) => {
           />
         </Card>
       )}
+      <Card sx={{ mt: 3 }}>
+        <CardContent>
+          <Grid container spacing={3}>
+            <Grid item md={4} xs={12}>
+              <Typography variant="h6">Students</Typography>
+              <Typography color="textSecondary" variant="body2" sx={{ mt: 1 }}>
+                {"If this group is a sub-group, you will only see students belonging to the parent group"}
+              </Typography>
+            </Grid>
+            <Grid item md={8} xs={12}>
+              <Button
+                fullWidth
+                onClick={addStudentHandler}
+                startIcon={<PlusIcon fontSize="small" />}
+                variant="contained"
+              >
+                Add students
+              </Button>
+              {form.values.students.length > 0 && (
+                <Box sx={{ mt: 2 }}>
+                  <List>
+                    {form.values.students.map((student) => (
+                      <ListItem
+                        key={student.id}
+                        sx={{
+                          border: 1,
+                          borderColor: "divider",
+                          borderRadius: 1,
+                          "& + &": { mt: 1 },
+                        }}
+                      >
+                        <ListItemIcon>
+                          <Groups fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={student.name}
+                          primaryTypographyProps={{
+                            color: "textPrimary",
+                            variant: "subtitle2",
+                          }}
+                        />
+                        <Tooltip title="Remove">
+                          <IconButton
+                            color="error"
+                            onClick={(e) => removeStudent(student.id)}
+                            edge="end"
+                          >
+                            <RemoveCircleOutline fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      </ListItem>
+                    ))}
+                  </List>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      mt: 2,
+                    }}
+                  >
+                    <Button
+                      onClick={onRemoveAllStudents}
+                      size="small"
+                      type="button"
+                    >
+                      Remove All
+                    </Button>
+                  </Box>
+                </Box>
+              )}
+            </Grid>
+          </Grid>
+        </CardContent>
+
+        <AddStudentDialog
+          open={addStudentDialog.isOpen}
+          onClose={handleCloseAddStudentDialog}
+          handleResult={handleStudentsResult}
+        />
+      </Card>
+      <Box
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+          mx: -1,
+          mb: -1,
+          mt: 3
+        }}
+      >        
+        <Button
+        
+          href="/app/groups" passHref
+          sx={{ m: 1 ,ml:'auto'}}
+          variant="outlined"
+        >
+          Cancel
+        </Button>
+        <Button
+          sx={{ m: 1 }}
+          type="submit"
+          variant="contained"
+        >
+          Create
+        </Button>
+      </Box>
     </form>
   );
 };

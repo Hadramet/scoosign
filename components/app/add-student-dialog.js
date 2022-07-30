@@ -2,9 +2,14 @@ import {
   Button,
   Card,
   CardActions,
-  CardContent, Checkbox, Dialog,
-  Divider, ListItemText,
-  MenuItem, Select, Typography
+  CardContent,
+  Checkbox,
+  Dialog,
+  Divider,
+  ListItemText,
+  MenuItem,
+  Select,
+  Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
@@ -13,9 +18,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { getRandomUser } from "@/faker/fakeDatas";
 
-
 export const AddStudentDialog = (props) => {
-  const { open, onClose, ...other } = props;
+  const { open, onClose, handleResult, ...other } = props;
   const [availableStudents, setAvailableStudents] = useState([]);
   useEffect(() => {
     if (open) {
@@ -26,7 +30,9 @@ export const AddStudentDialog = (props) => {
   }, [open, form]);
 
   const getAvailableStudents = async () => {
-    const response = await new Promise((resolve) => resolve(getRandomUser(150)));
+    const response = await new Promise((resolve) =>
+      resolve(getRandomUser(15))
+    );
     console.log("TODO get available students");
     setAvailableStudents(response);
   };
@@ -40,8 +46,11 @@ export const AddStudentDialog = (props) => {
     onSubmit: async (values, helpers) => {
       try {
         const value_to_add = [];
-        values.studentsToAdd.map((o) => value_to_add.push({ id: o.id }));
+        values.studentsToAdd.map((o) =>
+          value_to_add.push({ id: o.id, name: o.firstName+" "+o.lastName })
+        );
         console.log(value_to_add);
+        handleResult(value_to_add);
         onClose();
       } catch (error) {
         console.error(error);
@@ -66,7 +75,8 @@ export const AddStudentDialog = (props) => {
               sx={{
                 mt: 3,
                 mb: 3,
-              }} />
+              }}
+            />
             <Select
               label="Students"
               displayEmpty
@@ -95,7 +105,8 @@ export const AddStudentDialog = (props) => {
                 availableStudents.map((o) => (
                   <MenuItem key={o.id} value={o}>
                     <Checkbox
-                      checked={form.values.studentsToAdd.indexOf(o) > -1} />
+                      checked={form.values.studentsToAdd.indexOf(o) > -1}
+                    />
                     <ListItemText primary={o.firstName + " " + o.lastName} />
                   </MenuItem>
                 ))}
@@ -117,4 +128,5 @@ export const AddStudentDialog = (props) => {
 AddStudentDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  handleResult: PropTypes.func.isRequired,
 };

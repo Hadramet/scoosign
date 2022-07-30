@@ -180,6 +180,14 @@ const GroupDetails = (props) => {
     console.log("TODO : unlock");
   };
 
+  const handleStudentsResult = (students)=> {
+    console.log("TODO API POST", students)
+  }
+
+  const handleGroupsResult = (groups)=> {
+    console.log("TODO API POST", groups)
+  }
+
   if (!group) return null;
 
   const paginatedSubGroups = applyPagination(
@@ -374,10 +382,12 @@ const GroupDetails = (props) => {
       <AddStudentDialog
         open={addStudentDialog.isOpen}
         onClose={handleCloseAddStudentDialog}
+        handleResult={handleStudentsResult}
       />
       <AddGroupDialog
         open={addGroupDialog.isOpen}
         onClose={handleCloseAddGroupDialog}
+        handleGroupResult={handleGroupsResult}
       />
     </>
   );
