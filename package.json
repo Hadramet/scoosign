@@ -28,6 +28,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.3.0",
     "eslint": "latest",
     "eslint-config-next": "latest"
   }

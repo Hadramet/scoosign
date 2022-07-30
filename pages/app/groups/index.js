@@ -30,7 +30,7 @@ import {
   Download as DownloadIcon,
 } from "../../../components/icons";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Scrollbar } from "../../../components/custom";
 import {
   ChevronRight as ChevronRightIcon,
@@ -38,100 +38,8 @@ import {
   PencilAlt as PencilAltIcon,
   ArrowRight as ArrowRightIcon,
 } from "../../../components/icons";
-
-const groupsFixture = [
-  {
-    id: "1sqfs",
-    name: "Asociate of science 1",
-    description: "First class of 5 year program",
-    students: [],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-
-  {
-    id: "2dsfsffdf",
-    name: "Bsc 1 ",
-    description: "Licence class",
-    students: ["111", "222", "333"],
-    root_groups: null,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  {
-    id: "hzrgvd",
-    name: "Asc1 Group1",
-    description: "First class of 5 year program",
-    students: ["111", "222", "333"],
-    root_groups: "1sqfs",
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  {
-    id: "eareds",
-    name: "Asc1 Group1",
-    description: "First class of 5 year program",
-    students: ["111", "222", "333"],
-    root_groups: null,
-    child_count: 3,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  {
-    id: "hrqgds",
-    name: "Asc1 Group1",
-    description: "First class of 5 year program",
-    students: ["111", "222", "333"],
-    root_groups: "1sqfs",
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  {
-    id: "qze",
-    name: "Asc1 Group1",
-    description: "First class of 5 year program",
-    students: ["111", "222", "333"],
-    root_groups: "1sqfs",
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  {
-    id: "fdsfdsq",
-    name: "Asc1 Group1",
-    description: "First class of 5 year program",
-    students: ["111", "222", "333"],
-    root_groups: "1sqfs",
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  {
-    id: "dsfd",
-    name: "Asc1 Group1",
-    description: "First class of 5 year program",
-    students: ["111", "222", "333"],
-    root_groups: "1sqfs",
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-];
+import { useMounted } from "../../../hooks/use-mounted";
+import { getRandomGroups } from "../../../faker/fakeDatas";
 
 const GroupListTable = (props) => {
   const {
@@ -148,7 +56,7 @@ const GroupListTable = (props) => {
     <>
       <div {...other}>
         <Scrollbar>
-          <Table size="small" sx={{ minWidth: 700 }} >
+          <Table size="small" sx={{ minWidth: 700 }}>
             <TableHead>
               <TableRow>
                 <TableCell padding="checkbox">
@@ -163,38 +71,35 @@ const GroupListTable = (props) => {
             <TableBody>
               {groups.map((group) => {
                 return (
-                    <TableRow
-                      hover 
-                      key={group.id}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox />
-                      </TableCell>
-                      <TableCell>
-                          <NextLink href={`/app/groups/${group.id}`} passHref>
-                            <Link color="inherit" variant="subtitle2">
-                              {group.name}
-                            </Link>
-                          </NextLink>
-                      </TableCell>
-                      <TableCell align="right">
-                        <Typography color="textSecondary" variant="body2">
-                          {group.students && group.students.length}
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="right">
-                        <Typography color="textSecondary" variant="body2">
-                          {group.child_count && group.child_count}
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="right">
-                        <NextLink href={`/app/groups/${group.id}`} passHref>
-                          <IconButton component="a">
-                            <ArrowRightIcon fontSize="small" />
-                          </IconButton>
-                        </NextLink>
-                      </TableCell>
-                    </TableRow>
+                  <TableRow hover key={group.id}>
+                    <TableCell padding="checkbox">
+                      <Checkbox />
+                    </TableCell>
+                    <TableCell>
+                      <NextLink href={`/app/groups/${group.id}`} passHref>
+                        <Link color="inherit" variant="subtitle2">
+                          {group.name}
+                        </Link>
+                      </NextLink>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Typography color="textSecondary" variant="body2">
+                        {group.students && group.students.length}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Typography color="textSecondary" variant="body2">
+                        {group.child_count && group.child_count}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      <NextLink href={`/app/groups/${group.id}`} passHref>
+                        <IconButton component="a">
+                          <ArrowRightIcon fontSize="small" />
+                        </IconButton>
+                      </NextLink>
+                    </TableCell>
+                  </TableRow>
                 );
               })}
             </TableBody>
@@ -227,9 +132,21 @@ const applyPagination = (groups, page, rowsPerPage) =>
   groups.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
 const GroupList = (props) => {
+  const isMounted = useMounted();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [groups, setGroups] = useState([]);
 
+  useEffect(() => {
+    if (isMounted) getGroups();
+  }, [isMounted]);
+
+  const getGroups = async () => {
+    const response = await new Promise(async (resolve) =>
+      resolve(getRandomGroups(200))
+    );
+    setGroups(response);
+  };
   const onPageChanged = (event, newPage) => {
     setPage(newPage);
   };
@@ -238,7 +155,7 @@ const GroupList = (props) => {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
-  const paginatedGroups = applyPagination(groupsFixture, page, rowsPerPage);
+  const paginatedGroups = applyPagination(groups, page, rowsPerPage);
   return (
     <>
       <Head>
@@ -324,7 +241,7 @@ const GroupList = (props) => {
             </Box>
             <GroupListTable
               groups={paginatedGroups}
-              groupsCount={groupsFixture.length}
+              groupsCount={groups.length}
               page={page}
               rowPerPage={rowsPerPage}
               onPageChanged={onPageChanged}

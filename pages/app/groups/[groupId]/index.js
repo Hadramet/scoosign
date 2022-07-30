@@ -62,407 +62,13 @@ import { useMounted } from "../../../../hooks/use-mounted";
 import PropTypes from "prop-types";
 import { FieldArray, useFormik } from "formik";
 import * as Yup from "yup";
+import { createRandomGroup, getRandomGroups, getRandomUser } from "../../../../faker/fakeDatas";
 
-const groupFixture = {
-  id: "1sqdsqfdq8845fs",
-  name: "Asociate of science 77",
-  description: "First class of 5 year program",
-  students: ["ddd"],
-  root_groups: null,
-  created_by: "Kurk Cobain",
-  created_at: "2020-01-20T15:22:20.000Z",
-  last_update: "2020-01-20T15:22:20.000Z",
-  locked: false,
-  locked_by: "Kurk Cobain",
-  locked_at: "2020-01-20T15:22:20.000Z",
-};
-const groupChild = [
-  {
-    id: "1sqf8g4e46ds46dqfqs",
-    name: "Asociate of science 66",
-    description: "First class of 5 year program",
-    students: [],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  {
-    id: "1sq2156v1b56fhrrzrerearefs",
-    name: "Asociate of science 19",
-    description: "First class of 5 year program",
-    students: [],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  {
-    id: "1sqfhareaare84h6e1123fdsq3f1axcvs",
-    name: "Asociate of science 8",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  {
-    id: "1sqfhareaare84h6a1123fdsq3f1axcvs",
-    name: "Asociate of science 8",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  {
-    id: "1sqfhareaare84th61123fdsq3f1axcvs",
-    name: "Asociate of science 8",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  {
-    id: "1sqfhareaare84h611z23fdsq3f1axcvs",
-    name: "Asociate of science 8",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  {
-    id: "1sqfhareaare84h611az23fdsq3f1axcvs",
-    name: "Asociate of science 8",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  {
-    id: "1sqfhareaare84h6r11z23fdsq3f1axcvs",
-    name: "Asociate of science 8",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  {
-    id: "1sqfhareaare84sh611z23fdsq3f1axcvs",
-    name: "Asociate of science 8",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  {
-    id: "1sqfharesaare84h611z23fdsq3f1a33xcvs",
-    name: "Asociate of science 8",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  ,
-  {
-    id: "1sqfharesaare84h611z23fdsq113f1axcvs",
-    name: "Asociate of science 8",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  ,
-  {
-    id: "1sqfharesaare84h611z23fdsq3f133axcvs",
-    name: "Asociate of science 8",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  ,
-  {
-    id: "1sqfharesaare84h611z23fd44sq3f1axcvs",
-    name: "Asociate of science 8",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  ,
-  {
-    id: "1sqfharesaare84h611z23fdsq3f1a66xcvs",
-    name: "Asociate of science 8",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  ,
-  {
-    id: "1sqfharesaare84h611z23fdsq3f144axcvs",
-    name: "Asociate of science 8",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  ,
-  {
-    id: "1sqfharesaare84h611z23fdsq3f166axcvs",
-    name: "Asociate of science 8",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  ,
-  {
-    id: "1sqfharesaare84h611z23fdsq3f441axcvs",
-    name: "Asociate of science 8",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  ,
-  {
-    id: "1sqfharesaare84h611z23fdsq3f5531axcvs",
-    name: "Asociate of science 8",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  ,
-  {
-    id: "1sqfharesaare84h611z23fdsq3f551axcvs",
-    name: "Asociate of science 8",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  ,
-  {
-    id: "1sqfharesaare84h611z23fdsq399f1axcvs",
-    name: "Asociate of science 8",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  ,
-  {
-    id: "1sqfharesaare84h611z23fdsq773f1axcvs",
-    name: "Asociate of science 8",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  ,
-  {
-    id: "1sqfharesaare84h611z2399fdsq3f1axcvs",
-    name: "Asociate of science 8",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  ,
-  {
-    id: "1sqfharesaare84h611z893fdsq3f1axcvs",
-    name: "Asociate of science 8",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  ,
-  {
-    id: "1sqfharesaare84h611z878723fdsq3f1axcvs",
-    name: "Asociate of science 8",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  ,
-  {
-    id: "1sqfharesaare84h611z2873fdsq3f1axcvs",
-    name: "Asociate of science 8",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-];
-const parentList = [
-  {
-    id: "1sqaezat5456q1a1erezafs",
-    name: "Asociate of science 2",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-  {
-    id: "1ae9t64613ay4teza5qfs",
-    name: "Asociate of science 3",
-    description: "First class of 5 year program",
-    students: ["dddd"],
-    root_groups: null,
-    child_count: 5,
-    created_by: "Kurk Cobain",
-    created_at: "2020-01-20T15:22:20.000Z",
-    last_update: "2020-01-20T15:22:20.000Z",
-    locked: false,
-  },
-];
-const studentList = [
-  {
-    id: "1sqdsfqat949az4e613adsqfs",
-    firstName: "John ",
-    lastName: "Doe",
-    email: "jogn.doe@scoosign.com",
-  },
-  {
-    id: "1sqddsa6ez46e1313gassfqdsqfs",
-    firstName: "Kurk ",
-    lastName: "Cobain",
-    email: "kurk.cobain@scoosign.com",
-  },
-  {
-    id: "1sqddsa6ez46e13e13gassfqdsqfs",
-    firstName: "Kurk a",
-    lastName: "Cobain",
-    email: "kurk.cobain@scoosign.com",
-  },
-  {
-    id: "1sqddsa6ez46e131q3gassfqdsqfs",
-    firstName: "Kurk ",
-    lastName: "Cobain",
-    email: "kurk.cobain@scoosign.com",
-  },
-  {
-    id: "1sqddsa6ez46e1s313gassfqdsqfs",
-    firstName: "Kurk ",
-    lastName: "Cobain",
-    email: "kurk.cobain@scoosign.com",
-  },
-  {
-    id: "1sqddsa6ez46e1b313gassfqdsqfs",
-    firstName: "Kurk ",
-    lastName: "Cobain",
-    email: "kurk.cobain@scoosign.com",
-  },
-];
 const groupDetailsTabs = [
   { label: "Details", value: "details", disabled: false },
   { label: "Courses", value: "courses", disabled: true },
   { label: "Calendar", value: "calendar", disabled: true },
 ];
-
 
 const GroupBasicDetails = (props) => {
   const { group, setGroupInfosHandler, ...other } = props;
@@ -477,7 +83,7 @@ const GroupBasicDetails = (props) => {
 
   // Fetch available parent from api
   const getAvailableParent = async () => {
-    const response = await new Promise((resolve) => resolve(parentList));
+    const response = await new Promise((resolve) => resolve(getRandomGroups(50)));
     console.log("[LOAD AVAILABLE PARENT]", response);
     setAvailableParent(response);
   };
@@ -778,7 +384,7 @@ const GroupStudentItems = (props) => {
                 students.map((studentItem) => (
                   <TableRow key={studentItem.id}>
                     <TableCell>
-                      <Avatar
+                      <Avatar src={studentItem?.avatar}
                         sx={{
                           height: 32,
                           width: 32,
@@ -870,7 +476,7 @@ const AddStudentDialog = (props) => {
   }, [open, form]);
 
   const getAvailableStudents = async () => {
-    const response = await new Promise((resolve) => resolve(studentList));
+    const response = await new Promise((resolve) => resolve(getRandomUser(150)));
     console.log("TODO get available students");
     setAvailableStudents(response);
   };
@@ -976,7 +582,9 @@ const AddGroupDialog = (props) => {
   }, [open, groupForms]);
 
   const getAvailableGroup = async () => {
-    const response = await new Promise((resolve) => resolve(groupChild));
+    const response = await new Promise(async (resolve) =>
+      resolve(await getRandomGroups(200))
+    );
     console.log("TODO get available groups");
     setAvailableGroup(response);
   };
@@ -1092,37 +700,32 @@ const GroupDetails = (props) => {
     eventId: undefined,
     range: undefined,
   });
-  const [groupPagination, setGroupPagination] = useState({
-    page: 0,
-    rowsPerPage: 5,
-  });
-  const [studentsPagination, setStudentsPagination] = useState({
-    page: 0,
-    rowsPerPage: 5,
-  });
 
-  const onGroupsPageChanged = (event, newPage) => {
-    setGroupPagination({ ...groupPagination, page: newPage });
+  const [groupsPage, setGroupsPage] = useState(0);
+  const [groupsPerPage, setGroupsRowsPerPage] = useState(5);
+
+  const [studentsPage, setStudentsPage] = useState(0);
+  const [studentsRowsPerPage, setStudentsRowsPerPage] = useState(5);
+
+  const handleGroupPageChange = (event, newPage) => {
+    setGroupsPage(newPage);
   };
-  const onGroupsRowsPerPageChanged = (event) => {
-    setGroupPagination({
-      ...groupPagination,
-      rowsPerPage: parseInt(event.target.value, 10),
-    });
+
+  const handleGroupRowsPerPageChange = (event) => {
+    setGroupsRowsPerPage(parseInt(event.target.value, 10));
   };
-  const onStudentsPageChanged = (event, newPage) => {
-    setStudentsPagination({ ...studentsPagination, page: newPage });
+
+  const handleStudentsPageChange = (event, newPage) => {
+    setStudentsPage(newPage);
   };
-  const onStudentsRowsPerPageChanged = (event) => {
-    setStudentsPagination({
-      ...studentsPagination,
-      rowsPerPage: parseInt(event.target.value, 10),
-    });
+
+  const handleStudentsRowsPerPageChange = (event) => {
+    setStudentsRowsPerPage(parseInt(event.target.value, 10));
   };
 
   useEffect(() => {
     if (isMounted()) {
-      getGroup();
+      if(!group) getGroup();
       getGroupStudents();
       getGroupSubGroups();
     }
@@ -1131,7 +734,7 @@ const GroupDetails = (props) => {
   // Fetch group from api
   const getGroup = async () => {
     const response = await new Promise((resolve) => {
-      resolve(groupFixture);
+      resolve(createRandomGroup);
     });
     console.log("[LOAD GROUP]", response);
     setGroup(response);
@@ -1139,16 +742,16 @@ const GroupDetails = (props) => {
   // Fetch group students from api
   const getGroupStudents = async () => {
     const response = await new Promise((resolve) => {
-      resolve(studentList);
+      resolve(getRandomUser(34));
     });
     console.log("[LOAD GROUP-STUDENTS]", response);
     setGroupStudents(response);
   };
   // Fetch group sub-groups from api
   const getGroupSubGroups = async () => {
-    const response = await new Promise((resolve) => {
-      resolve(groupChild);
-    });
+    const response = await new Promise(async (resolve) =>
+      resolve(getRandomGroups(5))
+    );
     console.log("[LOAD GROUP-SUB-GROUPS]", response);
     setGroupSubGroups(response);
   };
@@ -1216,13 +819,13 @@ const GroupDetails = (props) => {
 
   const paginatedSubGroups = applyPagination(
     groupSubGroups,
-    groupPagination.page,
-    groupPagination.rowsPerPage
+    groupsPage,
+    groupsPerPage
   );
   const paginatedStudents = applyPagination(
     groupStudents,
-    studentsPagination.page,
-    studentsPagination.rowsPerPage
+    studentsPage,
+    studentsRowsPerPage
   );
   return (
     <>
@@ -1339,10 +942,10 @@ const GroupDetails = (props) => {
                       canBrowseToGroup={false}
                       addGroupHandler={addGroupHandler}
                       removeGroupHandler={removeGroupHandler}
-                      page={groupPagination.page}
-                      rowsPerPage={groupPagination.rowsPerPage}
-                      onPageChange={onGroupsPageChanged}
-                      onRowsPerPageChange={onGroupsRowsPerPageChanged}
+                      page={groupsPage}
+                      rowsPerPage={groupsPerPage}
+                      onPageChange={handleGroupPageChange}
+                      onRowsPerPageChange={handleGroupRowsPerPageChange}
                     />
                   </Grid>
                 )}
@@ -1354,10 +957,10 @@ const GroupDetails = (props) => {
                       students={paginatedStudents}
                       canBrowseToStudent={false}
                       count={groupStudents.length}
-                      page={studentsPagination.page}
-                      rowsPerPage={studentsPagination.rowsPerPage}
-                      onPageChange={onStudentsPageChanged}
-                      onRowsPerPageChange={onStudentsRowsPerPageChanged}
+                      page={studentsPage}
+                      rowsPerPage={studentsRowsPerPage}
+                      onPageChange={handleStudentsPageChange}
+                      onRowsPerPageChange={handleStudentsRowsPerPageChange}
                     />
                   </Grid>
                 ) : (
