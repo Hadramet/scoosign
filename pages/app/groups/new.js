@@ -3,10 +3,8 @@ import {
   Breadcrumbs,
   Button,
   Card,
-  CardActions,
   CardContent,
   FormControlLabel,
-  FormHelperText,
   Grid,
   IconButton,
   Link,
@@ -24,8 +22,6 @@ import { Container } from "@mui/system";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
-import { QuillEditor } from "@/components/quill-editor";
-import { PropertyListItem } from "@/components/property-list-items";
 import { useMounted } from "@/hooks/use-mounted";
 import { useEffect, useState } from "react";
 import { getRandomGroups } from "@/faker/fakeDatas";
@@ -188,11 +184,13 @@ const CreateGroupForm = (props) => {
                 value={form.values.name}
               />
               <TextField
-                error={Boolean(form.touched.description && form.errors.description)}
+                error={Boolean(
+                  form.touched.description && form.errors.description
+                )}
                 fullWidth
                 helperText={form.touched.description && form.errors.description}
                 label="Description"
-                name="description"       
+                name="description"
                 sx={{ mb: 2, mt: 3 }}
                 onBlur={form.handleBlur}
                 onChange={form.handleChange}
@@ -341,7 +339,9 @@ const CreateGroupForm = (props) => {
             <Grid item md={4} xs={12}>
               <Typography variant="h6">Students</Typography>
               <Typography color="textSecondary" variant="body2" sx={{ mt: 1 }}>
-                {"If this group is a sub-group, you will only see students belonging to the parent group"}
+                {
+                  "If this group is a sub-group, you will only see students belonging to the parent group"
+                }
               </Typography>
             </Grid>
             <Grid item md={8} xs={12}>
@@ -417,27 +417,23 @@ const CreateGroupForm = (props) => {
       </Card>
       <Box
         sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'space-between',
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "space-between",
           mx: -1,
           mb: -1,
-          mt: 3
+          mt: 3,
         }}
-      >        
+      >
         <Button
-        
-          href="/app/groups" passHref
-          sx={{ m: 1 ,ml:'auto'}}
+          href="/app/groups"
+          passHref
+          sx={{ m: 1, ml: "auto" }}
           variant="outlined"
         >
           Cancel
         </Button>
-        <Button
-          sx={{ m: 1 }}
-          type="submit"
-          variant="contained"
-        >
+        <Button sx={{ m: 1 }} type="submit" variant="contained">
           Create
         </Button>
       </Box>

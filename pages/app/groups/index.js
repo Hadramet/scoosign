@@ -2,23 +2,12 @@ import {
   Box,
   Button,
   Card,
-  Checkbox,
-  Collapse,
   Container,
   Grid,
-  IconButton,
   InputAdornment,
-  Link,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
   TextField,
   Typography,
 } from "@mui/material";
-import NextLink from "next/link";
 import Head from "next/head";
 import { AppLayout } from "@/components/app/app-layout";
 import { AuthGuard } from "@/components/authentication/auth-guard";
@@ -29,128 +18,37 @@ import {
   Search as SearchIcon,
   Download as DownloadIcon,
 } from "@/components/icons";
-import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
-import { Scrollbar } from "@/components/custom";
-import { ArrowRight as ArrowRightIcon } from "@/components/icons";
-import { useMounted } from "@/hooks/use-mounted";
-import { getRandomGroups } from "@/faker/fakeDatas";
-import { applyPagination } from "@/components/app/apply-pagination";
+import { useState } from "react";
 import { useRouter } from "next/router";
-
-const GroupListTable = (props) => {
-  const {
-    groups,
-    groupsCount,
-    page,
-    rowPerPage,
-    onRowPerPageChanged,
-    onPageChanged,
-    ...other
-  } = props;
-
-  return (
-    <>
-      <div {...other}>
-        <Scrollbar>
-          <Table size="small" sx={{ minWidth: 700 }}>
-            <TableHead>
-              <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox></Checkbox>
-                </TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell align="right">Students</TableCell>
-                <TableCell align="right">Sub-Group</TableCell>
-                <TableCell align="right">Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {groups.map((group) => {
-                return (
-                  <TableRow hover key={group.id}>
-                    <TableCell padding="checkbox">
-                      <Checkbox />
-                    </TableCell>
-                    <TableCell>
-                      <NextLink href={`/app/groups/${group.id}`} passHref>
-                        <Link color="inherit" variant="subtitle2">
-                          {group.name}
-                        </Link>
-                      </NextLink>
-                    </TableCell>
-                    <TableCell align="right">
-                      <Typography color="textSecondary" variant="body2">
-                        {group.students && group.students.length}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="right">
-                      <Typography color="textSecondary" variant="body2">
-                        {group.child_count && group.child_count}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="right">
-                      <NextLink href={`/app/groups/${group.id}`} passHref>
-                        <IconButton component="a">
-                          <ArrowRightIcon fontSize="small" />
-                        </IconButton>
-                      </NextLink>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>{" "}
-        </Scrollbar>
-        <TablePagination
-          component="div"
-          count={groupsCount}
-          onPageChange={onPageChanged}
-          onRowsPerPageChange={onRowPerPageChanged}
-          page={page}
-          rowsPerPage={rowPerPage}
-          rowsPerPageOptions={[5, 10, 25, 50]}
-        />
-      </div>
-    </>
-  );
-};
-
-GroupListTable.propTypes = {
-  groups: PropTypes.array,
-  groupsCount: PropTypes.number,
-  page: PropTypes.number,
-  rowPerPage: PropTypes.number,
-  onRowPerPageChanged: PropTypes.func,
-  onPageChanged: PropTypes.func,
-};
+import useSWR from "swr";
+import { GroupListTable } from "../../../components/app/groups/group-list-table";
 
 const GroupList = (props) => {
-  const isMounted = useMounted();
   const router = useRouter();
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [groups, setGroups] = useState([]);
+  const accessToken = globalThis.localStorage.getItem("accessToken");
+  const { data, error } = useSWR([
+    `/api/v1/groups?page=${page}&limit=${rowsPerPage}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+        "X-Scoosign-Authorization": `Bearer ${accessToken}`,
+      },
+    },
+  ]);
 
-  useEffect(() => {
-    if (isMounted) getGroups();
-  }, [isMounted]);
-
-  const getGroups = async () => {
-    const response = await new Promise(async (resolve) =>
-      resolve(getRandomGroups(200))
-    );
-    setGroups(response);
-  };
   const onPageChanged = (event, newPage) => {
-    setPage(newPage);
+    setPage(newPage + 1);
   };
 
   const onRowPerPageChanged = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
-  const paginatedGroups = applyPagination(groups, page, rowsPerPage);
+  if (error) return "An error has occurred.";
+  if (!data) return "Loading...";
   return (
     <>
       <Head>
@@ -234,13 +132,14 @@ const GroupList = (props) => {
               </Box>
             </Box>
             <GroupListTable
-              groups={paginatedGroups}
-              groupsCount={groups.length}
-              page={page}
+              groups={data.data.itemsList}
+              groupsCount={data.data.paginator.itemCount}
+              page={page-1}
               rowPerPage={rowsPerPage}
               onPageChanged={onPageChanged}
               onRowPerPageChanged={onRowPerPageChanged}
             />
+            {/* <pre style={{fontSize: '1rem'}}>{JSON.stringify({data, error , page, rowsPerPage}, null, 4)}</pre> */}
           </Card>
         </Container>
       </Box>
