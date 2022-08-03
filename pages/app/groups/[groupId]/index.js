@@ -40,6 +40,7 @@ import { AddGroupDialog } from "@/components/app/add-group-dialog";
 import { applyPagination } from "@/components/app/apply-pagination";
 import useSWR from "swr";
 import { useRouter } from "next/router";
+import toast from "react-hot-toast";
 
 const groupDetailsTabs = [
   { label: "Details", value: "details", disabled: false },
@@ -56,7 +57,7 @@ const GroupDetails = (props) => {
   // // const [group, setGroup] = useState(null);
   const accessToken = globalThis.localStorage.getItem("accessToken");
   const { query } = useRouter();
-  const { data: group, error } = useSWR([
+  const { data: group, mutate } = useSWR([
     `/api/v1/groups/${query.groupId}`,
     {
       method: "GET",
@@ -105,20 +106,10 @@ const GroupDetails = (props) => {
 
   useEffect(() => {
     if (isMounted()) {
-      // // if (!group) getGroup();
       getGroupStudents();
       getGroupSubGroups();
     }
   }, [isMounted, group]);
-
-  // // // Fetch group from api
-  // // const getGroup = async () => {
-  // //   const response = await new Promise((resolve) => {
-  // //     resolve(createRandomGroup);
-  // //   });
-  // //   console.log("[LOAD GROUP]", response);
-  // //   setGroup(response);
-  // // };
   // Fetch group students from api
   const getGroupStudents = async () => {
     const response = await new Promise((resolve) => {
@@ -137,7 +128,28 @@ const GroupDetails = (props) => {
   };
 
   const setGroupInfosHandler = async (body) => {
-    console.log("[SET GROUP INFOS", body);
+    await putGroupInfo(body);  
+    mutate({
+      ...group,
+      itemsList: { parent: body.parent, description: body.description },
+    });
+  };
+
+  const putGroupInfo = async (body) => {
+    await fetch(`/api/v1/groups/${query.groupId}`, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json",
+        "X-Scoosign-Authorization": `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(body),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) toast.success("Successfully update");
+        else toast.error("Update failed", data.message || "");
+      })
+      .catch((error) => toast.error(error.message));
   };
 
   const handleTabsChange = (event, value) => {
@@ -247,10 +259,10 @@ const GroupDetails = (props) => {
             <Grid container justifyContent="space-between" spacing={3}>
               <Grid item>
                 <Typography variant="h4">
-                  {!group.data.active && (
+                  {!group.data?.active && (
                     <Lock color="textPrimary" fontSize="medium" />
                   )}{" "}
-                  {group.data.name}
+                  {group.data?.name}
                 </Typography>
                 <Box
                   sx={{
@@ -259,22 +271,22 @@ const GroupDetails = (props) => {
                   }}
                 >
                   <Chip
-                    label={group.data._id}
+                    label={group.data?._id}
                     color="default"
                     size="small"
                     sx={{ mr: 0.5 }}
                   />
-                  {group.data.active && (
+                  {group.data?.active && (
                     <Chip
-                      label={!group.data.parent ? "ROOT-GROUP" : "SUB-GROUP"}
-                      color={!group.data.parent ? "primary" : "secondary"}
+                      label={!group.data?.parent ? "ROOT-GROUP" : "SUB-GROUP"}
+                      color={!group.data?.parent ? "primary" : "secondary"}
                       size="small"
                     />
                   )}
                 </Box>
               </Grid>
               <Grid item sx={{ ml: -2 }}>
-                {group.data.active && (
+                {group.data?.active && (
                   <Button
                     disabled
                     endIcon={<ChevronDownIcon fontSize="small" />}
@@ -284,7 +296,7 @@ const GroupDetails = (props) => {
                     Actions
                   </Button>
                 )}
-                {!group.data.active && (
+                {!group.data?.active && (
                   <Button
                     onClick={handleUnlock}
                     endIcon={<LockOpen fontSize="small" />}
@@ -326,7 +338,7 @@ const GroupDetails = (props) => {
                     setGroupInfosHandler={setGroupInfosHandler}
                   />
                 </Grid>
-                {!group.data.active || group.data.parent ? (
+                {!group.data?.active || group.data?.parent ? (
                   <></>
                 ) : (
                   <Grid item xs={12}>
@@ -343,7 +355,7 @@ const GroupDetails = (props) => {
                     />
                   </Grid>
                 )}
-                {group.data.active ? (
+                {group.data?.active ? (
                   <Grid item xs={12}>
                     <GroupStudentItems
                       addStudentHandler={addStudentHandler}
@@ -375,7 +387,7 @@ const GroupDetails = (props) => {
                       </Box>
                     </CardContent>
                     <CardActions sx={{ flewWrap: "wrap", m: -1 }}>
-                      {group.data.active && (
+                      {group.data?.active && (
                         <Button
                           onClick={handleLock}
                           sx={{ m: 1, mr: "auto" }}

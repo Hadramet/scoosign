@@ -8,14 +8,12 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { useEffect, useState } from "react";
 import { PropertyList } from "../../property-list";
 import { PropertyListItem } from "../../property-list-items";
 import { useMounted } from "../../../hooks/use-mounted";
 import PropTypes from "prop-types";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { getRandomGroups } from "../../../faker/fakeDatas";
 import useSWR from "swr";
 
 export const GroupBasicDetails = (props) => {
@@ -23,7 +21,6 @@ export const GroupBasicDetails = (props) => {
   const isMounted = useMounted();
   const smDown = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const align = smDown ? "vertical" : "horizontal";
-  // // const [availableParent, setAvailableParent] = useState([]);
 
   const accessToken = globalThis.localStorage.getItem("accessToken");
   const { data: availableParent, error } = useSWR([
@@ -36,19 +33,6 @@ export const GroupBasicDetails = (props) => {
       },
     },
   ]);
-
-  // // useEffect(() => {
-  // //   if (isMounted) getAvailableParent();
-  // // }, [isMounted]);
-
-  // // // Fetch available parent from api
-  // // const getAvailableParent = async () => {
-  // //   const response = await new Promise((resolve) =>
-  // //     resolve(getRandomGroups(50))
-  // //   );
-  // //   console.log("[LOAD AVAILABLE PARENT]", response);
-  // //   setAvailableParent(response);
-  // // };
 
   const groupForms = useFormik({
     initialValues: {
