@@ -48,10 +48,6 @@ const groupDetailsTabs = [
   { label: "Calendar", value: "calendar", disabled: true },
 ];
 
-// TODO: get group fixture
-// TODO: get sub-group
-// TODO: get students
-// TODO: Remove group parent
 const GroupDetails = (props) => {
   const isMounted = useMounted();
   const accessToken = globalThis.localStorage.getItem("accessToken");
@@ -115,7 +111,6 @@ const GroupDetails = (props) => {
     console.log("TODO : unlock");
   };
 
-  // // const [groupSubGroups, setGroupSubGroups] = useState([]);
 
   // ********************************
   // ** SUB-GROUPS
@@ -172,47 +167,31 @@ const GroupDetails = (props) => {
   // ** STUDENTS
   // ********************************
 
-  const [groupStudents, setGroupStudents] = useState([]);
-
+  const [studentsPage, setStudentsPage] = useState(1);
+  const [studentsRowsPerPage, setStudentsRowsPerPage] = useState(5);
+  const { data: groupStudents, mutate: studentsMutate } = useSWR([
+    `/api/v1/groups/${query.groupId}/students?page=${studentsPage}&limit=${studentsRowsPerPage}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+        "X-Scoosign-Authorization": `Bearer ${accessToken}`,
+      },
+    },
+  ]);
   const [addStudentDialog, setAddStudentDialog] = useState({
     isOpen: false,
     eventId: undefined,
     range: undefined,
   });
 
-  const [studentsPage, setStudentsPage] = useState(0);
-  const [studentsRowsPerPage, setStudentsRowsPerPage] = useState(5);
-
   const handleStudentsPageChange = (event, newPage) => {
-    setStudentsPage(newPage);
+    setStudentsPage(newPage + 1);
   };
 
   const handleStudentsRowsPerPageChange = (event) => {
     setStudentsRowsPerPage(parseInt(event.target.value, 10));
   };
-
-  useEffect(() => {
-    if (isMounted()) {
-      getGroupStudents();
-      // // getGroupSubGroups();
-    }
-  }, [isMounted, group]);
-  // Fetch group students from api
-  const getGroupStudents = async () => {
-    const response = await new Promise((resolve) => {
-      resolve(getRandomUser(34));
-    });
-    console.log("[LOAD GROUP-STUDENTS]", response);
-    setGroupStudents(response);
-  };
-  // // // Fetch group sub-groups from api
-  // // const getGroupSubGroups = async () => {
-  // //   const response = await new Promise(async (resolve) =>
-  // //     resolve(getRandomGroups(5))
-  // //   );
-  // //   console.log("[LOAD GROUP-SUB-GROUPS]", response);
-  // //   setGroupSubGroups(response);
-  // // };
 
   const addStudentHandler = (event) => {
     event.preventDefault();
@@ -237,17 +216,6 @@ const GroupDetails = (props) => {
   };
 
   if (!group) return null;
-
-  // // const paginatedSubGroups = applyPagination(
-  // //   groupSubGroups,
-  // //   groupsPage,
-  // //   groupsPerPage
-  // // );
-  const paginatedStudents = applyPagination(
-    groupStudents,
-    studentsPage,
-    studentsRowsPerPage
-  );
   return (
     <>
       <Head>
@@ -380,17 +348,19 @@ const GroupDetails = (props) => {
                 )}
                 {group.data?.active ? (
                   <Grid item xs={12}>
-                    <GroupStudentItems
-                      addStudentHandler={addStudentHandler}
-                      removeStudentHandler={removeStudentHandler}
-                      students={paginatedStudents}
-                      canBrowseToStudent={false}
-                      count={groupStudents.length}
-                      page={studentsPage}
-                      rowsPerPage={studentsRowsPerPage}
-                      onPageChange={handleStudentsPageChange}
-                      onRowsPerPageChange={handleStudentsRowsPerPageChange}
-                    />
+                    {groupStudents && (
+                      <GroupStudentItems
+                        addStudentHandler={addStudentHandler}
+                        removeStudentHandler={removeStudentHandler}
+                        students={groupStudents.data?.itemsList}
+                        canBrowseToStudent={false}
+                        count={groupStudents.data?.paginator.itemCount}
+                        page={studentsPage - 1}
+                        rowsPerPage={studentsRowsPerPage}
+                        onPageChange={handleStudentsPageChange}
+                        onRowsPerPageChange={handleStudentsRowsPerPageChange}
+                      />
+                    )}
                   </Grid>
                 ) : (
                   <></>

@@ -58,28 +58,28 @@ export const GroupStudentItems = (props) => {
                         }}
                       >
                         {getInitials(
-                          studentItem?.firstName + " " + studentItem?.lastName
+                          studentItem?.user.firstName + " " + studentItem?.user.lastName
                         )}
                       </Avatar>
                     </TableCell>
                     <TableCell>
                       <Typography variant="subtitle2">
-                        {studentItem.firstName}
+                        {studentItem.user.firstName}
                       </Typography>
                     </TableCell>
                     <TableCell>
                       <Typography variant="subtitle2">
-                        {studentItem.lastName}
+                        {studentItem.user.lastName}
                       </Typography>
                     </TableCell>
                     <TableCell>
                       <Typography variant="subtitle2">
-                        {studentItem.email}
+                        {studentItem.user.email}
                       </Typography>
                     </TableCell>
                     <TableCell align="right">
                       <IconButton
-                        onClick={(e) => removeStudentHandler(e, studentItem.id)}
+                        onClick={(e) => removeStudentHandler(e, studentItem._id)}
                         component="a"
                       >
                         <DeleteOutline fontSize="small" />
@@ -87,7 +87,7 @@ export const GroupStudentItems = (props) => {
                       {canBrowseToStudent && (
                         <NextLink
                           disabled
-                          href={`/app/student/${studentItem.id}`}
+                          href={`/app/student/${studentItem._id}`}
                           passHref
                         >
                           <IconButton component="a">
