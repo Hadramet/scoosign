@@ -44,7 +44,7 @@ export const GroupSubGroupItems = (props) => {
             </TableHead>
             <TableBody>
               {subGroups.map((groupItem) => (
-                <TableRow key={groupItem.id}>
+                <TableRow key={groupItem._id}>
                   <TableCell>
                     <Typography variant="subtitle2">
                       {groupItem.name}
@@ -57,13 +57,13 @@ export const GroupSubGroupItems = (props) => {
                   </TableCell>
                   <TableCell align="right">
                     <IconButton
-                      onClick={(e) => removeGroupHandler(e, groupItem.id)}
+                      onClick={(e) => removeGroupHandler(e, groupItem._id)}
                       component="a"
                     >
                       <DeleteOutline fontSize="small" />
                     </IconButton>
                     {canBrowseToGroup && (
-                      <NextLink href={`/app/groups/${groupItem.id}`} passHref>
+                      <NextLink href={`/app/groups/${groupItem._id}`} passHref>
                         <IconButton component="a">
                           <ArrowRightIcon fontSize="small" />
                         </IconButton>

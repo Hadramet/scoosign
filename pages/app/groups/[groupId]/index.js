@@ -54,9 +54,17 @@ const groupDetailsTabs = [
 // TODO: Remove group parent
 const GroupDetails = (props) => {
   const isMounted = useMounted();
-  // // const [group, setGroup] = useState(null);
   const accessToken = globalThis.localStorage.getItem("accessToken");
   const { query } = useRouter();
+  const [currentTab, setCurrentTab] = useState("details");
+
+  const handleTabsChange = (event, value) => {
+    setCurrentTab(value);
+  };
+
+  // ********************************
+  // ** GROUP
+  // ********************************
   const { data: group, mutate } = useSWR([
     `/api/v1/groups/${query.groupId}`,
     {
@@ -67,68 +75,8 @@ const GroupDetails = (props) => {
       },
     },
   ]);
-
-  const [currentTab, setCurrentTab] = useState("details");
-  const [groupStudents, setGroupStudents] = useState([]);
-  const [groupSubGroups, setGroupSubGroups] = useState([]);
-  const [addGroupDialog, setAddGroupDialog] = useState({
-    isOpen: false,
-    eventId: undefined,
-    range: undefined,
-  });
-  const [addStudentDialog, setAddStudentDialog] = useState({
-    isOpen: false,
-    eventId: undefined,
-    range: undefined,
-  });
-
-  const [groupsPage, setGroupsPage] = useState(0);
-  const [groupsPerPage, setGroupsRowsPerPage] = useState(5);
-
-  const [studentsPage, setStudentsPage] = useState(0);
-  const [studentsRowsPerPage, setStudentsRowsPerPage] = useState(5);
-
-  const handleGroupPageChange = (event, newPage) => {
-    setGroupsPage(newPage);
-  };
-
-  const handleGroupRowsPerPageChange = (event) => {
-    setGroupsRowsPerPage(parseInt(event.target.value, 10));
-  };
-
-  const handleStudentsPageChange = (event, newPage) => {
-    setStudentsPage(newPage);
-  };
-
-  const handleStudentsRowsPerPageChange = (event) => {
-    setStudentsRowsPerPage(parseInt(event.target.value, 10));
-  };
-
-  useEffect(() => {
-    if (isMounted()) {
-      getGroupStudents();
-      getGroupSubGroups();
-    }
-  }, [isMounted, group]);
-  // Fetch group students from api
-  const getGroupStudents = async () => {
-    const response = await new Promise((resolve) => {
-      resolve(getRandomUser(34));
-    });
-    console.log("[LOAD GROUP-STUDENTS]", response);
-    setGroupStudents(response);
-  };
-  // Fetch group sub-groups from api
-  const getGroupSubGroups = async () => {
-    const response = await new Promise(async (resolve) =>
-      resolve(getRandomGroups(5))
-    );
-    console.log("[LOAD GROUP-SUB-GROUPS]", response);
-    setGroupSubGroups(response);
-  };
-
   const setGroupInfosHandler = async (body) => {
-    await putGroupInfo(body);  
+    await putGroupInfo(body);
     mutate({
       ...group,
       itemsList: { parent: body.parent, description: body.description },
@@ -152,9 +100,119 @@ const GroupDetails = (props) => {
       .catch((error) => toast.error(error.message));
   };
 
-  const handleTabsChange = (event, value) => {
-    setCurrentTab(value);
+  const handleDelete = (event) => {
+    event.preventDefault();
+    console.log("TODO : danger delete");
   };
+
+  const handleLock = (event) => {
+    event.preventDefault();
+    console.log("TODO : danger lock");
+  };
+
+  const handleUnlock = (event) => {
+    event.preventDefault();
+    console.log("TODO : unlock");
+  };
+
+  // // const [groupSubGroups, setGroupSubGroups] = useState([]);
+
+  // ********************************
+  // ** SUB-GROUPS
+  // ********************************
+  const [groupsPage, setGroupsPage] = useState(1);
+  const [groupsPerPage, setGroupsRowsPerPage] = useState(5);
+  const { data: groupSubGroups, mutate: subGroupsMutate } = useSWR([
+    `/api/v1/groups/subGroups/${query.groupId}?page=${groupsPage}&limit=${groupsPerPage}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+        "X-Scoosign-Authorization": `Bearer ${accessToken}`,
+      },
+    },
+  ]);
+  const [addGroupDialog, setAddGroupDialog] = useState({
+    isOpen: false,
+    eventId: undefined,
+    range: undefined,
+  });
+  const handleGroupPageChange = (event, newPage) => {
+    setGroupsPage(newPage + 1);
+  };
+
+  const handleGroupRowsPerPageChange = (event) => {
+    setGroupsRowsPerPage(parseInt(event.target.value, 10));
+  };
+
+  const handleCloseAddGroupDialog = () => {
+    setAddGroupDialog({
+      isOpen: false,
+    });
+  };
+
+  const handleGroupsResult = (groups) => {
+    console.log("TODO API POST", groups);
+  };
+
+  const removeGroupHandler = (event, groupId) => {
+    event.preventDefault();
+    console.log("TODO : remove group id: " + groupId);
+  };
+
+  const addGroupHandler = (event) => {
+    event.preventDefault();
+    console.log("TODO : add group handle");
+    setAddGroupDialog({
+      isOpen: true,
+    });
+  };
+
+  // ********************************
+  // ** STUDENTS
+  // ********************************
+
+  const [groupStudents, setGroupStudents] = useState([]);
+
+  const [addStudentDialog, setAddStudentDialog] = useState({
+    isOpen: false,
+    eventId: undefined,
+    range: undefined,
+  });
+
+  const [studentsPage, setStudentsPage] = useState(0);
+  const [studentsRowsPerPage, setStudentsRowsPerPage] = useState(5);
+
+  const handleStudentsPageChange = (event, newPage) => {
+    setStudentsPage(newPage);
+  };
+
+  const handleStudentsRowsPerPageChange = (event) => {
+    setStudentsRowsPerPage(parseInt(event.target.value, 10));
+  };
+
+  useEffect(() => {
+    if (isMounted()) {
+      getGroupStudents();
+      // // getGroupSubGroups();
+    }
+  }, [isMounted, group]);
+  // Fetch group students from api
+  const getGroupStudents = async () => {
+    const response = await new Promise((resolve) => {
+      resolve(getRandomUser(34));
+    });
+    console.log("[LOAD GROUP-STUDENTS]", response);
+    setGroupStudents(response);
+  };
+  // // // Fetch group sub-groups from api
+  // // const getGroupSubGroups = async () => {
+  // //   const response = await new Promise(async (resolve) =>
+  // //     resolve(getRandomGroups(5))
+  // //   );
+  // //   console.log("[LOAD GROUP-SUB-GROUPS]", response);
+  // //   setGroupSubGroups(response);
+  // // };
 
   const addStudentHandler = (event) => {
     event.preventDefault();
@@ -174,54 +232,17 @@ const GroupDetails = (props) => {
     console.log("TODO : remove student id: " + studentId);
   };
 
-  const addGroupHandler = (event) => {
-    event.preventDefault();
-    console.log("TODO : add group handle");
-    setAddGroupDialog({
-      isOpen: true,
-    });
-  };
-  const handleCloseAddGroupDialog = () => {
-    setAddGroupDialog({
-      isOpen: false,
-    });
-  };
-
-  const removeGroupHandler = (event, groupId) => {
-    event.preventDefault();
-    console.log("TODO : remove group id: " + groupId);
-  };
-
-  const handleDelete = (event) => {
-    event.preventDefault();
-    console.log("TODO : danger delete");
-  };
-
-  const handleLock = (event) => {
-    event.preventDefault();
-    console.log("TODO : danger lock");
-  };
-
-  const handleUnlock = (event) => {
-    event.preventDefault();
-    console.log("TODO : unlock");
-  };
-
   const handleStudentsResult = (students) => {
     console.log("TODO API POST", students);
   };
 
-  const handleGroupsResult = (groups) => {
-    console.log("TODO API POST", groups);
-  };
-
   if (!group) return null;
 
-  const paginatedSubGroups = applyPagination(
-    groupSubGroups,
-    groupsPage,
-    groupsPerPage
-  );
+  // // const paginatedSubGroups = applyPagination(
+  // //   groupSubGroups,
+  // //   groupsPage,
+  // //   groupsPerPage
+  // // );
   const paginatedStudents = applyPagination(
     groupStudents,
     studentsPage,
@@ -342,17 +363,19 @@ const GroupDetails = (props) => {
                   <></>
                 ) : (
                   <Grid item xs={12}>
-                    <GroupSubGroupItems
-                      subGroups={paginatedSubGroups}
-                      count={groupSubGroups.length}
-                      canBrowseToGroup={false}
-                      addGroupHandler={addGroupHandler}
-                      removeGroupHandler={removeGroupHandler}
-                      page={groupsPage}
-                      rowsPerPage={groupsPerPage}
-                      onPageChange={handleGroupPageChange}
-                      onRowsPerPageChange={handleGroupRowsPerPageChange}
-                    />
+                    {groupSubGroups && (
+                      <GroupSubGroupItems
+                        subGroups={groupSubGroups.data?.itemsList}
+                        count={groupSubGroups.data?.paginator.itemCount}
+                        canBrowseToGroup={false}
+                        addGroupHandler={addGroupHandler}
+                        removeGroupHandler={removeGroupHandler}
+                        page={groupsPage - 1}
+                        rowsPerPage={groupsPerPage}
+                        onPageChange={handleGroupPageChange}
+                        onRowsPerPageChange={handleGroupRowsPerPageChange}
+                      />
+                    )}
                   </Grid>
                 )}
                 {group.data?.active ? (
