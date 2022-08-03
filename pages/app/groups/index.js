@@ -139,7 +139,6 @@ const GroupList = (props) => {
               onPageChanged={onPageChanged}
               onRowPerPageChanged={onRowPerPageChanged}
             />
-            {/* <pre style={{fontSize: '1rem'}}>{JSON.stringify({data, error , page, rowsPerPage}, null, 4)}</pre> */}
           </Card>
         </Container>
       </Box>

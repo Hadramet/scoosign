@@ -1,7 +1,11 @@
 import {
   Button,
   Card,
-  CardActions, CardHeader, Divider, TextField, useMediaQuery
+  CardActions,
+  CardHeader,
+  Divider,
+  TextField,
+  useMediaQuery,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
@@ -12,30 +16,44 @@ import PropTypes from "prop-types";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { getRandomGroups } from "../../../faker/fakeDatas";
+import useSWR from "swr";
 
 export const GroupBasicDetails = (props) => {
   const { group, setGroupInfosHandler, ...other } = props;
   const isMounted = useMounted();
   const smDown = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const align = smDown ? "vertical" : "horizontal";
-  const [availableParent, setAvailableParent] = useState([]);
+  // // const [availableParent, setAvailableParent] = useState([]);
 
-  useEffect(() => {
-    if (isMounted)
-      getAvailableParent();
-  }, [isMounted]);
+  const accessToken = globalThis.localStorage.getItem("accessToken");
+  const { data: availableParent, error } = useSWR([
+    `/api/v1/groups/list/available?limit=20`,
+    {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+        "X-Scoosign-Authorization": `Bearer ${accessToken}`,
+      },
+    },
+  ]);
 
-  // Fetch available parent from api
-  const getAvailableParent = async () => {
-    const response = await new Promise((resolve) => resolve(getRandomGroups(50)));
-    console.log("[LOAD AVAILABLE PARENT]", response);
-    setAvailableParent(response);
-  };
+  // // useEffect(() => {
+  // //   if (isMounted) getAvailableParent();
+  // // }, [isMounted]);
+
+  // // // Fetch available parent from api
+  // // const getAvailableParent = async () => {
+  // //   const response = await new Promise((resolve) =>
+  // //     resolve(getRandomGroups(50))
+  // //   );
+  // //   console.log("[LOAD AVAILABLE PARENT]", response);
+  // //   setAvailableParent(response);
+  // // };
 
   const groupForms = useFormik({
     initialValues: {
-      parent: group.root_groups || "",
-      description: group.description,
+      parent: group.data.parent || "",
+      description: group.data.description,
     },
     validationSchema: Yup.object({
       parent: Yup.string(),
@@ -72,46 +90,58 @@ export const GroupBasicDetails = (props) => {
                 name="description"
                 onBlur={groupForms.handleBlur}
                 onChange={groupForms.handleChange}
+                disabled={!group.data.active}
                 error={Boolean(
                   groupForms.touched.description &&
-                  groupForms.errors.description
+                    groupForms.errors.description
                 )}
-                helperText={groupForms.touched.description &&
-                  groupForms.errors.description}
+                helperText={
+                  groupForms.touched.description &&
+                  groupForms.errors.description
+                }
                 value={groupForms.values.description}
                 size="small"
                 sx={{
                   flexGrow: 1,
                   mr: 3,
-                }} />
+                }}
+              />
             </Box>
           </PropertyListItem>
           <Divider />
           <PropertyListItem
             align={align}
             label="Created By"
-            value={group.created_by} />
+            value={
+              group.data.created_by.firstName +
+              " " +
+              group.data.created_by.lastName
+            }
+          />
           <Divider />
           <PropertyListItem
             align={align}
             label="Created At"
-            value={group.created_at} />
+            value={new Date(group.data.created_at).toUTCString()}
+          />
           <Divider />
-          {group.locked && (
+          {!group.data.active && (
             <>
               <PropertyListItem
                 align={align}
                 label="Locked By"
-                value={group.locked_by} />
+                value={group.data.locked_by || "unknown"}
+              />
               <Divider />
               <PropertyListItem
                 align={align}
                 label="Locked At"
-                value={group.locked_at} />
+                value={new Date(group.data.locked_at).toUTCString()}
+              />
               <Divider />
             </>
           )}
-          {group.locked ? (
+          {!group.data.active ? (
             <></>
           ) : (
             <PropertyListItem align={align} label="Set Parent">
@@ -148,8 +178,8 @@ export const GroupBasicDetails = (props) => {
                 >
                   <option></option>
                   {availableParent &&
-                    availableParent.map((parent) => (
-                      <option key={parent.id} value={parent.id}>
+                    availableParent.data.itemsList.map((parent) => (
+                      <option key={parent._id} value={parent._id}>
                         {parent.name}
                       </option>
                     ))}

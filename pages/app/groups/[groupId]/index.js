@@ -38,6 +38,8 @@ import { GroupStudentItems } from "@/components/app/groups/group-student-items";
 import { AddStudentDialog } from "@/components/app/add-student-dialog";
 import { AddGroupDialog } from "@/components/app/add-group-dialog";
 import { applyPagination } from "@/components/app/apply-pagination";
+import useSWR from "swr";
+import { useRouter } from "next/router";
 
 const groupDetailsTabs = [
   { label: "Details", value: "details", disabled: false },
@@ -51,7 +53,20 @@ const groupDetailsTabs = [
 // TODO: Remove group parent
 const GroupDetails = (props) => {
   const isMounted = useMounted();
-  const [group, setGroup] = useState(null);
+  // // const [group, setGroup] = useState(null);
+  const accessToken = globalThis.localStorage.getItem("accessToken");
+  const { query } = useRouter();
+  const { data: group, error } = useSWR([
+    `/api/v1/groups/${query.groupId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+        "X-Scoosign-Authorization": `Bearer ${accessToken}`,
+      },
+    },
+  ]);
+
   const [currentTab, setCurrentTab] = useState("details");
   const [groupStudents, setGroupStudents] = useState([]);
   const [groupSubGroups, setGroupSubGroups] = useState([]);
@@ -90,20 +105,20 @@ const GroupDetails = (props) => {
 
   useEffect(() => {
     if (isMounted()) {
-      if (!group) getGroup();
+      // // if (!group) getGroup();
       getGroupStudents();
       getGroupSubGroups();
     }
   }, [isMounted, group]);
 
-  // Fetch group from api
-  const getGroup = async () => {
-    const response = await new Promise((resolve) => {
-      resolve(createRandomGroup);
-    });
-    console.log("[LOAD GROUP]", response);
-    setGroup(response);
-  };
+  // // // Fetch group from api
+  // // const getGroup = async () => {
+  // //   const response = await new Promise((resolve) => {
+  // //     resolve(createRandomGroup);
+  // //   });
+  // //   console.log("[LOAD GROUP]", response);
+  // //   setGroup(response);
+  // // };
   // Fetch group students from api
   const getGroupStudents = async () => {
     const response = await new Promise((resolve) => {
@@ -180,13 +195,13 @@ const GroupDetails = (props) => {
     console.log("TODO : unlock");
   };
 
-  const handleStudentsResult = (students)=> {
-    console.log("TODO API POST", students)
-  }
+  const handleStudentsResult = (students) => {
+    console.log("TODO API POST", students);
+  };
 
-  const handleGroupsResult = (groups)=> {
-    console.log("TODO API POST", groups)
-  }
+  const handleGroupsResult = (groups) => {
+    console.log("TODO API POST", groups);
+  };
 
   if (!group) return null;
 
@@ -232,10 +247,10 @@ const GroupDetails = (props) => {
             <Grid container justifyContent="space-between" spacing={3}>
               <Grid item>
                 <Typography variant="h4">
-                  {group.locked && (
+                  {!group.data.active && (
                     <Lock color="textPrimary" fontSize="medium" />
                   )}{" "}
-                  {group.name}
+                  {group.data.name}
                 </Typography>
                 <Box
                   sx={{
@@ -243,17 +258,23 @@ const GroupDetails = (props) => {
                     alignItems: "center",
                   }}
                 >
-                  <Typography variant="subtitle2">Type :</Typography>
                   <Chip
-                    label={!group.root_groups ? "ROOT-GROUP" : "SUB-GROUP"}
-                    color={!group.root_groups ? "primary" : "secondary"}
+                    label={group.data._id}
+                    color="default"
                     size="small"
-                    sx={{ ml: 1 }}
+                    sx={{ mr: 0.5 }}
                   />
+                  {group.data.active && (
+                    <Chip
+                      label={!group.data.parent ? "ROOT-GROUP" : "SUB-GROUP"}
+                      color={!group.data.parent ? "primary" : "secondary"}
+                      size="small"
+                    />
+                  )}
                 </Box>
               </Grid>
               <Grid item sx={{ ml: -2 }}>
-                {!group.locked && (
+                {group.data.active && (
                   <Button
                     disabled
                     endIcon={<ChevronDownIcon fontSize="small" />}
@@ -263,7 +284,7 @@ const GroupDetails = (props) => {
                     Actions
                   </Button>
                 )}
-                {group.locked && (
+                {!group.data.active && (
                   <Button
                     onClick={handleUnlock}
                     endIcon={<LockOpen fontSize="small" />}
@@ -305,7 +326,7 @@ const GroupDetails = (props) => {
                     setGroupInfosHandler={setGroupInfosHandler}
                   />
                 </Grid>
-                {group.locked || group.root_groups ? (
+                {!group.data.active || group.data.parent ? (
                   <></>
                 ) : (
                   <Grid item xs={12}>
@@ -322,7 +343,7 @@ const GroupDetails = (props) => {
                     />
                   </Grid>
                 )}
-                {!group.locked ? (
+                {group.data.active ? (
                   <Grid item xs={12}>
                     <GroupStudentItems
                       addStudentHandler={addStudentHandler}
@@ -354,7 +375,7 @@ const GroupDetails = (props) => {
                       </Box>
                     </CardContent>
                     <CardActions sx={{ flewWrap: "wrap", m: -1 }}>
-                      {!group.locked && (
+                      {group.data.active && (
                         <Button
                           onClick={handleLock}
                           sx={{ m: 1, mr: "auto" }}
