@@ -75,7 +75,8 @@ const GroupDetails = (props) => {
     await putGroupInfo(body);
     mutate({
       ...group,
-      itemsList: { parent: body.parent, description: body.description },
+      parent: body.parent, 
+      description: body.description 
     });
   };
 
@@ -101,14 +102,16 @@ const GroupDetails = (props) => {
     console.log("TODO : danger delete");
   };
 
-  const handleLock = (event) => {
+  const handleLockUnlock = async (event) => {
     event.preventDefault();
-    console.log("TODO : danger lock");
-  };
-
-  const handleUnlock = (event) => {
-    event.preventDefault();
-    console.log("TODO : unlock");
+    const body = {
+      active : !group.data.active
+    }
+    await putGroupInfo(body);
+    mutate({
+      ...group,
+      active : body.active
+    });
   };
 
 
@@ -287,7 +290,7 @@ const GroupDetails = (props) => {
                 )}
                 {!group.data?.active && (
                   <Button
-                    onClick={handleUnlock}
+                    onClick={handleLockUnlock}
                     endIcon={<LockOpen fontSize="small" />}
                     variant="contained"
                     color="primary"
@@ -382,7 +385,7 @@ const GroupDetails = (props) => {
                     <CardActions sx={{ flewWrap: "wrap", m: -1 }}>
                       {group.data?.active && (
                         <Button
-                          onClick={handleLock}
+                          onClick={handleLockUnlock}
                           sx={{ m: 1, mr: "auto" }}
                           color="error"
                           variant="contained"
@@ -391,7 +394,7 @@ const GroupDetails = (props) => {
                         </Button>
                       )}
                       <Button
-                        align="right"
+                        align="right" disabled
                         onClick={handleDelete}
                         color="error"
                       >
