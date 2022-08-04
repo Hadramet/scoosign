@@ -75,13 +75,13 @@ const GroupDetails = (props) => {
     await putGroupInfo(body);
     mutate({
       ...group,
-      parent: body.parent, 
-      description: body.description 
+      parent: body.parent,
+      description: body.description,
     });
   };
 
-  const putGroupInfo = async (body) => {
-    await fetch(`/api/v1/groups/${query.groupId}`, {
+  const putGroupInfo = async (body, groupId=query.groupId) => {
+    await fetch(`/api/v1/groups/${groupId}`, {
       method: "PUT",
       headers: {
         "Content-type": "application/json",
@@ -105,15 +105,14 @@ const GroupDetails = (props) => {
   const handleLockUnlock = async (event) => {
     event.preventDefault();
     const body = {
-      active : !group.data.active
-    }
+      active: !group.data.active,
+    };
     await putGroupInfo(body);
     mutate({
       ...group,
-      active : body.active
+      active: body.active,
     });
   };
-
 
   // ********************************
   // ** SUB-GROUPS
@@ -149,13 +148,41 @@ const GroupDetails = (props) => {
     });
   };
 
-  const handleGroupsResult = (groups) => {
-    console.log("TODO API POST", groups);
+  const handleGroupsResult = async (groups) => {
+    const ids = [];
+    groups.map((group) => ids.push(group._id));
+
+    const body = {
+      subGroups: ids,
+    };
+    await putGroupInfo(body);
+    subGroupsMutate({
+      ...groupSubGroups,
+      data: {
+        ...groupSubGroups.data,
+        paginator: {
+          ...groupSubGroups.data.paginator,
+          itemCount: groupSubGroups.data.paginator.itemCount + groups.length,
+        },
+        itemsList: [...groupSubGroups.data.itemsList, groups],
+      },
+    });
   };
 
-  const removeGroupHandler = (event, groupId) => {
+  const removeGroupHandler = async (event, groupId) => {
     event.preventDefault();
-    console.log("TODO : remove group id: " + groupId);
+    await putGroupInfo({parent:''},groupId);
+    subGroupsMutate({
+      ...groupSubGroups,
+      data: {
+        ...groupSubGroups.data,
+        paginator: {
+          ...groupSubGroups.data.paginator,
+          itemCount: groupSubGroups.data.paginator.itemCount - 1,
+        },
+        itemsList: [groupSubGroups.data.itemsList.filter(item => item._id != groupId)],
+      },
+    });
   };
 
   const addGroupHandler = (event) => {
@@ -337,7 +364,7 @@ const GroupDetails = (props) => {
                     {groupSubGroups && (
                       <GroupSubGroupItems
                         subGroups={groupSubGroups.data?.itemsList}
-                        count={groupSubGroups.data?.paginator.itemCount}
+                        count={groupSubGroups.data?.paginator?.itemCount}
                         canBrowseToGroup={false}
                         addGroupHandler={addGroupHandler}
                         removeGroupHandler={removeGroupHandler}
@@ -394,7 +421,8 @@ const GroupDetails = (props) => {
                         </Button>
                       )}
                       <Button
-                        align="right" disabled
+                        align="right"
+                        disabled
                         onClick={handleDelete}
                         color="error"
                       >

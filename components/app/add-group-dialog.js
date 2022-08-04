@@ -2,9 +2,16 @@ import {
   Button,
   Card,
   CardActions,
-  CardContent, Checkbox, Dialog,
-  Divider, ListItemText,
-  MenuItem, Select, Typography
+  CardContent,
+  Checkbox,
+  Dialog,
+  Divider,
+  FormControlLabel,
+  FormGroup,
+  ListItemText,
+  MenuItem,
+  Select,
+  Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
@@ -12,37 +19,41 @@ import PropTypes from "prop-types";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { getRandomGroups } from "@/faker/fakeDatas";
+import useSWR, { useSWRInfinite } from "swr";
+import { Scrollbar } from "../custom";
 
 export const AddGroupDialog = (props) => {
   const { open, onClose, handleGroupResult, ...other } = props;
-  const [availableGroup, setAvailableGroup] = useState([]);
+  const [groupsToAdd, setGroupToAdd] = useState([]);
+  const [nbGroups, setNbGroups] = useState(10);
+  const accessToken = globalThis.localStorage.getItem("accessToken");
+  const { data: availableGroup, error } = useSWR([
+    `/api/v1/groups?page=1&limit=${nbGroups}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+        "X-Scoosign-Authorization": `Bearer ${accessToken}`,
+      },
+    },
+  ]);
+
   useEffect(() => {
     if (open) {
-      setAvailableGroup([]);
-      groupForms.resetForm();
-      getAvailableGroup();
+      setGroupToAdd([])
     }
-  }, [open, groupForms]);
-
-  const getAvailableGroup = async () => {
-    const response = await new Promise(async (resolve) => resolve(await getRandomGroups(5))
-    );
-    console.log("TODO get available groups");
-    setAvailableGroup(response);
-  };
+  }, [open]);
   const groupForms = useFormik({
     initialValues: {
-      groupsToAdd: [],
+      groupToAdd: [],
     },
     validationSchema: Yup.object({
-      groupsToAdd: Yup.array(),
+      groupToAdd: Yup.array(),
     }),
     onSubmit: async (values, helpers) => {
       try {
-        const value_to_add = [];
-        values.groupsToAdd.map((group) => value_to_add.push({ id: group.id, name:group.name }));
-        console.log(value_to_add);
-        handleGroupResult(value_to_add)
+        console.log(groupsToAdd)
+        handleGroupResult(groupsToAdd);
         onClose();
       } catch (error) {
         console.error(error);
@@ -52,6 +63,10 @@ export const AddGroupDialog = (props) => {
       }
     },
   });
+
+ 
+
+  if (!availableGroup) return "loading";
   return (
     <Dialog fullWidth maxWidth="sm" onClose={onClose} open={!!open} {...other}>
       <Card>
@@ -67,40 +82,67 @@ export const AddGroupDialog = (props) => {
               sx={{
                 mt: 3,
                 mb: 3,
-              }} />
-            <Select
-              label="Groups"
-              displayEmpty
-              //   value={groups}
-              onBlur={groupForms.handleBlur}
-              onChange={groupForms.handleChange}
-              error={Boolean(
-                groupForms.touched.parent && groupForms.errors.parent
-              )}
-              value={groupForms.values.groupsToAdd}
-              name="groupsToAdd"
-              fullWidth
-              multiple
-              renderValue={(selected) => (
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                  <Typography color="textSecondary" variant="body2">
-                    Groups selected : {selected.length}
-                  </Typography>
-                </Box>
-              )}
+              }}
+            />
+            <Box
+              sx={{
+                backgroundColor: "background.default",
+                borderColor: "divider",
+                borderRadius: 1,
+                borderStyle: "solid",
+                borderWidth: 1,
+                mt: 2,
+              }}
             >
-              <MenuItem disabled value="">
-                <em>Select groups</em>
-              </MenuItem>
-              {availableGroup &&
-                availableGroup.map((group) => (
-                  <MenuItem key={group.id} value={group}>
-                    <Checkbox
-                      checked={groupForms.values.groupsToAdd.indexOf(group) > -1} />
-                    <ListItemText primary={group.name} />
-                  </MenuItem>
-                ))}
-            </Select>
+              <Scrollbar sx={{ maxHeight: 300 }}>
+                <FormGroup
+                  name="groupsToAdd"
+                  label="Groups"
+                  sx={{
+                    py: 1,
+                    px: 1.5,
+                  }}
+                >
+                  {availableGroup &&
+                    availableGroup.data?.itemsList?.map((group) => (
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={groupsToAdd.indexOf(group) > -1}
+                            onChange={(e) => {
+                              if (groupsToAdd.indexOf(group) > -1)
+                                setGroupToAdd(
+                                  groupsToAdd.filter(
+                                    (item) => item._id != group._id
+                                  )
+                                );
+                              else setGroupToAdd([...groupsToAdd, group]);
+                            }}
+                          />
+                        }
+                        key={group._id}
+                        label={group.name}
+                        value={group._id}
+                      />
+                    ))}
+                </FormGroup>
+              </Scrollbar>
+            </Box>
+
+            <MenuItem value="">
+              <em>
+                <Button
+                  disabled={nbGroups >= availableGroup.data.paginator.itemCount}
+                  onClick={(e) => {
+                    setNbGroups(nbGroups + 10);
+                  }}
+                  variant="text"
+                  sx={{ ml: "auto" }}
+                >
+                  Load More
+                </Button>{" "}
+              </em>
+            </MenuItem>
           </CardContent>
           <CardActions>
             <Button sx={{ ml: "auto" }} onClick={onClose}>

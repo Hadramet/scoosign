@@ -52,7 +52,7 @@ export const GroupSubGroupItems = (props) => {
                   </TableCell>
                   <TableCell>
                     <Typography variant="subtitle2">
-                      {groupItem.students.length}
+                      {groupItem?.students?.length}
                     </Typography>
                   </TableCell>
                   <TableCell align="right">
