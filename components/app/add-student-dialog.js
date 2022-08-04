@@ -6,6 +6,8 @@ import {
   Checkbox,
   Dialog,
   Divider,
+  FormControlLabel,
+  FormGroup,
   ListItemText,
   MenuItem,
   Select,
@@ -17,40 +19,53 @@ import PropTypes from "prop-types";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { getRandomUser } from "@/faker/fakeDatas";
+import { Scrollbar } from "../custom";
+import useSWR from "swr";
 
 export const AddStudentDialog = (props) => {
-  const { open, onClose, handleResult, ...other } = props;
-  const [availableStudents, setAvailableStudents] = useState([]);
+  const { open, onClose, handleResult, groupParentId, ...other } = props;
+  // // const [availableStudents, setAvailableStudents] = useState([]);
+
+  const [studentsToAdd, setStudentsToAdd] = useState([]);
+  const [nbStudent, setNbStudent] = useState(10);
+  const accessToken = globalThis.localStorage.getItem("accessToken");
+  const { data: availableStudents, error } = useSWR([
+    `${
+      groupParentId
+        ? `/api/v1/groups/${groupParentId}/students?page=1&limit=${nbStudent}`
+        : `/api/v1/students?page=1&limit=${nbStudent}`
+    }`,
+    {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+        "X-Scoosign-Authorization": `Bearer ${accessToken}`,
+      },
+    },
+  ]);
   useEffect(() => {
     if (open) {
-      setAvailableStudents([]);
-      form.resetForm();
-      getAvailableStudents();
+      setStudentsToAdd([]);
+      // // form.resetForm();
+      // // getAvailableStudents();
     }
   }, [open, form]);
 
-  const getAvailableStudents = async () => {
-    const response = await new Promise((resolve) =>
-      resolve(getRandomUser(15))
-    );
-    console.log("TODO get available students");
-    setAvailableStudents(response);
-  };
+  // // const getAvailableStudents = async () => {
+  // //   const response = await new Promise((resolve) => resolve(getRandomUser(15)));
+  // //   console.log("TODO get available students");
+  // //   setAvailableStudents(response);
+  // // };
   const form = useFormik({
     initialValues: {
-      studentsToAdd: [],
+      studentsToAddForm: [],
     },
     validationSchema: Yup.object({
-      studentsToAdd: Yup.array(),
+      studentsToAddForm: Yup.array(),
     }),
     onSubmit: async (values, helpers) => {
       try {
-        const value_to_add = [];
-        values.studentsToAdd.map((o) =>
-          value_to_add.push({ id: o.id, name: o.firstName+" "+o.lastName })
-        );
-        console.log(value_to_add);
-        handleResult(value_to_add);
+        handleResult(studentsToAdd);
         onClose();
       } catch (error) {
         console.error(error);
@@ -60,6 +75,7 @@ export const AddStudentDialog = (props) => {
       }
     },
   });
+  if(!availableStudents) return "loading"
   return (
     <Dialog fullWidth maxWidth="sm" onClose={onClose} open={!!open} {...other}>
       <Card>
@@ -77,40 +93,65 @@ export const AddStudentDialog = (props) => {
                 mb: 3,
               }}
             />
-            <Select
-              label="Students"
-              displayEmpty
-              //   value={groups}
-              onBlur={form.handleBlur}
-              onChange={form.handleChange}
-              error={Boolean(
-                form.touched.studentsToAdd && form.errors.studentsToAdd
-              )}
-              value={form.values.studentsToAdd}
-              name="studentsToAdd"
-              fullWidth
-              multiple
-              renderValue={(selected) => (
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                  <Typography color="textSecondary" variant="body2">
-                    Students selected : {selected.length}
-                  </Typography>
-                </Box>
-              )}
+            <Box
+              sx={{
+                backgroundColor: "background.default",
+                borderColor: "divider",
+                borderRadius: 1,
+                borderStyle: "solid",
+                borderWidth: 1,
+                mt: 2,
+              }}
             >
-              <MenuItem disabled value="">
-                <em>Select students</em>
-              </MenuItem>
-              {availableStudents &&
-                availableStudents.map((o) => (
-                  <MenuItem key={o.id} value={o}>
-                    <Checkbox
-                      checked={form.values.studentsToAdd.indexOf(o) > -1}
-                    />
-                    <ListItemText primary={o.firstName + " " + o.lastName} />
-                  </MenuItem>
-                ))}
-            </Select>
+              <Scrollbar sx={{ maxHeight: 300 }}>
+                <FormGroup
+                  name="studentsToAdd"
+                  label="Students"
+                  sx={{
+                    py: 1,
+                    px: 1.5,
+                  }}
+                >
+                  {availableStudents &&
+                    availableStudents.data?.itemsList?.map((student) => (
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={studentsToAdd.indexOf(student) > -1}
+                            onChange={(e) => {
+                              if (studentsToAdd.indexOf(student) > -1)
+                                setGroupToAdd(
+                                  studentsToAdd.filter(
+                                    (item) => item._id != group._id
+                                  )
+                                );
+                              else
+                                setStudentsToAdd([...studentsToAdd, student]);
+                            }}
+                          />
+                        }
+                        key={student._id}
+                        label={student.user.firstName+' '+student.user.lastName}
+                        value={student._id}
+                      />
+                    ))}
+                </FormGroup>
+              </Scrollbar>
+            </Box>
+            <MenuItem value="">
+              <em>
+                <Button
+                  disabled={nbStudent >= availableStudents.data?.paginator?.itemCount}
+                  onClick={(e) => {
+                    setNbStudent(nbStudent + 10);
+                  }}
+                  variant="text"
+                  sx={{ ml: "auto" }}
+                >
+                  Load More
+                </Button>{" "}
+              </em>
+            </MenuItem>
           </CardContent>
           <CardActions>
             <Button sx={{ ml: "auto" }} onClick={onClose}>
@@ -129,4 +170,5 @@ AddStudentDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   handleResult: PropTypes.func.isRequired,
+  groupParentId: PropTypes.string,
 };

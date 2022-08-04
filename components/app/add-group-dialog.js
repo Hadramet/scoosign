@@ -8,9 +8,7 @@ import {
   Divider,
   FormControlLabel,
   FormGroup,
-  ListItemText,
   MenuItem,
-  Select,
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
@@ -18,8 +16,7 @@ import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { getRandomGroups } from "@/faker/fakeDatas";
-import useSWR, { useSWRInfinite } from "swr";
+import useSWR from "swr";
 import { Scrollbar } from "../custom";
 
 export const AddGroupDialog = (props) => {
@@ -40,7 +37,7 @@ export const AddGroupDialog = (props) => {
 
   useEffect(() => {
     if (open) {
-      setGroupToAdd([])
+      setGroupToAdd([]);
     }
   }, [open]);
   const groupForms = useFormik({
@@ -52,7 +49,7 @@ export const AddGroupDialog = (props) => {
     }),
     onSubmit: async (values, helpers) => {
       try {
-        console.log(groupsToAdd)
+        console.log(groupsToAdd);
         handleGroupResult(groupsToAdd);
         onClose();
       } catch (error) {
@@ -63,8 +60,6 @@ export const AddGroupDialog = (props) => {
       }
     },
   });
-
- 
 
   if (!availableGroup) return "loading";
   return (

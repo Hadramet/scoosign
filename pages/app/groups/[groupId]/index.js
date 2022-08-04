@@ -80,7 +80,7 @@ const GroupDetails = (props) => {
     });
   };
 
-  const putGroupInfo = async (body, groupId=query.groupId) => {
+  const putGroupInfo = async (body, groupId = query.groupId) => {
     await fetch(`/api/v1/groups/${groupId}`, {
       method: "PUT",
       headers: {
@@ -171,7 +171,7 @@ const GroupDetails = (props) => {
 
   const removeGroupHandler = async (event, groupId) => {
     event.preventDefault();
-    await putGroupInfo({parent:''},groupId);
+    await putGroupInfo({ parent: "" }, groupId);
     subGroupsMutate({
       ...groupSubGroups,
       data: {
@@ -180,14 +180,15 @@ const GroupDetails = (props) => {
           ...groupSubGroups.data.paginator,
           itemCount: groupSubGroups.data.paginator.itemCount - 1,
         },
-        itemsList: [groupSubGroups.data.itemsList.filter(item => item._id != groupId)],
+        itemsList: [
+          groupSubGroups.data.itemsList.filter((item) => item._id != groupId),
+        ],
       },
     });
   };
 
   const addGroupHandler = (event) => {
     event.preventDefault();
-    console.log("TODO : add group handle");
     setAddGroupDialog({
       isOpen: true,
     });
@@ -225,7 +226,6 @@ const GroupDetails = (props) => {
 
   const addStudentHandler = (event) => {
     event.preventDefault();
-    console.log("TODO : add student handle");
     setAddStudentDialog({
       isOpen: true,
     });
@@ -241,8 +241,25 @@ const GroupDetails = (props) => {
     console.log("TODO : remove student id: " + studentId);
   };
 
-  const handleStudentsResult = (students) => {
-    console.log("TODO API POST", students);
+  const handleStudentsResult = async (students) => {
+    const ids = [];
+    students.map((student) => ids.push(student._id));
+
+    const body = {
+      students: ids,
+    };
+    await putGroupInfo(body);
+    studentsMutate({
+      ...groupStudents,
+      data: {
+        ...groupStudents.data,
+        paginator: {
+          ...groupStudents.data.paginator,
+          itemCount: groupStudents.data.paginator.itemCount + students.length,
+        },
+        itemsList: [...groupStudents.data.itemsList, students],
+      },
+    });
   };
 
   if (!group) return null;
@@ -437,6 +454,7 @@ const GroupDetails = (props) => {
         </Container>
       </Box>
       <AddStudentDialog
+        groupParentId={group.data?.parent}
         open={addStudentDialog.isOpen}
         onClose={handleCloseAddStudentDialog}
         handleResult={handleStudentsResult}

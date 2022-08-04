@@ -49,7 +49,7 @@ export const GroupStudentItems = (props) => {
             <TableBody>
               {students &&
                 students.map((studentItem) => (
-                  <TableRow key={studentItem.id}>
+                  <TableRow key={studentItem._id}>
                     <TableCell>
                       <Avatar src={studentItem?.avatar}
                         sx={{
@@ -58,23 +58,23 @@ export const GroupStudentItems = (props) => {
                         }}
                       >
                         {getInitials(
-                          studentItem?.user.firstName + " " + studentItem?.user.lastName
+                          studentItem?.user?.firstName + " " + studentItem?.user?.lastName
                         )}
                       </Avatar>
                     </TableCell>
                     <TableCell>
                       <Typography variant="subtitle2">
-                        {studentItem.user.firstName}
+                        {studentItem?.user?.firstName}
                       </Typography>
                     </TableCell>
                     <TableCell>
                       <Typography variant="subtitle2">
-                        {studentItem.user.lastName}
+                        {studentItem?.user?.lastName}
                       </Typography>
                     </TableCell>
                     <TableCell>
                       <Typography variant="subtitle2">
-                        {studentItem.user.email}
+                        {studentItem?.user?.email}
                       </Typography>
                     </TableCell>
                     <TableCell align="right">
