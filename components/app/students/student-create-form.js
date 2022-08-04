@@ -108,7 +108,7 @@ export const StudentCreateForm = (props) => {
 
   useEffect(() => {
     router.prefetch("/app/students");
-  }, []);
+  },);
 
   const [valuesForm, setValuesForm] = useState({
     showPassword: false,

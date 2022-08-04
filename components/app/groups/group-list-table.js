@@ -36,12 +36,12 @@ export const GroupListTable = (props) => {
             <TableBody>
               {groups.map((group) => {
                 return (
-                  <TableRow hover key={group.id}>
+                  <TableRow hover key={group._id}>
                     <TableCell padding="checkbox">
                       <Checkbox />
                     </TableCell>
                     <TableCell>
-                      <NextLink href={`/app/groups/${group.id}`} passHref>
+                      <NextLink href={`/app/groups/${group._id}`} passHref>
                         <Link color="inherit" variant="subtitle2">
                           {group.name}
                         </Link>
