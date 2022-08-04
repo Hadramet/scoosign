@@ -52,12 +52,12 @@ export function getSections(t) {
       title: "School",
       permissions: ["admin", "academic"],
       items: [
-        // {
-        //   title: "Students",
-        //   path: "/app/students",
-        //   icon: <SchoolIcon fontSize="small" />,
-        //   permissions: ["admin", "academic"],
-        // },
+        {
+          title: "Students",
+          path: "/app/students",
+          icon: <SchoolIcon fontSize="small" />,
+          permissions: ["admin", "academic"],
+        },
         {
           title: "Groups",
           path: "/app/groups",
