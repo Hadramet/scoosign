@@ -1,11 +1,16 @@
 import {
   Button,
-  Card, CardHeader, Divider, IconButton, Table,
+  Card,
+  CardHeader,
+  Divider,
+  IconButton,
+  Table,
   TableBody,
   TableCell,
   TableHead,
   TablePagination,
-  TableRow, Typography
+  TableRow,
+  Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import NextLink from "next/link";
@@ -17,20 +22,32 @@ import PropTypes from "prop-types";
 
 export const GroupSubGroupItems = (props) => {
   const {
-    subGroups, canBrowseToGroup, addGroupHandler, removeGroupHandler, page, rowsPerPage, onPageChange, onRowsPerPageChange, count, ...other
+    subGroups,
+    canBrowseToGroup,
+    addGroupHandler,
+    removeGroupHandler,
+    page,
+    rowsPerPage,
+    onPageChange,
+    onRowsPerPageChange,
+    count,
+    ...other
   } = props;
 
   return (
     <Card {...other}>
       <CardHeader
         title="Sub Groups"
-        action={<Button
-          onClick={addGroupHandler}
-          startIcon={<PlusIcon fontSize="small" />}
-          variant="contained"
-        >
-          Add Group
-        </Button>} />
+        action={
+          <Button
+            onClick={addGroupHandler}
+            startIcon={<PlusIcon fontSize="small" />}
+            variant="contained"
+          >
+            Add Group
+          </Button>
+        }
+      />
       <Divider />
       <Scrollbar>
         <Box sx={{ minWidth: 700 }}>
@@ -43,35 +60,39 @@ export const GroupSubGroupItems = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {subGroups.map((groupItem) => (
-                <TableRow key={groupItem._id}>
-                  <TableCell>
-                    <Typography variant="subtitle2">
-                      {groupItem.name}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="subtitle2">
-                      {groupItem?.students?.length}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="right">
-                    <IconButton
-                      onClick={(e) => removeGroupHandler(e, groupItem._id)}
-                      component="a"
-                    >
-                      <DeleteOutline fontSize="small" />
-                    </IconButton>
-                    {canBrowseToGroup && (
-                      <NextLink href={`/app/groups/${groupItem._id}`} passHref>
-                        <IconButton component="a">
-                          <ArrowRightIcon fontSize="small" />
-                        </IconButton>
-                      </NextLink>
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
+              {subGroups &&
+                subGroups.map((groupItem) => (
+                  <TableRow key={groupItem._id}>
+                    <TableCell>
+                      <Typography variant="subtitle2">
+                        {groupItem.name}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="subtitle2">
+                        {groupItem?.students?.length}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="right">
+                      <IconButton
+                        onClick={(e) => removeGroupHandler(e, groupItem._id)}
+                        component="a"
+                      >
+                        <DeleteOutline fontSize="small" />
+                      </IconButton>
+                      {canBrowseToGroup && (
+                        <NextLink
+                          href={`/app/groups/${groupItem._id}`}
+                          passHref
+                        >
+                          <IconButton component="a">
+                            <ArrowRightIcon fontSize="small" />
+                          </IconButton>
+                        </NextLink>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </Box>
@@ -83,7 +104,8 @@ export const GroupSubGroupItems = (props) => {
         onRowsPerPageChange={onRowsPerPageChange}
         page={page}
         rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={[5, 10, 25]} />
+        rowsPerPageOptions={[5, 10, 25]}
+      />
     </Card>
   );
 };

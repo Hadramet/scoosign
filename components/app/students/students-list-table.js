@@ -49,7 +49,7 @@ export const StudentListTable = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map((user) => {
+            {users && users.map((user) => {
               return (
                 <TableRow hover key={user._id}>
                   <TableCell padding="checkbox">
@@ -66,7 +66,7 @@ export const StudentListTable = (props) => {
                         {getInitials(user.user.firstName+ ' '+ user.user.lastName)}
                       </Avatar>
                       <Box sx={{ ml: 1 }}>
-                        <NextLink href={`/app/users/${user._id}`} passHref>
+                        <NextLink href={`/app/students/${user._id}`} passHref>
                           <Link color="inherit" variant="subtitle2">
                             {user.user.firstName+ ' '+ user.user.lastName}
                           </Link>
