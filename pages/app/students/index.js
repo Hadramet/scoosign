@@ -38,7 +38,7 @@ const StudentsList = (props) => {
       },
     },
   ]);
-  
+
   const onPageChanged = (event, newPage) => {
     setPage(newPage + 1);
   };
@@ -46,9 +46,6 @@ const StudentsList = (props) => {
   const onRowPerPageChanged = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
-
-  if (error) return "An error has occurred.";
-  if(!data) return (<div> {"Loading .."}</div>)
 
   return (
     <Box>
@@ -110,10 +107,7 @@ const StudentsList = (props) => {
                 p: 3,
               }}
             >
-              <Box
-                component="form" disabled
-                sx={{ flexGrow: 1, m: 1.5 }}
-              >
+              <Box component="form" disabled sx={{ flexGrow: 1, m: 1.5 }}>
                 <TextField
                   defaultValue=""
                   fullWidth
@@ -129,14 +123,20 @@ const StudentsList = (props) => {
                 />
               </Box>
             </Box>
-            <StudentListTable
-              users={data.data.itemsList}
-              usersCount={data.data.paginator.itemCount}
-              page={page-1}
-              rowsPerPage={rowsPerPage}
-              onPageChanged={onPageChanged}
-              onRowPerPageChanged={onRowPerPageChanged}
-            />
+            {error ? (
+              "An error has occurred."
+            ) : !data ? (
+              "loading ..."
+            ) : (
+              <StudentListTable
+                users={data.data?.itemsList}
+                usersCount={data.data?.paginator?.itemCount}
+                page={page - 1}
+                rowsPerPage={rowsPerPage}
+                onPageChange={onPageChanged}
+                onRowsPerPageChange={onRowPerPageChanged}
+              />
+            )}
           </Card>
         </Container>
       </Box>
