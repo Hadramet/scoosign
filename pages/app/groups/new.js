@@ -24,8 +24,6 @@ import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { useMounted } from "@/hooks/use-mounted";
 import { useEffect, useState } from "react";
-import { getRandomGroups } from "@/faker/fakeDatas";
-
 const { AppLayout } = require("@/components/app/app-layout");
 const { AuthGuard } = require("@/components/authentication/auth-guard");
 const { RoleGuard } = require("@/components/authentication/role-guard");
@@ -33,12 +31,24 @@ import { Plus as PlusIcon } from "@/components/icons";
 import { Groups, RemoveCircleOutline } from "@mui/icons-material";
 import { AddGroupDialog } from "@/components/app/add-group-dialog";
 import { AddStudentDialog } from "@/components/app/add-student-dialog";
+import useSWR from "swr";
+import { useRouter } from "next/router";
 const { default: Head } = require("next/head");
 
 const CreateGroupForm = (props) => {
   const isMounted = useMounted();
-
-  const [availableParent, setAvailableParent] = useState([]);
+  const router = useRouter();
+  const accessToken = globalThis.localStorage.getItem("accessToken");
+  const { data: availableParent, error } = useSWR([
+    `/api/v1/groups/list/available?limit=20`,
+    {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+        "X-Scoosign-Authorization": `Bearer ${accessToken}`,
+      },
+    },
+  ]);
 
   const [subGroups, setGroups] = useState([]);
   const [students, setStudents] = useState([]);
@@ -56,27 +66,16 @@ const CreateGroupForm = (props) => {
 
   useEffect(() => {
     if (isMounted) {
-      getAvailableParent();
     }
   }, [isMounted]);
   useEffect(() => {
     form.setFieldValue("subGroups", subGroups, true);
-  }, [subGroups]);
+  }, [subGroups, form]);
   useEffect(() => {
     form.setFieldValue("students", students, true);
-  }, [students]);
-
-  // Fetch available  from api
-  const getAvailableParent = async () => {
-    const response = await new Promise((resolve) =>
-      resolve(getRandomGroups(50))
-    );
-    console.log("[LOAD AVAILABLE PARENT]", response);
-    setAvailableParent(response);
-  };
+  }, [students, form]);
   const addGroupHandler = (event) => {
     event.preventDefault();
-    console.log("TODO : add group handle");
     setAddGroupDialog({
       isOpen: true,
     });
@@ -88,7 +87,6 @@ const CreateGroupForm = (props) => {
   };
   const addStudentHandler = (event) => {
     event.preventDefault();
-    console.log("TODO : add student handle");
     setAddStudentDialog({
       isOpen: true,
     });
@@ -102,13 +100,13 @@ const CreateGroupForm = (props) => {
     setGroups((prevGroups) => [...prevGroups, ...groups]);
   };
   const removeItem = (id) => {
-    setGroups((prev) => prev.filter((g) => g.id !== id));
+    setGroups((prev) => prev.filter((g) => g._id !== id));
   };
   const handleStudentsResult = (groups) => {
     setStudents((prevGroups) => [...prevGroups, ...groups]);
   };
   const removeStudent = (id) => {
-    setStudents((prev) => prev.filter((s) => s.id !== id));
+    setStudents((prev) => prev.filter((s) => s._id !== id));
   };
   const onRemoveAll = () => {
     setGroups([]);
@@ -120,7 +118,7 @@ const CreateGroupForm = (props) => {
     initialValues: {
       name: "",
       description: "",
-      parentId: "",
+      parent: "",
       isSubGroup: false,
       subGroups: [],
       students: [],
@@ -129,7 +127,7 @@ const CreateGroupForm = (props) => {
     validationSchema: Yup.object({
       name: Yup.string().max(255).required(),
       description: Yup.string().max(5000),
-      parentId: Yup.string()
+      parent: Yup.string()
         .max(255)
         .when("isSubGroup", {
           is: true,
@@ -138,22 +136,39 @@ const CreateGroupForm = (props) => {
           ),
         }),
       isSubGroup: Yup.bool(),
-      subGroups: Yup.array().of(
-        Yup.object({
-          id: Yup.string().max(255).required(),
-          name: Yup.string().max(255),
-        })
-      ),
-      students: Yup.array().of(
-        Yup.object({
-          id: Yup.string().max(255).required(),
-          name: Yup.string().max(255),
-        })
-      ),
+      subGroups: Yup.array(),
+      students: Yup.array(),
     }),
     onSubmit: async (values, helpers) => {
       try {
-        console.log(values);
+        const sts = [];
+        const sbg = [];
+
+        values.subGroups.map((group) => sbg.push(group._id));
+        values.students.map((student) => sts.push(student._id));
+
+        const body = { ...values, students: sts, subGroups: sbg };
+        console.log(body);
+        await fetch("/api/v1/groups", {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+            "X-Scoosign-Authorization": `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify(body),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              toast.success("Group successfully created");
+              router.push("/app/groups");
+            } else {
+              toast.error(data.message);
+            }
+          })
+          .catch((error) => {
+            toast.error(err.message);
+          });
       } catch (error) {
         console.error(err);
         toast.error("Something went wrong!");
@@ -219,16 +234,14 @@ const CreateGroupForm = (props) => {
                   <TextField
                     label="Parent"
                     margin="normal"
-                    name="parentId"
+                    name="parent"
                     select
                     fullWidth
-                    helperText={form.touched.parentId && form.errors.parentId}
+                    helperText={form.touched.parent && form.errors.parent}
                     onBlur={form.handleBlur}
                     onChange={form.handleChange}
-                    error={Boolean(
-                      form.touched.parentId && form.errors.parentId
-                    )}
-                    value={form.values.parentId}
+                    error={Boolean(form.touched.parent && form.errors.parent)}
+                    value={form.values.parent}
                     SelectProps={{ native: true }}
                     sx={{
                       flexGrow: 1,
@@ -238,8 +251,8 @@ const CreateGroupForm = (props) => {
                   >
                     <option></option>
                     {availableParent &&
-                      availableParent.map((parent) => (
-                        <option key={parent.id} value={parent.id}>
+                      availableParent.data.itemsList.map((parent) => (
+                        <option key={parent._id} value={parent._id}>
                           {parent.name}
                         </option>
                       ))}
@@ -300,7 +313,7 @@ const CreateGroupForm = (props) => {
                           <Tooltip title="Remove">
                             <IconButton
                               color="error"
-                              onClick={(e) => removeItem(subGroup.id)}
+                              onClick={(e) => removeItem(subGroup._id)}
                               edge="end"
                             >
                               <RemoveCircleOutline fontSize="small" />
@@ -358,7 +371,7 @@ const CreateGroupForm = (props) => {
                   <List>
                     {form.values.students.map((student) => (
                       <ListItem
-                        key={student.id}
+                        key={student._id}
                         sx={{
                           border: 1,
                           borderColor: "divider",
@@ -370,16 +383,19 @@ const CreateGroupForm = (props) => {
                           <Groups fontSize="small" />
                         </ListItemIcon>
                         <ListItemText
-                          primary={student.name}
+                          primary={
+                            student.user.firstName + " " + student.user.lastName
+                          }
                           primaryTypographyProps={{
                             color: "textPrimary",
                             variant: "subtitle2",
                           }}
+                          secondary={student.user.email}
                         />
                         <Tooltip title="Remove">
                           <IconButton
                             color="error"
-                            onClick={(e) => removeStudent(student.id)}
+                            onClick={(e) => removeStudent(student._id)}
                             edge="end"
                           >
                             <RemoveCircleOutline fontSize="small" />
@@ -413,6 +429,7 @@ const CreateGroupForm = (props) => {
           open={addStudentDialog.isOpen}
           onClose={handleCloseAddStudentDialog}
           handleResult={handleStudentsResult}
+          groupParentId={form.values.parentId}
         />
       </Card>
       <Box

@@ -127,7 +127,7 @@ export const AddGroupDialog = (props) => {
             <MenuItem value="">
               <em>
                 <Button
-                  disabled={nbGroups >= availableGroup.data.paginator.itemCount}
+                  disabled={nbGroups >= availableGroup.data?.paginator?.itemCount}
                   onClick={(e) => {
                     setNbGroups(nbGroups + 10);
                   }}

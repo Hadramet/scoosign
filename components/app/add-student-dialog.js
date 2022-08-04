@@ -24,7 +24,6 @@ import useSWR from "swr";
 
 export const AddStudentDialog = (props) => {
   const { open, onClose, handleResult, groupParentId, ...other } = props;
-  // // const [availableStudents, setAvailableStudents] = useState([]);
 
   const [studentsToAdd, setStudentsToAdd] = useState([]);
   const [nbStudent, setNbStudent] = useState(10);
@@ -46,16 +45,9 @@ export const AddStudentDialog = (props) => {
   useEffect(() => {
     if (open) {
       setStudentsToAdd([]);
-      // // form.resetForm();
-      // // getAvailableStudents();
     }
   }, [open, form]);
 
-  // // const getAvailableStudents = async () => {
-  // //   const response = await new Promise((resolve) => resolve(getRandomUser(15)));
-  // //   console.log("TODO get available students");
-  // //   setAvailableStudents(response);
-  // // };
   const form = useFormik({
     initialValues: {
       studentsToAddForm: [],
@@ -84,7 +76,7 @@ export const AddStudentDialog = (props) => {
             <div>
               <Typography variant="h6">Add Students</Typography>
               <Typography color="textSecondary" variant="body2" sx={{ mt: 1 }}>
-                Click on the student and save your selections.
+                List of root students if its a sub-group or all students if its root group
               </Typography>
             </div>
             <Divider
@@ -120,9 +112,9 @@ export const AddStudentDialog = (props) => {
                             checked={studentsToAdd.indexOf(student) > -1}
                             onChange={(e) => {
                               if (studentsToAdd.indexOf(student) > -1)
-                                setGroupToAdd(
+                                setStudentsToAdd(
                                   studentsToAdd.filter(
-                                    (item) => item._id != group._id
+                                    (item) => item._id != student._id
                                   )
                                 );
                               else
