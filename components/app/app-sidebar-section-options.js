@@ -9,7 +9,6 @@ import {
 import ClassIcon from "@mui/icons-material/Class";
 import SchoolIcon from "@mui/icons-material/School";
 import GroupsIcon from "@mui/icons-material/Groups";
-import PermContactCalendarIcon from "@mui/icons-material/PermContactCalendar";
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 export function getSections(t) {
   return [
@@ -71,12 +70,12 @@ export function getSections(t) {
           icon: <GroupsIcon fontSize="small" />,
           permissions: ["admin", "academic"],
         },
-        // {
-        //   title: "Courses",
-        //   path: "/app/courses",
-        //   icon: <ClassIcon fontSize="small" />,
-        //   permissions: ["admin", "academic"],
-        // },
+        {
+          title: "Courses",
+          path: "/app/courses",
+          icon: <ClassIcon fontSize="small" />,
+          permissions: ["admin", "academic"],
+        },
         // {
         //   title: "Attendances",
         //   path: "/app/attendances",
