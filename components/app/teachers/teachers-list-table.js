@@ -70,7 +70,7 @@ export const TeacherListTable = (props) => {
                           )}
                         </Avatar>
                         <Box sx={{ ml: 1 }}>
-                          <NextLink href={`/app/students/${user._id}`} passHref>
+                          <NextLink href={`/app/teachers/${user._id}`} passHref>
                             <Link color="inherit" variant="subtitle2">
                               {user.user.firstName + " " + user.user.lastName}
                             </Link>
@@ -96,7 +96,7 @@ export const TeacherListTable = (props) => {
                       </Typography>
                     </TableCell>
                     <TableCell align="right">
-                      <NextLink href={`/app/students/${user._id}`} passHref>
+                      <NextLink href={`/app/teachers/${user._id}`} passHref>
                         <IconButton component="a">
                           <PencilAltIcon fontSize="small" />
                         </IconButton>

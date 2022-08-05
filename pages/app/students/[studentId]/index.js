@@ -52,8 +52,6 @@ const StudentBasicDetails = (props) => {
     handleResetPassword,
     ...other
   } = props;
-  const smDown = useMediaQuery((theme) => theme.breakpoints.down("sm"));
-  const align = smDown ? "vertical" : "horizontal";
   const form = useFormik({
     initialValues: {
       firstName: student?.data?.user?.firstName,
