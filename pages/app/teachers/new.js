@@ -7,37 +7,36 @@ import { AppLayout } from "@/components/app/app-layout";
 import { Breadcrumbs, Container, Link, Typography } from "@mui/material";
 import { StudentCreateForm } from "@/components/app/students/student-create-form";
 
-const NewStudent = (props) => {
+const NewTeacher = (props) => {
   return (
     <Box>
       <Head>
-        <title>App - New Student | ScooSign</title>
+        <title>App - New Teacher | ScooSign</title>
       </Head>
       <Box component="main" sx={{ flexGrow: 1, py: 8 }}>
         <Container maxWidth="md">
           <Box sx={{ mb: 3 }}>
-            <Typography variant="h4"> Create a new student </Typography>
+            <Typography variant="h4"> Create a new teacher </Typography>
             <Breadcrumbs separator="/" sx={{ mt: 1 }}>
               <NextLink href="/app" passHref>
                 <Link variant="subtitle2">Dashboard</Link>
               </NextLink>
-              <NextLink href="/app/students" passHref>
+              <NextLink href="/app/teachers" passHref>
                 <Link color="primary" variant="subtitle2">
                   School
                 </Link>
               </NextLink>
               <Typography color="textSecondary" variant="subtitle2">
-                Students
+                Teachers
               </Typography>
             </Breadcrumbs>
           </Box>
-          <StudentCreateForm />
         </Container>
       </Box>
     </Box>
   );
 };
-NewStudent.getLayout = (page) => (
+NewTeacher.getLayout = (page) => (
   <AuthGuard>
     <RoleGuard permissions={["admin", "academic"]}>
       <AppLayout>{page}</AppLayout>
@@ -45,4 +44,4 @@ NewStudent.getLayout = (page) => (
   </AuthGuard>
 );
 
-export default NewStudent;
+export default NewTeacher;

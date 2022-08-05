@@ -132,8 +132,8 @@ const GroupList = (props) => {
               </Box>
             </Box>
             <GroupListTable
-              groups={data.data.itemsList}
-              groupsCount={data.data.paginator.itemCount}
+              groups={data?.data?.itemsList}
+              groupsCount={data?.data?.paginator?.itemCount}
               page={page-1}
               rowPerPage={rowsPerPage}
               onPageChanged={onPageChanged}
