@@ -48,6 +48,8 @@ import { AddGroupDialog } from "@/components/app/add-group-dialog";
 const TeacherDetails = (props) => {
   const [currentTab, setCurrentTab] = useState("details");
   const router = useRouter();
+  
+
   return (
     <Box>
       <Head>
