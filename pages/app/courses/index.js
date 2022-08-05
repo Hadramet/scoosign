@@ -69,9 +69,8 @@ import { CourseListTable } from "@/components/app/courses/course-list-table";
                 </Grid>
                 <Grid item>
                   <Button
-                    disabled
                     onClick={() => {
-                      router.push("/app/course/new");
+                      router.push("/app/courses/new");
                     }}
                     startIcon={<PlusIcon fontSize="small" />}
                     variant="contained"
