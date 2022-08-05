@@ -146,6 +146,7 @@ export const CourseListTable = (props) => {
     </>
   );
 };
+
 CourseListTable.propTypes = {
   courses: PropTypes.array,
   courseCount: PropTypes.number,
