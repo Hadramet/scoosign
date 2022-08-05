@@ -23,15 +23,13 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { useAuth } from "../../../hooks/use-auth";
 
-const saltRounds = 12;
-
-export const StudentCreateForm = (props) => {
+export const TeacherCreateForm = (props) => {
   const userCreateForm = useFormik({
     initialValues: {
-      firstName: "Aicha",
-      lastName: "FaitMale",
-      email: "aicha.faitmale@scoosign.com",
-      password: "Supinf0?",
+      firstName: "Jean",
+      lastName: "Jacque",
+      email: "jean.jacque@scoosign.com",
+      specialty:"Math",
       sendEmail: true,
     },
     validationSchema: Yup.object({
@@ -41,7 +39,7 @@ export const StudentCreateForm = (props) => {
         .email("Must be a valid email")
         .max(255)
         .required("Email is required"),
-      password: Yup.string().max(255).required("Password is required"),
+      specialty: Yup.string().max(255),
       sendEmail: Yup.boolean(),
     }),
     onSubmit: async (values, helpers) => {
@@ -50,11 +48,11 @@ export const StudentCreateForm = (props) => {
           firstName: values.firstName,
           lastName: values.lastName,
           email: values.email,
-          password: values.password,
+          specialty: values.specialty,
           sendEmail: values.sendEmail,
         };
 
-        await fetch("/api/v1/students", {
+        await fetch("/api/v1/teachers", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -65,8 +63,8 @@ export const StudentCreateForm = (props) => {
           .then((response) => response.json())
           .then((data) => {
             if (data.success) {
-              toast.success("Student successfully created");
-              router.push("/app/students");
+              toast.success("Teacher successfully created");
+              router.push("/app/teachers");
             } else {
               if (data.failed === "email") {
                 helpers.setStatus({ success: false });
@@ -107,7 +105,7 @@ export const StudentCreateForm = (props) => {
   });
 
   useEffect(() => {
-    router.prefetch("/app/students");
+    router.prefetch("/app/teachers");
   },);
 
   const [valuesForm, setValuesForm] = useState({
@@ -175,6 +173,23 @@ export const StudentCreateForm = (props) => {
                 }
                 value={userCreateForm.values.lastName}
               />
+              <TextField
+                label="Specialty (Optional)"
+                name="specialty"
+                fullWidth
+                sx={{ mb: 1, mt: 1 }}
+                onBlur={userCreateForm.handleBlur}
+                onChange={userCreateForm.handleChange}
+                error={Boolean(
+                  userCreateForm.touched.specialty &&
+                    userCreateForm.errors.specialty
+                )}
+                helperText={
+                  userCreateForm.touched.specialty &&
+                  userCreateForm.errors.specialty
+                }
+                value={userCreateForm.values.specialty}
+              />
             </Grid>
           </Grid>
         </CardContent>
@@ -188,7 +203,7 @@ export const StudentCreateForm = (props) => {
             </Grid>
             <Grid item md={8} xs={12}>
               <TextField
-                label="Email Address"
+                label="Email"
                 name="email"
                 fullWidth
                 sx={{ mb: 2, mt: 3 }}
@@ -228,67 +243,6 @@ export const StudentCreateForm = (props) => {
           </Grid>
         </CardContent>
       </Card>
-      <Card sx={{ mt: 3 }}>
-        <CardContent>
-          <Grid container spacing={3}>
-            <Grid item md={4} xs={12}>
-              {" "}
-              <Typography variant="h6"> Security </Typography>
-            </Grid>
-            <Grid item md={8} xs={12}>
-              <Stack direction="row" spacing={2}>
-                <TextField
-                  label="Password"
-                  name="password"
-                  fullWidth
-                  type={valuesForm.showPassword ? "text" : "password"}
-                  onBlur={userCreateForm.handleBlur}
-                  onChange={userCreateForm.handleChange}
-                  error={Boolean(
-                    userCreateForm.touched.password &&
-                      userCreateForm.errors.password
-                  )}
-                  helperText={
-                    userCreateForm.touched.password &&
-                    userCreateForm.errors.password
-                  }
-                  value={userCreateForm.values.password}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          edge="end"
-                        >
-                          {valuesForm.showPassword ? (
-                            <VisibilityOff />
-                          ) : (
-                            <Visibility />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-
-                <Button
-                  variant="contained"
-                  size="large"
-                  onClick={() => {
-                    const secret = crypto
-                      .getRandomValues(new BigUint64Array(1))[0]
-                      .toString(36);
-                    userCreateForm.setFieldValue("password", secret);
-                  }}
-                >
-                  Generate
-                </Button>
-              </Stack>
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
       <Box
         sx={{
           display: "flex",
@@ -301,7 +255,7 @@ export const StudentCreateForm = (props) => {
       >
         <Button
           onClick={() => {
-            router.push("/app/students");
+            router.push("/app/teachers");
           }}
           sx={{ m: 1, ml: "auto" }}
           variant="outlined"

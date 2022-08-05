@@ -6,6 +6,7 @@ import { RoleGuard } from "@/components/authentication/role-guard";
 import { AppLayout } from "@/components/app/app-layout";
 import { Breadcrumbs, Container, Link, Typography } from "@mui/material";
 import { StudentCreateForm } from "@/components/app/students/student-create-form";
+import { TeacherCreateForm } from "@/components/app/teachers/teacher-create-form";
 
 const NewTeacher = (props) => {
   return (
@@ -31,6 +32,7 @@ const NewTeacher = (props) => {
               </Typography>
             </Breadcrumbs>
           </Box>
+          <TeacherCreateForm/>
         </Container>
       </Box>
     </Box>
