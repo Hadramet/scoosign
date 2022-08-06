@@ -22,7 +22,7 @@ import { ArrowRight as ArrowRightIcon } from "@/components/icons";
 import { getInitials } from "@/lib/get-initials";
 import format from "date-fns/format";
 import { Download, DownloadDone, Lock } from "@mui/icons-material";
-const getFormattedStartEndDate = (start, end) => {
+export const getFormattedStartEndDate = (start, end) => {
   const s = new Date(start);
   const e = new Date(end);
   if (s.getDate === e.getDate)
