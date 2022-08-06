@@ -61,7 +61,7 @@ export const CourseListTable = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {courses.map((course) => {
+              {courses && courses.map((course) => {
                 return (
                   <TableRow hover key={course._id}>
                     <TableCell padding="checkbox">
