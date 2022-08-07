@@ -133,7 +133,7 @@ export const UserCreateForm = (props) => {
 
   useEffect(() => {
     router.prefetch("/app/users");
-  }, []);
+  }, [router]);
 
   const [valuesForm, setValuesForm] = useState({
     showPassword: false,
