@@ -4,10 +4,12 @@ import {
   Button,
   Card,
   CardActions,
+  CardContent,
   CardHeader,
   Checkbox,
   Divider,
   Grid,
+  Icon,
   IconButton,
   Link,
   Table,
@@ -50,50 +52,7 @@ import { Scrollbar } from "@/components/custom";
 import { getInitials } from "@/lib/get-initials";
 import { SeverityBadge } from "@/components/severity-badge";
 import { formatDistanceToNow } from "date-fns";
-
-// // const CircularProgressRoot = styled("div")({
-// //   height: 56,
-// //   width: 56,
-// // });
-// // const CircularProgressBackground = styled("path")(({ theme }) => ({
-// //   fill: "none",
-// //   stroke:
-// //     theme.palette.mode === "dark" ? "rgba(0,0,0,0.15)" : "rgba(0,0,0,0.05)",
-// //   strokeWidth: 4,
-// // }));
-// // const CircularProgressValue = styled("path")(({ theme }) => ({
-// //   animation: "$progress 1s ease-out forwards",
-// //   fill: "none",
-// //   stroke: theme.palette.primary.main,
-// //   strokeWidth: 4,
-// //   "@keyframes progress": {
-// //     "0%": {
-// //       strokeDasharray: "0 100",
-// //     },
-// //   },
-// // }));
-// // const CircularProgress = (props) => {
-// //   const { value, ...other } = props;
-
-// //   return (
-// //     <CircularProgressRoot {...other}>
-// //       <svg viewBox="0 0 36 36">
-// //         <CircularProgressBackground
-// //           d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-// //           strokeDasharray="100, 100"
-// //         />
-// //         <CircularProgressValue
-// //           d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-// //           strokeDasharray={`${value}, 100`}
-// //         />
-// //       </svg>
-// //     </CircularProgressRoot>
-// //   );
-// // };
-
-// // CircularProgress.propTypes = {
-// //   value: PropTypes.number.isRequired,
-// // };
+import { Calendar } from "@/components/icons";
 
 const AttendanceDetails = (props) => {
   const router = useRouter();
@@ -114,6 +73,78 @@ const AttendanceDetails = (props) => {
       },
     },
   ]);
+
+  const handleCourseLocked = async (e) => {
+    e.preventDefault();
+    await fetch(`/api/v1/courses/${query.attendanceId}/lock`, {
+      method: "PATCH",
+      headers: {
+        "Content-type": "application/json",
+        "X-Scoosign-Authorization": `Bearer ${accessToken}`,
+      },
+    });
+    mutate();
+  };
+
+  const handleSendEmailToAbsents = (e) => {
+    e.preventDefault();
+    console.log("TODO send email to absent", query.attendanceId);
+  };
+
+  const handleSendEmailToStudent = (e, studentId) => {
+    e.preventDefault();
+    console.log("TODO send email to absent", studentId, query.attendanceId);
+  };
+
+  const handleMarkStudentAsAbsent = async (e, studentId) => {
+    e.preventDefault();
+    await fetch(
+      `/api/v1/courses/${query.attendanceId}/studentAbsent/${studentId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-type": "application/json",
+          "X-Scoosign-Authorization": `Bearer ${accessToken}`,
+        },
+      }
+    );
+    mutate();
+  };
+
+  const handleMarkStudentAsAbsentJustify = async (e, studentId) => {
+    e.preventDefault();
+    await fetch(
+      `/api/v1/courses/${query.attendanceId}/studentJustify/${studentId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-type": "application/json",
+          "X-Scoosign-Authorization": `Bearer ${accessToken}`,
+        },
+      }
+    );
+    mutate();
+  };
+
+  const handleMarkStudentAsPresent = async (e, studentId) => {
+    e.preventDefault();
+    await fetch(
+      `/api/v1/courses/${query.attendanceId}/studentPresent/${studentId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-type": "application/json",
+          "X-Scoosign-Authorization": `Bearer ${accessToken}`,
+        },
+      }
+    );
+    mutate();
+  };
+
+  const handlePreviewCertificate = (e) => {
+    e.preventDefault();
+    console.log("TODO preview certificate");
+  };
 
   if (error) return "Failed to fetch data";
   if (!attendance) return "loading...";
@@ -164,8 +195,15 @@ const AttendanceDetails = (props) => {
                     sx={{
                       display: "flex",
                       alignItems: "center",
+                      ml: -1,
+                      mt: 1,
                     }}
                   >
+                    <Calendar
+                      color="action"
+                      fontSize="small"
+                      sx={{ ml: 1, mr: 0.5 }}
+                    />
                     <Typography color="textSecondary" variant="body2">
                       {getFormattedStartEndDate(
                         attendance?.data?.start,
@@ -184,16 +222,21 @@ const AttendanceDetails = (props) => {
                   m: -1,
                 }}
               >
-                {attendance?.data?.isLock ? (
+                {attendance?.data?.isLocked ? (
                   <Button
-                    onClick={() => setViewPDF(true)}
+                    onClick={handlePreviewCertificate}
                     sx={{ m: 1 }}
                     variant="outlined"
                   >
                     Preview
                   </Button>
                 ) : (
-                  <Button color="error" sx={{ m: 1 }} variant="contained">
+                  <Button
+                    onClick={handleCourseLocked}
+                    color="error"
+                    sx={{ m: 1 }}
+                    variant="contained"
+                  >
                     Lock
                   </Button>
                 )}
@@ -280,7 +323,10 @@ const AttendanceDetails = (props) => {
                   >
                     <ErrorOutline fontSize="small" />
                   </Avatar>
-                  <Typography variant="h5">0</Typography>
+                  <Typography variant="h5">
+                    {" "}
+                    {attendance?.data?.justifyCount}
+                  </Typography>
                 </Box>
                 <Typography color="textSecondary" variant="body2">
                   Justify
@@ -322,6 +368,8 @@ const AttendanceDetails = (props) => {
               title="Students"
               action={
                 <Button
+                  disabled={attendance?.data?.isLocked}
+                  onClick={handleSendEmailToAbsents}
                   variant="contained"
                   startIcon={<Send fontSize="small" />}
                 >
@@ -374,53 +422,80 @@ const AttendanceDetails = (props) => {
                                 {student.email}
                               </Typography>
                               {student.signedAt && (
-                            <Box
-                              sx={{
-                                alignItems: "center",
-                                display: "flex",
-                              }}
-                            >
-                              <Timelapse color="primary" fontSize="small" />
-                              <Typography
-                                color="primary"
-                                variant="caption"
-                                sx={{ ml: 1 }}
-                              >
-                                {formatDistanceToNow(
-                                  new Date(student.signedAt),
-                                  {
-                                    addSuffix: true,
-                                    includeSeconds: true,
-                                  }
-                                )}
-                              </Typography>
-                            </Box>
-                          )}
+                                <Box
+                                  sx={{
+                                    alignItems: "center",
+                                    display: "flex",
+                                    mt:0.5
+                                  }}
+                                >
+                                  <Timelapse color="action" fontSize="small" />
+                                  <Typography
+                                    color="textSecondary"
+                                    variant="caption"
+                                    sx={{ ml: 1 }}
+                                  >
+                                    {formatDistanceToNow(
+                                      new Date(student.signedAt),
+                                      {
+                                        addSuffix: true,
+                                        includeSeconds: true,
+                                      }
+                                    )}
+                                  </Typography>
+                                </Box>
+                              )}
                             </Box>
                           </Box>
-                          
                         </TableCell>
                         <TableCell align="right">
                           <SeverityBadge
                             color={
-                              student.present === true ? "success" : "error"
+                              student.present === true
+                                ? "success"
+                                : student.justify === true
+                                ? "warning"
+                                : "error"
                             }
                           >
-                            {student.present === true ? "PRESENT" : "ABSENT"}
+                            {student.present === true
+                              ? "PRESENT"
+                              : student.justify === true
+                              ? "JUSTIFY"
+                              : "ABSENT"}
                           </SeverityBadge>
                         </TableCell>
                         <TableCell align="right">
                           {!student.present && (
                             <Tooltip title="Mark as justify">
-                              <IconButton component="a">
-                                <FactCheck color="warning" fontSize="small" />
+                              <IconButton
+                                onClick={(e) => {
+                                  handleMarkStudentAsAbsentJustify(
+                                    e,
+                                    student.studentId
+                                  );
+                                }}
+                                disabled={
+                                  attendance?.data?.isLocked || student.justify
+                                }
+                                component="a"
+                              >
+                                <FactCheck fontSize="small" />
                               </IconButton>
                             </Tooltip>
                           )}
 
                           {!student.present && (
                             <Tooltip title="Send attendance email">
-                              <IconButton component="a">
+                              <IconButton
+                                disabled={
+                                  attendance?.data?.isLocked || student.justify
+                                }
+                                onClick={(e) =>
+                                  handleSendEmailToStudent(e, student.studentId)
+                                }
+                                component="a"
+                              >
                                 <Send fontSize="small" />
                               </IconButton>
                             </Tooltip>
@@ -434,6 +509,22 @@ const AttendanceDetails = (props) => {
                             }
                           >
                             <IconButton
+                              disabled={
+                                attendance?.data?.isLocked || student.justify
+                              }
+                              onClick={(e) => {
+                                if (student.present) {
+                                  handleMarkStudentAsAbsent(
+                                    e,
+                                    student.studentId
+                                  );
+                                } else {
+                                  handleMarkStudentAsPresent(
+                                    e,
+                                    student.studentId
+                                  );
+                                }
+                              }}
                               color={student.present ? "error" : "success"}
                               component="a"
                             >
@@ -450,6 +541,101 @@ const AttendanceDetails = (props) => {
                 </TableBody>
               </Table>
             </Scrollbar>
+          </Card>
+          <Card sx={{ mt: 2 }}>
+            <CardHeader title="Teacher" />
+            <CardContent>
+              <Card key={attendance?.data?.teacher._id} variant="outlined">
+                <CardActions>
+                  <SeverityBadge
+                    color={
+                      attendance?.data?.teacher.present === true
+                        ? "success"
+                        : "error"
+                    }
+                  >
+                    {attendance?.data?.teacher.present === true
+                      ? "PRESENT"
+                      : "ABSENT"}
+                  </SeverityBadge>
+                </CardActions>
+                <CardContent>
+                  <Box
+                    sx={{
+                      alignItems: {
+                        xs: "flex-start",
+                        sm: "center",
+                      },
+                      display: "flex",
+                      flexDirection: {
+                        xs: "column",
+                        sm: "row",
+                      },
+                    }}
+                  >
+                    <Avatar sx={{ mr: 2 }}>
+                      {getInitials(
+                        attendance?.data?.teacher.firstName +
+                          " " +
+                          attendance?.data?.teacher.lastName
+                      )}
+                    </Avatar>
+                    <div>
+                      <Typography variant="subtitle1">
+                        {attendance?.data?.teacher.firstName +
+                          " " +
+                          attendance?.data?.teacher.lastName}
+                      </Typography>
+                      <Box
+                        sx={{
+                          alignItems: "center",
+                          display: "flex",
+                          flexWrap: "wrap",
+                          ml: -2,
+                          mt: -1,
+                        }}
+                      >
+                        <Typography
+                          noWrap
+                          sx={{
+                            ml: 2,
+                            mt: 1,
+                          }}
+                          variant="subtitle2"
+                        >
+                          • {attendance?.data?.teacher.email}
+                        </Typography>
+
+                        {attendance?.data?.teacher.signedAt && (
+                          <Typography
+                            color="textSecondary"
+                            noWrap
+                            sx={{
+                              ml: 2,
+                              mt: 1,
+                            }}
+                            variant="body2"
+                          >
+                            •{" "}
+                            {formatDistanceToNow(
+                              new Date(attendance?.data?.teacher.signedAt),
+                              {
+                                addSuffix: true,
+                              }
+                            )}
+                          </Typography>
+                        )}
+                      </Box>
+                    </div>
+                  </Box>
+                  {attendance?.data?.teacher.comment && (
+                    <Typography sx={{ mt: 2 }} variant="body1">
+                      {attendance?.data?.teacher.comment}
+                    </Typography>
+                  )}
+                </CardContent>
+              </Card>
+            </CardContent>
           </Card>
         </Container>
       </Box>
