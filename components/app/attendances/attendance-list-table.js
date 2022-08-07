@@ -74,7 +74,7 @@ export const AttendanceListTable = (props) => {
                         <Checkbox />
                       </TableCell>
                       <TableCell padding="checkbox">
-                        {course.lock && <Lock fontSize="small" />}
+                        {course.isLocked && <Lock fontSize="small" />}
                       </TableCell>
                       <TableCell>
                         <NextLink
@@ -143,9 +143,9 @@ export const AttendanceListTable = (props) => {
                         ))}
                       </TableCell>
                       <TableCell align="right">
-                        <Tooltip title={course.lock ? "Download" : "Lock"}>
+                        <Tooltip title={course.isLocked ? "Download" : "Lock"}>
                           <IconButton component="a">
-                            {course.lock ? (
+                            {course.isLocked ? (
                               <Download fontSize="small" />
                             ) : (
                               <Lock color="error" fontSize="small" />
