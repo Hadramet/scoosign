@@ -3,8 +3,19 @@ import {
   Box,
   Button,
   Card,
+  CardActions,
+  CardHeader,
+  Checkbox,
+  Divider,
   Grid,
+  IconButton,
   Link,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { Container } from "@mui/system";
@@ -14,8 +25,16 @@ import {
   ArrowBack as ArrowBackIcon,
   AssignmentTurnedIn,
   ErrorOutline,
+  FactCheck,
   FlashOffOutlined,
+  Groups,
+  HowToReg,
+  NotInterested,
+  Send,
   Timelapse,
+  TimelapseSharp,
+  TimelapseTwoTone,
+  Verified,
   Warning,
 } from "@mui/icons-material";
 import { AuthGuard } from "@/components/authentication/auth-guard";
@@ -27,6 +46,10 @@ import { getFormattedStartEndDate } from "@/components/app/attendances/attendanc
 import PropTypes from "prop-types";
 import { styled } from "@mui/material/styles";
 import { alpha } from "@mui/material/styles";
+import { Scrollbar } from "@/components/custom";
+import { getInitials } from "@/lib/get-initials";
+import { SeverityBadge } from "@/components/severity-badge";
+import { formatDistanceToNow } from "date-fns";
 
 // // const CircularProgressRoot = styled("div")({
 // //   height: 56,
@@ -136,7 +159,7 @@ const AttendanceDetails = (props) => {
                 }}
               >
                 <div>
-                  <Typography variant="h4">{attendance.data.name}</Typography>
+                  <Typography variant="h4">{attendance?.data?.name}</Typography>
                   <Box
                     sx={{
                       display: "flex",
@@ -145,8 +168,8 @@ const AttendanceDetails = (props) => {
                   >
                     <Typography color="textSecondary" variant="body2">
                       {getFormattedStartEndDate(
-                        attendance.data.start,
-                        attendance.data.end
+                        attendance?.data?.start,
+                        attendance?.data?.end
                       )}
                     </Typography>
                   </Box>
@@ -161,7 +184,7 @@ const AttendanceDetails = (props) => {
                   m: -1,
                 }}
               >
-                {attendance.data.isLock ? (
+                {attendance?.data?.isLock ? (
                   <Button
                     onClick={() => setViewPDF(true)}
                     sx={{ m: 1 }}
@@ -200,7 +223,7 @@ const AttendanceDetails = (props) => {
                     <Warning fontSize="small" />
                   </Avatar>
                   <Typography variant="h5">
-                    {attendance.data.absentCount}
+                    {attendance?.data?.absentCount}
                   </Typography>
                 </Box>
                 <Typography color="textSecondary" variant="body2">
@@ -228,7 +251,9 @@ const AttendanceDetails = (props) => {
                   >
                     <AssignmentTurnedIn fontSize="small" />
                   </Avatar>
-                  <Typography variant="h5">{attendance.data.presentCount}</Typography>
+                  <Typography variant="h5">
+                    {attendance?.data?.presentCount}
+                  </Typography>
                 </Box>
                 <Typography color="textSecondary" variant="body2">
                   Present
@@ -280,9 +305,11 @@ const AttendanceDetails = (props) => {
                       mr: 1,
                     }}
                   >
-                    <Timelapse fontSize="small" />
+                    <Groups fontSize="small" />
                   </Avatar>
-                  <Typography variant="h5">{attendance.data.total}</Typography>
+                  <Typography variant="h5">
+                    {attendance?.data?.total}
+                  </Typography>
                 </Box>
                 <Typography color="textSecondary" variant="body2">
                   Total student(s)
@@ -290,6 +317,140 @@ const AttendanceDetails = (props) => {
               </Card>
             </Grid>
           </Grid>
+          <Card sx={{ mt: 4 }}>
+            <CardHeader
+              title="Students"
+              action={
+                <Button
+                  variant="contained"
+                  startIcon={<Send fontSize="small" />}
+                >
+                  Send attendance email
+                </Button>
+              }
+            />
+            <Divider />
+            <Scrollbar>
+              <Table sx={{ minWidth: 700 }}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell padding="checkbox">
+                      <Checkbox></Checkbox>
+                    </TableCell>
+                    <TableCell>Name</TableCell>
+                    <TableCell align="right">State</TableCell>
+                    <TableCell align="right">Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {attendance?.data?.students &&
+                    attendance.data.students.map((student) => (
+                      <TableRow hover key={student._id}>
+                        <TableCell padding="checkbox">
+                          <Checkbox />
+                        </TableCell>
+                        <TableCell>
+                          <Box sx={{ alignItems: "center", display: "flex" }}>
+                            <Avatar
+                              sx={{
+                                height: 40,
+                                width: 40,
+                              }}
+                            >
+                              {getInitials(
+                                student.firstName + " " + student.lastName
+                              )}
+                            </Avatar>
+                            <Box sx={{ ml: 1 }}>
+                              <NextLink
+                                href={`/app/students/${student.studentId}`}
+                                passHref
+                              >
+                                <Link color="inherit" variant="subtitle2">
+                                  {student.firstName + " " + student.lastName}
+                                </Link>
+                              </NextLink>
+                              <Typography color="textSecondary" variant="body2">
+                                {student.email}
+                              </Typography>
+                              {student.signedAt && (
+                            <Box
+                              sx={{
+                                alignItems: "center",
+                                display: "flex",
+                              }}
+                            >
+                              <Timelapse color="primary" fontSize="small" />
+                              <Typography
+                                color="primary"
+                                variant="caption"
+                                sx={{ ml: 1 }}
+                              >
+                                {formatDistanceToNow(
+                                  new Date(student.signedAt),
+                                  {
+                                    addSuffix: true,
+                                    includeSeconds: true,
+                                  }
+                                )}
+                              </Typography>
+                            </Box>
+                          )}
+                            </Box>
+                          </Box>
+                          
+                        </TableCell>
+                        <TableCell align="right">
+                          <SeverityBadge
+                            color={
+                              student.present === true ? "success" : "error"
+                            }
+                          >
+                            {student.present === true ? "PRESENT" : "ABSENT"}
+                          </SeverityBadge>
+                        </TableCell>
+                        <TableCell align="right">
+                          {!student.present && (
+                            <Tooltip title="Mark as justify">
+                              <IconButton component="a">
+                                <FactCheck color="warning" fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                          )}
+
+                          {!student.present && (
+                            <Tooltip title="Send attendance email">
+                              <IconButton component="a">
+                                <Send fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                          )}
+
+                          <Tooltip
+                            title={
+                              student.present
+                                ? "Mark as absent"
+                                : "Mark as Present"
+                            }
+                          >
+                            <IconButton
+                              color={student.present ? "error" : "success"}
+                              component="a"
+                            >
+                              {student.present ? (
+                                <NotInterested fontSize="small" />
+                              ) : (
+                                <HowToReg fontSize="small" />
+                              )}
+                            </IconButton>
+                          </Tooltip>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </Scrollbar>
+          </Card>
         </Container>
       </Box>
     </>
