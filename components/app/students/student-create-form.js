@@ -25,37 +25,13 @@ import { useAuth } from "../../../hooks/use-auth";
 
 const saltRounds = 12;
 
-const userRoleOptions = [
-  {
-    label: "Administrator",
-    value: "admin",
-  },
-  {
-    label: "Academic Manager",
-    value: "academic",
-  },
-  {
-    label: "Teacher",
-    value: "teacher",
-  },
-  {
-    label: "Student",
-    value: "student",
-  },
-  {
-    label: "Student Parent",
-    value: "parent",
-  },
-];
-
-export const UserCreateForm = (props) => {
+export const StudentCreateForm = (props) => {
   const userCreateForm = useFormik({
     initialValues: {
       firstName: "Aicha",
       lastName: "FaitMale",
       email: "aicha.faitmale@scoosign.com",
       password: "Supinf0?",
-      role: "student",
       sendEmail: true,
     },
     validationSchema: Yup.object({
@@ -75,11 +51,10 @@ export const UserCreateForm = (props) => {
           lastName: values.lastName,
           email: values.email,
           password: values.password,
-          role: values.role,
           sendEmail: values.sendEmail,
         };
 
-        await fetch("/api/v1/users", {
+        await fetch("/api/v1/students", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -90,8 +65,8 @@ export const UserCreateForm = (props) => {
           .then((response) => response.json())
           .then((data) => {
             if (data.success) {
-              toast.success("User successfully created");
-              router.push("/app/users");
+              toast.success("Student successfully created");
+              router.push("/app/students");
             } else {
               if (data.failed === "email") {
                 helpers.setStatus({ success: false });
@@ -132,8 +107,8 @@ export const UserCreateForm = (props) => {
   });
 
   useEffect(() => {
-    router.prefetch("/app/users");
-  }, [router]);
+    router.prefetch("/app/students");
+  },);
 
   const [valuesForm, setValuesForm] = useState({
     showPassword: false,
@@ -310,25 +285,6 @@ export const UserCreateForm = (props) => {
                   Generate
                 </Button>
               </Stack>
-              <TextField
-                label="Permission Level"
-                name="role"
-                fullWidth
-                sx={{ mt: 3 }}
-                select
-                onBlur={userCreateForm.handleBlur}
-                onChange={userCreateForm.handleChange}
-                error={Boolean(
-                  userCreateForm.touched.role && userCreateForm.errors.role
-                )}
-                value={userCreateForm.values.role}
-              >
-                {userRoleOptions.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
             </Grid>
           </Grid>
         </CardContent>
@@ -345,7 +301,7 @@ export const UserCreateForm = (props) => {
       >
         <Button
           onClick={() => {
-            router.push("/app/users");
+            router.push("/app/students");
           }}
           sx={{ m: 1, ml: "auto" }}
           variant="outlined"

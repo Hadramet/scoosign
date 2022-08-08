@@ -7,7 +7,10 @@ import {
   Users as UsersIcon,
 } from "../icons";
 import ClassIcon from "@mui/icons-material/Class";
-
+import SchoolIcon from "@mui/icons-material/School";
+import GroupsIcon from "@mui/icons-material/Groups";
+import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 export function getSections(t) {
   return [
     {
@@ -20,34 +23,70 @@ export function getSections(t) {
           icon: <HomeIcon fontSize="small" />,
           permissions: ["all"],
         },
+        // {
+        //   title: "Analytics",
+        //   path: "/app/analytics",
+        //   icon: <ChartBarIcon fontSize="small" />,
+        //   permissions: ["all"],
+        // },
+        // {
+        //   title: "Calendar",
+        //   path: "/app/calendar",
+        //   icon: <CalendarIcon fontSize="small" />,
+        //   permissions: ["all"],
+        // },
+        // {
+        //   title: "Documents",
+        //   path: "/app/documents",
+        //   icon: <DocumentTextIcon fontSize="small" />,
+        //   permissions: ["all"],
+        // },
+        // {
+        //   title: "Account",
+        //   path: "/app/account",
+        //   icon: <UserCircleIcon fontSize="small" />,
+        //   permissions: ["all"],
+        // },
+      ],
+    },
+    {
+      title: "School",
+      permissions: ["admin", "academic"],
+      items: [
         {
-          title: "Analytics",
-          path: "/app/analytics",
-          icon: <ChartBarIcon fontSize="small" />,
-          permissions: ["all"],
+          title: "Students",
+          path: "/app/students",
+          icon: <SchoolIcon fontSize="small" />,
+          permissions: ["admin", "academic"],
         },
         {
-          title: "Calendar",
-          path: "/app/calendar",
-          icon: <CalendarIcon fontSize="small" />,
-          permissions: ["all"],
+          title: "Teachers",
+          path: "/app/teachers",
+          icon: <SupervisedUserCircleIcon fontSize="small" />,
+          permissions: ["admin", "academic"],
         },
         {
-          title: "Documents",
-          path: "/app/documents",
-          icon: <DocumentTextIcon fontSize="small" />,
-          permissions: ["all"],
+          title: "Groups",
+          path: "/app/groups",
+          icon: <GroupsIcon fontSize="small" />,
+          permissions: ["admin", "academic"],
         },
         {
-          title: "Account",
-          path: "/app/account",
-          icon: <UserCircleIcon fontSize="small" />,
-          permissions: ["all"],
+          title: "Courses",
+          path: "/app/courses",
+          icon: <ClassIcon fontSize="small" />,
+          permissions: ["admin", "academic"],
+        },
+        {
+          title: "Attendances Certificate",
+          path: "/app/attendances",
+          icon: <ReceiptLongIcon fontSize="small" />,
+          permissions: ["admin", "academic"],
         },
       ],
     },
     {
-      title: "Management",
+      title: "Administrator",
       permissions: ["admin"],
       items: [
         {
@@ -57,31 +96,13 @@ export function getSections(t) {
           permissions: ["admin"],
           children: [
             {
-              title: "Browse users",
+              title: "Browse",
               path: "/app/users",
               permissions: ["admin"],
             },
             {
               title: "Create",
               path: "/app/users/new",
-              permissions: ["admin"],
-            },
-          ],
-        },
-        {
-          title: "Class",
-          path: "/app/class",
-          icon: <ClassIcon fontSize="small" />,
-          permissions: ["admin"],
-          children: [
-            {
-              title: "Browse",
-              path: "/app/class",
-              permissions: ["admin"],
-            },
-            {
-              title: "Create",
-              path: "/app/class/new",
               permissions: ["admin"],
             },
           ],

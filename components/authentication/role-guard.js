@@ -20,7 +20,7 @@ export const RoleGuard = (props) => {
         if (res) setCanView(true);
       }
     }
-  }, []);
+  }, [auth, permissions, user]);
 
   if (!canView) return null;
 

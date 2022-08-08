@@ -1,44 +1,44 @@
-import { Box, Breadcrumbs, Container, Link, Typography } from "@mui/material";
-import Head from "next/head";
+import { Box } from "@mui/system";
+import { default as Head } from "next/head";
 import NextLink from "next/link";
-import { AppLayout } from "@/components/app/app-layout";
-import { UserCreateForm } from "@/components/app/users/user-create-form";
 import { AuthGuard } from "@/components/authentication/auth-guard";
 import { RoleGuard } from "@/components/authentication/role-guard";
+import { AppLayout } from "@/components/app/app-layout";
+import { Breadcrumbs, Container, Link, Typography } from "@mui/material";
+import { StudentCreateForm } from "@/components/app/students/student-create-form";
+import { TeacherCreateForm } from "@/components/app/teachers/teacher-create-form";
 
-const UserCreate = () => {
+const NewTeacher = (props) => {
   return (
-    <>
+    <Box>
       <Head>
-        <title>App : User create | ScooSign</title>
+        <title>App - New Teacher | ScooSign</title>
       </Head>
-
       <Box component="main" sx={{ flexGrow: 1, py: 8 }}>
         <Container maxWidth="md">
           <Box sx={{ mb: 3 }}>
-            <Typography variant="h4"> Create a new user </Typography>
+            <Typography variant="h4"> Create a new teacher </Typography>
             <Breadcrumbs separator="/" sx={{ mt: 1 }}>
               <NextLink href="/app" passHref>
                 <Link variant="subtitle2">Dashboard</Link>
               </NextLink>
-              <NextLink href="/app" passHref>
+              <NextLink href="/app/teachers" passHref>
                 <Link color="primary" variant="subtitle2">
-                  Management
+                  School
                 </Link>
               </NextLink>
               <Typography color="textSecondary" variant="subtitle2">
-                Users
+                Teachers
               </Typography>
             </Breadcrumbs>
           </Box>
-          <UserCreateForm />
+          <TeacherCreateForm/>
         </Container>
       </Box>
-    </>
+    </Box>
   );
 };
-
-UserCreate.getLayout = (page) => (
+NewTeacher.getLayout = (page) => (
   <AuthGuard>
     <RoleGuard permissions={["admin", "academic"]}>
       <AppLayout>{page}</AppLayout>
@@ -46,4 +46,4 @@ UserCreate.getLayout = (page) => (
   </AuthGuard>
 );
 
-export default UserCreate;
+export default NewTeacher;

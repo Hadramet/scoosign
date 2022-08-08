@@ -3,15 +3,15 @@ import { Container } from "@mui/system";
 import NextLink from "next/link";
 import Head from "next/head";
 import { useCallback, useEffect, useState } from "react";
-import { AppLayout } from "../../../../components/app/app-layout";
-import { AuthGuard } from "../../../../components/authentication/auth-guard";
-import { RoleGuard } from "../../../../components/authentication/role-guard";
-import { useMounted } from "../../../../hooks/use-mounted";
+import { AppLayout } from "@/components/app/app-layout";
+import { AuthGuard } from "@/components/authentication/auth-guard";
+import { RoleGuard } from "@/components/authentication/role-guard";
+import { useMounted } from "@/hooks/use-mounted";
 import { ArrowBack as ArrowBackIcon } from "@mui/icons-material";
-import { getInitials } from "../../../../lib/get-initials";
+import { getInitials } from "@/lib/get-initials";
 import { useRouter } from "next/router";
-import { getUserApi } from "../../../../lib/user-api";
-import { UserEditForm } from "../../../../components/app/users/user-edit-form";
+import { getUserApi } from "@/lib/user-api";
+import { UserEditForm } from "@/components/app/users/user-edit-form";
 
 const UserEdit = () => {
   const isMounted = useMounted();

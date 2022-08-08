@@ -1,6 +1,6 @@
 import { Box, Card, Container, Divider, Typography } from "@mui/material";
 import NextLink from "next/link";
-import { JWTLogin } from "../../components/authentication/login";
+import { JWTLogin } from "@/components/authentication/login";
 const { default: Head } = require("next/head");
 
 const Login = () => {

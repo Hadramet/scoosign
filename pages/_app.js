@@ -6,10 +6,12 @@ import Head from "next/head";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { CacheProvider } from "@emotion/react";
-import {createMyTheme} from "../src/theme";
+import { createMyTheme } from "../src/theme";
 import createEmotionCache from "../src/createEmotionCache";
 import { AuthConsumer, AuthProvider } from "../contexts/jwt-context";
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
+import { SWRConfig } from "swr";
+import { fetcher } from "@/lib/fetcher";
 
 Router.events.on("routeChangeStart", nProgress.start);
 Router.events.on("routeChangeError", nProgress.done);
@@ -29,18 +31,24 @@ export default function MyApp(props) {
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <AuthProvider>
-        <ThemeProvider theme={createMyTheme({ mode: 'light' })}>
-          <CssBaseline />
-          <Toaster position="top-center"/>
-          <AuthConsumer>
-            {(auth) =>
-              !auth.isInitialized ? (
-                <p> SplashScreen </p>
-              ) : (
-                getLayout(<Component {...pageProps} />)
-              )
-            }
-          </AuthConsumer>
+        <ThemeProvider theme={createMyTheme({ mode: "light" })}>
+          <SWRConfig
+            value={{
+              fetcher: fetcher,
+            }}
+          >
+            <CssBaseline />
+            <Toaster position="top-center" />
+            <AuthConsumer>
+              {(auth) =>
+                !auth.isInitialized ? (
+                  <p> SplashScreen </p>
+                ) : (
+                  getLayout(<Component {...pageProps} />)
+                )
+              }
+            </AuthConsumer>
+          </SWRConfig>
         </ThemeProvider>
       </AuthProvider>
     </CacheProvider>
