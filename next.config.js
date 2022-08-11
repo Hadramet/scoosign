@@ -7,7 +7,6 @@ const nextConfig = {
     return config
   },
   rewrites: () =>[{ source: '/api/:path*', destination: `${process.env.BACKEND_URI}/:path*`}]
-
 }
 
 module.exports = nextConfig
