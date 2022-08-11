@@ -14,6 +14,7 @@ FROM node:14-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
+ENV BACKEND_URI http://host.docker.internal:5000/api
 
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
