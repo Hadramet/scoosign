@@ -11,6 +11,7 @@ import SchoolIcon from "@mui/icons-material/School";
 import GroupsIcon from "@mui/icons-material/Groups";
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import HistoryIcon from '@mui/icons-material/History';
 export function getSections(t) {
   return [
     {
@@ -18,11 +19,30 @@ export function getSections(t) {
       permissions: ["all"],
       items: [
         {
-          title: "Overview",
+          title: "Dashboard",
           path: "/app",
           icon: <HomeIcon fontSize="small" />,
           permissions: ["all"],
         },
+        {
+          title: "History",
+          path: "/app/history",
+          icon: <HistoryIcon fontSize="small" />,
+          permissions: ["all"],
+        },
+        {
+          title: "Account",
+          path: "/app/account",
+          icon: <UserCircleIcon fontSize="small" />,
+          permissions: ["all"],
+        },
+        {
+          title: "Calendar",
+          path: "/app/calendar",
+          icon: <CalendarIcon fontSize="small" />,
+          permissions: ["all"],
+        }
+
         // {
         //   title: "Analytics",
         //   path: "/app/analytics",
@@ -41,12 +61,7 @@ export function getSections(t) {
         //   icon: <DocumentTextIcon fontSize="small" />,
         //   permissions: ["all"],
         // },
-        // {
-        //   title: "Account",
-        //   path: "/app/account",
-        //   icon: <UserCircleIcon fontSize="small" />,
-        //   permissions: ["all"],
-        // },
+        
       ],
     },
     {
