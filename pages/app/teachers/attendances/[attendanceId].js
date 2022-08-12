@@ -7,7 +7,10 @@ import {
   Box,
   Button,
   Card,
+  CardActions,
+  CardContent,
   Container,
+  Grid,
   Step,
   StepContent,
   StepLabel,
@@ -16,25 +19,63 @@ import {
 } from "@mui/material";
 import NextLink from "next/link";
 import Head from "next/head";
-import { useState } from "react";
-import { CheckCircleOutline } from "@mui/icons-material";
+import { createRef, useEffect, useRef, useState } from "react";
+import { CheckCircleOutline, DeleteOutline } from "@mui/icons-material";
 import PropTypes from "prop-types";
+import SignaturePad from "react-signature-pad-wrapper";
+
+const ScooSignaturePad = (props) => {
+  const { padRef, ...others } = props;
+  return <SignaturePad {...others} ref={padRef} redrawOnResize />;
+};
 
 const TeacherAttendanceStep = (props) => {
   const { onBack, onNext, ...other } = props;
+  const padRef = useRef(null);
+
+  const handleClear = () => {
+    padRef.current.clear();
+  };
 
   return (
-    <div {...other}>
-      <Typography variant="h6">Sign here</Typography>
-      <Box sx={{ mt: 3 }}></Box>
-      <Button
-        endIcon={<ArrowRight fontSize="small" />}
-        onClick={onNext}
-        variant="contained"
-      >
-        Continue
-      </Button>
-    </div>
+    <Container maxWidth="sm" {...other}>
+      <Card sx={{ mb: 2 }}>
+        <CardContent>
+          <Card variant="outlined" sx={{ mb: 2, px: 1, py: 1 }}>
+            <Typography
+              variant="overline"
+              color="text.secondary"
+              component="div"
+            >
+              Sign here
+            </Typography>
+            <ScooSignaturePad padRef={padRef} />
+          </Card>
+          <Typography variant="body2" color="text.secondary" component="div">
+            I hereby certify that I, as my FIRST NAME, am present at the
+            training course NAME OF THE COURSE, from the DATE OF START to the
+            DATE OF END.
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <Button 
+            sx={{mr:'auto'}}
+            endIcon={<ArrowRight fontSize="small" />}
+            onClick={onNext}
+            variant="contained"
+          >
+            Continue
+          </Button>
+          <Button
+            endIcon={<DeleteOutline fontSize="small" />}
+            onClick={handleClear}
+            variant="outlined"
+          >
+            Clear
+          </Button>
+        </CardActions>
+      </Card>
+    </Container>
   );
 };
 
@@ -164,7 +205,7 @@ const TeacherAttendanceSession = (props) => {
         }}
       >
         <Container maxWidth="md">
-          <NextLink href="/dashboard" passHref>
+          <NextLink href="/app" passHref>
             <Button component="a" startIcon={<ArrowLeft fontSize="small" />}>
               Dashboard
             </Button>
@@ -269,7 +310,9 @@ const TeacherAttendanceSession = (props) => {
                     >
                       1 minute ago
                     </Typography>
-                    <Button href='/app' passHref>Dashboard</Button>
+                    <Button href="/app" passHref>
+                      Dashboard
+                    </Button>
                   </div>
                 </Card>
               </div>
