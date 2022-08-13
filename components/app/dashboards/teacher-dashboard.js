@@ -86,19 +86,19 @@ export const TeacherDashboard = (props) => {
           name: {
             show: true,
             color: theme.palette.text.secondary,
-            fontSize: "12px",
+            fontSize: "8px",
             fontWeight: 400,
-            offsetY: 20,
+            offsetY: 10,
           },
           value: {
             color: theme.palette.text.primary,
-            fontSize: "18px",
+            fontSize: "12px",
             fontWeight: 600,
             offsetY: -20,
           },
         },
         hollow: {
-          size: "60%",
+          size: "50%",
         },
         track: {
           background: theme.palette.background.default,
@@ -184,8 +184,7 @@ export const TeacherDashboard = (props) => {
                 series={[item.value]}
                 type="radialBar"
               />
-              <Typography variant="h6">{item.value}</Typography>
-              <Typography color="textSecondary" variant="body2">
+              <Typography color="textSecondary" variant="caption">
                 {item.subtitle}
               </Typography>
             </Card>

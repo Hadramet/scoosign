@@ -16,13 +16,14 @@ import { ScooSignaturePad } from "./scoo-signature-pad";
 import { useAuth } from "@/hooks/use-auth";
 
 export const TeacherAttendanceStep = (props) => {
-  const { onBack, onNext, padRef, padData, handleClear, ...other } = props;
+  const { onBack, onNext, padRef, padData, handleClear, isSigned, ...other } =
+    props;
   const [notSignedAlert, setNotSigned] = useState(false);
   const { user } = useAuth();
 
   useEffect(() => {
-    padRef.current.fromData(padData, { clear: true });
-  }, [padData, padRef]);
+    if (!isSigned) padRef.current.fromData(padData, { clear: true });
+  }, [padData, padRef, isSigned]);
 
   const canGoNext = (e) => {
     e.preventDefault();
@@ -34,58 +35,63 @@ export const TeacherAttendanceStep = (props) => {
   };
   return (
     <Container maxWidth="sm" {...other}>
-      <Card sx={{ mb: 2 }}>
-        <CardContent>
-          <Card variant="outlined" sx={{ mb: 2, px: 1, py: 1 }}>
-            <Typography
-              variant="overline"
-              color="text.secondary"
-              component="div"
-            >
-              Sign here
-            </Typography>
-            <ScooSignaturePad padRef={padRef} />
-          </Card>
-          <Typography variant="body2" color="text.secondary" component="div">
-            {`I hereby certify that I, as ${user.name} that, am present at the
+      {isSigned ? (
+        <div>Already signed</div>
+      ) : (
+        <Card sx={{ mb: 2 }}>
+          <CardContent>
+            <Card variant="outlined" sx={{ mb: 2, px: 1, py: 1 }}>
+              <Typography
+                variant="overline"
+                color="text.secondary"
+                component="div"
+              >
+                Sign here
+              </Typography>
+              <ScooSignaturePad padRef={padRef} />
+            </Card>
+            <Typography variant="body2" color="text.secondary" component="div">
+              {`I hereby certify that I, as ${user.name} that, am present at the
             training course NAME OF THE COURSE, from the DATE OF START to the
             DATE OF END.`}
-          </Typography>
-          {notSignedAlert && (
-            <Box sx={{ mt: 2 }}>
-              <Alert severity="error">
-                <Typography variant="caption">
-                  <div>🤷‍♂️ You must signed first.</div>
-                </Typography>
-              </Alert>
-            </Box>
-          )}
-        </CardContent>
-        <CardActions>
-          <Button
-            sx={{ mr: "auto" }}
-            endIcon={<ArrowRight fontSize="small" />}
-            onClick={canGoNext}
-            variant="contained"
-          >
-            Continue
-          </Button>
-          <Button
-            endIcon={<DeleteOutline fontSize="small" />}
-            onClick={handleClear}
-            variant="outlined"
-          >
-            Clear
-          </Button>
-        </CardActions>
-      </Card>
+            </Typography>
+            {notSignedAlert && (
+              <Box sx={{ mt: 2 }}>
+                <Alert severity="error">
+                  <Typography variant="caption">
+                    <div>🤷‍♂️ You must signed first.</div>
+                  </Typography>
+                </Alert>
+              </Box>
+            )}
+          </CardContent>
+          <CardActions>
+            <Button
+              sx={{ mr: "auto" }}
+              endIcon={<ArrowRight fontSize="small" />}
+              onClick={canGoNext}
+              variant="contained"
+            >
+              Continue
+            </Button>
+            <Button
+              endIcon={<DeleteOutline fontSize="small" />}
+              onClick={handleClear}
+              variant="outlined"
+            >
+              Clear
+            </Button>
+          </CardActions>
+        </Card>
+      )}
     </Container>
   );
 };
 TeacherAttendanceStep.propTypes = {
-  onBack: PropTypes.func,
-  onNext: PropTypes.func,
-  padRef: PropTypes.object,
-  padData: PropTypes.array,
-  handleClear: PropTypes.func,
+  onBack: PropTypes.func.isRequired,
+  isSigned: PropTypes.bool.isRequired,
+  onNext: PropTypes.func.isRequired,
+  padRef: PropTypes.object.isRequired,
+  padData: PropTypes.array.isRequired,
+  handleClear: PropTypes.func.isRequired,
 };

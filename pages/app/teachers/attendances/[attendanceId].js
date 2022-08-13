@@ -33,6 +33,7 @@ const TeacherAttendanceSession = (props) => {
   const [attendance, setAttendance] = useState(null); // TODO use api
   const [comment, setComment] = useState("");
   const [completedTime, setCompletedTime] = useState();
+  const [isSigned, setIsSigned] = useState(false)
 
   const padRef = useRef(null);
 
@@ -42,14 +43,15 @@ const TeacherAttendanceSession = (props) => {
 
   const handleNext = () => {
     if (activeStep == 0) {
-      setPadData(padRef.current.toData());
+      if(!isSigned) setPadData(padRef.current.toData());
+      setIsSigned(true);
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
   };
 
-  const handleBack = () => {
+  const handleBack = () => {    
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
@@ -135,6 +137,7 @@ const TeacherAttendanceSession = (props) => {
           onNext={handleNext}
           padRef={padRef}
           padData={padData}
+          isSigned={isSigned}
           handleClear={handleClear}
         />
       ),
@@ -145,6 +148,7 @@ const TeacherAttendanceSession = (props) => {
         <StudentsAttendanceStep
           onBack={handleBack}
           onNext={handleNext}
+          isSigned={isSigned}
           attendance={attendance}
           handleSendEmailToAbsents={handleSendEmailToAbsents}
           handleMarkStudentAsAbsentJustify={handleMarkStudentAsAbsentJustify}
