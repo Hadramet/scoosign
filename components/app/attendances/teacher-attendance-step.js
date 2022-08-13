@@ -1,19 +1,24 @@
 import { ArrowRight } from "@/components/icons";
 import {
-  Alert, Box,
+  Alert,
+  Box,
   Button,
   Card,
   CardActions,
-  CardContent, Container, Typography
+  CardContent,
+  Container,
+  Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { DeleteOutline } from "@mui/icons-material";
 import PropTypes from "prop-types";
 import { ScooSignaturePad } from "./scoo-signature-pad";
+import { useAuth } from "@/hooks/use-auth";
 
 export const TeacherAttendanceStep = (props) => {
   const { onBack, onNext, padRef, padData, handleClear, ...other } = props;
   const [notSignedAlert, setNotSigned] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     padRef.current.fromData(padData, { clear: true });
@@ -42,9 +47,9 @@ export const TeacherAttendanceStep = (props) => {
             <ScooSignaturePad padRef={padRef} />
           </Card>
           <Typography variant="body2" color="text.secondary" component="div">
-            I hereby certify that I, as my FIRST NAME, am present at the
+            {`I hereby certify that I, as ${user.name} that, am present at the
             training course NAME OF THE COURSE, from the DATE OF START to the
-            DATE OF END.
+            DATE OF END.`}
           </Typography>
           {notSignedAlert && (
             <Box sx={{ mt: 2 }}>
@@ -82,5 +87,5 @@ TeacherAttendanceStep.propTypes = {
   onNext: PropTypes.func,
   padRef: PropTypes.object,
   padData: PropTypes.array,
-  handleClear: PropTypes.func
+  handleClear: PropTypes.func,
 };
