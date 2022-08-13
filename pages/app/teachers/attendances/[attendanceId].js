@@ -59,6 +59,7 @@ import {
   EmojiHappy as EmojiHappyIcon,
 } from "@/components/icons";
 import { getInitials } from "@/lib/get-initials";
+import { formatDistanceToNow } from "date-fns";
 
 const ScooSignaturePad = (props) => {
   const { padRef, ...others } = props;
@@ -136,7 +137,7 @@ TeacherAttendanceStep.propTypes = {
   onBack: PropTypes.func,
   onNext: PropTypes.func,
   padRef: PropTypes.object,
-  padData: PropTypes.object,
+  padData: PropTypes.array,
   handleClear: PropTypes.func,
 };
 
@@ -463,7 +464,11 @@ StudentsAttendanceStep.propTypes = {
 };
 
 const FinishAttendanceStep = (props) => {
-  const { onBack, onNext, ...other } = props;
+  const { onBack, onNext, setComment, ...other } = props;
+
+  const onCommentValueChange = (e) => {
+    setComment(e.target.value);
+  };
 
   return (
     <div {...other}>
@@ -481,6 +486,7 @@ const FinishAttendanceStep = (props) => {
           <TextField
             fullWidth
             multiline
+            onChange={onCommentValueChange}
             placeholder="Add a comment"
             rows={3}
             sx={{
@@ -562,6 +568,7 @@ const FinishAttendanceStep = (props) => {
 FinishAttendanceStep.propTypes = {
   onBack: PropTypes.func,
   onNext: PropTypes.func,
+  setComment: PropTypes.func,
 };
 const StepIcon = (props) => {
   const { active, completed, icon } = props;
@@ -589,6 +596,8 @@ const TeacherAttendanceSession = (props) => {
   const [complete, setComplete] = useState(false);
   const [padData, setPadData] = useState([]);
   const [attendance, setAttendance] = useState(null); // TODO use api
+  const [comment, setComment] = useState("");
+  const [completedTime, setCompletedTime] = useState();
 
   const padRef = useRef(null);
 
@@ -610,7 +619,9 @@ const TeacherAttendanceSession = (props) => {
   };
 
   const handleComplete = () => {
+    console.log(comment);
     setComplete(true);
+    setCompletedTime(new Date());
   };
 
   const handleCourseLocked = async (e) => {
@@ -627,7 +638,7 @@ const TeacherAttendanceSession = (props) => {
 
   const handleSendEmailToAbsents = (e) => {
     e.preventDefault();
-    console.log("TODO send email to absent", query.attendanceId);
+    console.log("TODO send email to absent");
   };
 
   const handleSendEmailToStudent = (e, studentId) => {
@@ -714,7 +725,11 @@ const TeacherAttendanceSession = (props) => {
       label: "Finish",
       category: "fa",
       content: (
-        <FinishAttendanceStep onBack={handleBack} onNext={handleComplete} />
+        <FinishAttendanceStep
+          onBack={handleBack}
+          onNext={handleComplete}
+          setComment={setComment}
+        />
       ),
     },
   ];
@@ -814,7 +829,10 @@ const TeacherAttendanceSession = (props) => {
                       sx={{ mr: 2 }}
                       variant="caption"
                     >
-                      1 minute ago
+                      {formatDistanceToNow(completedTime, {
+                        addSuffix: true,
+                        includeSeconds: true,
+                      })}
                     </Typography>
                     <Typography
                       sx={{
@@ -822,18 +840,7 @@ const TeacherAttendanceSession = (props) => {
                       }}
                       variant="body2"
                     >
-                      TODO : It is a long established fact that a reader will be
-                      distracted by the readable content of a page when looking
-                      at its layout. The point of using Lorem Ipsum is that it
-                      has a more-or-less normal distribution of letters, as
-                      opposed to using 'Content here, content here', making it
-                      look like readable English. Many desktop publishing
-                      packages and web page editors now use Lorem Ipsum as their
-                      default model text, and a search for 'lorem ipsum' will
-                      uncover many web sites still in their infancy. Various
-                      versions have evolved over the years, sometimes by
-                      accident, sometimes on purpose (injected humour and the
-                      like).
+                      {comment}
                     </Typography>
                     <Box
                       sx={{
@@ -855,11 +862,6 @@ const TeacherAttendanceSession = (props) => {
                         ))}
                       </AvatarGroup>
                     </Box>
-                  </div>
-                  <div>
-                    <Button href="/app" passHref>
-                      Dashboard
-                    </Button>
                   </div>
                 </Card>
               </div>
