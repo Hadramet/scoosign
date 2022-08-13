@@ -2,6 +2,7 @@ import { AuthGuard } from "@/components/authentication/auth-guard";
 import { RoleGuard } from "@/components/authentication/role-guard";
 import { ArrowLeft, ArrowRight, CheckCircleOutlined } from "@/components/icons";
 import {
+  Alert,
   Avatar,
   AvatarGroup,
   Box,
@@ -24,6 +25,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -49,6 +51,14 @@ import SignaturePad from "react-signature-pad-wrapper";
 import { Scrollbar } from "@/components/custom";
 import Link from "next/link";
 import { SeverityBadge } from "@/components/severity-badge";
+import {
+  Plus as PlusIcon,
+  Photograph as PhotographIcon,
+  PaperClip as PaperClipIcon,
+  Link as LinkIcon,
+  EmojiHappy as EmojiHappyIcon,
+} from "@/components/icons";
+import { getInitials } from "@/lib/get-initials";
 
 const ScooSignaturePad = (props) => {
   const { padRef, ...others } = props;
@@ -437,14 +447,90 @@ const FinishAttendanceStep = (props) => {
 
   return (
     <div {...other}>
-      <Typography variant="h6">Comment and validate</Typography>
-      <Box sx={{ mt: 3 }}></Box>
+      <Box sx={{ display: "flex" }}>
+        <Avatar
+          sx={{
+            height: 40,
+            mr: 2,
+            width: 40,
+          }}
+        >
+          {getInitials("TO" + " " + "DO")}
+        </Avatar>
+        <Box sx={{ flexGrow: 1 }}>
+          <TextField
+            fullWidth
+            multiline
+            placeholder="Add a comment"
+            rows={3}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                backgroundColor: "background.paper",
+              },
+            }}
+          />
+          <Box
+            sx={{
+              alignItems: "center",
+              display: "flex",
+              justifyContent: "space-between",
+              mt: 3,
+            }}
+          >
+            <IconButton
+              sx={{
+                display: {
+                  xs: "inline-flex",
+                  sm: "none",
+                },
+              }}
+            >
+              <PlusIcon fontSize="small" />
+            </IconButton>
+            <Box
+              sx={{
+                display: {
+                  xs: "none",
+                  sm: "block",
+                },
+                m: -1,
+                "& > *": {
+                  m: 1,
+                },
+              }}
+            >
+              <IconButton disabled>
+                <PhotographIcon fontSize="small" />
+              </IconButton>
+              <IconButton disabled>
+                <PaperClipIcon fontSize="small" />
+              </IconButton>
+              <IconButton disabled>
+                <LinkIcon fontSize="small" />
+              </IconButton>
+              <IconButton disabled>
+                <EmojiHappyIcon fontSize="small" />
+              </IconButton>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+      <Box sx={{ mt: 4, mb: 3 }}>
+        <Alert severity="warning">
+          <Typography variant="caption">
+            <div>
+              Make sure that all the information has been filled in correctly,
+              once completed you can never go back.
+            </div>
+          </Typography>
+        </Alert>
+      </Box>
       <Button
         endIcon={<ArrowRight fontSize="small" />}
         onClick={onNext}
         variant="contained"
       >
-        Continue
+        Complete
       </Button>
       <Button onClick={onBack} sx={{ ml: 2 }}>
         Back
@@ -703,12 +789,39 @@ const TeacherAttendanceSession = (props) => {
                     <Typography variant="subtitle1">
                       TODO : Attendance name here
                     </Typography>
+                    <Typography
+                      color="textSecondary"
+                      sx={{ mr: 2 }}
+                      variant="caption"
+                    >
+                      1 minute ago
+                    </Typography>
+                    <Typography
+                      sx={{
+                        mt: 4,
+                      }}
+                      variant="body2"
+                    >
+                      TODO : It is a long established fact that a reader will be
+                      distracted by the readable content of a page when looking
+                      at its layout. The point of using Lorem Ipsum is that it
+                      has a more-or-less normal distribution of letters, as
+                      opposed to using 'Content here, content here', making it
+                      look like readable English. Many desktop publishing
+                      packages and web page editors now use Lorem Ipsum as their
+                      default model text, and a search for 'lorem ipsum' will
+                      uncover many web sites still in their infancy. Various
+                      versions have evolved over the years, sometimes by
+                      accident, sometimes on purpose (injected humour and the
+                      like).
+                    </Typography>
                     <Box
                       sx={{
                         display: "flex",
                         alignItems: "center",
                         pl: 1,
                         pb: 1,
+                        mt: 4,
                       }}
                     >
                       <AvatarGroup max={4}>
@@ -724,13 +837,6 @@ const TeacherAttendanceSession = (props) => {
                     </Box>
                   </div>
                   <div>
-                    <Typography
-                      color="textSecondary"
-                      sx={{ mr: 2 }}
-                      variant="caption"
-                    >
-                      1 minute ago
-                    </Typography>
                     <Button href="/app" passHref>
                       Dashboard
                     </Button>
