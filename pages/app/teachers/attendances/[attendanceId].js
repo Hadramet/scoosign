@@ -67,9 +67,20 @@ const ScooSignaturePad = (props) => {
 
 const TeacherAttendanceStep = (props) => {
   const { onBack, onNext, padRef, padData, handleClear, ...other } = props;
+  const [notSignedAlert, setNotSigned] = useState(false);
+
   useEffect(() => {
     padRef.current.fromData(padData, { clear: true });
-  }, [padRef, padData]);
+  }, [padData, padRef]);
+
+  const canGoNext = (e) => {
+    e.preventDefault();
+    if (!padRef.current.isEmpty()) {
+      onNext();
+    } else {
+      setNotSigned(true);
+    }
+  };
   return (
     <Container maxWidth="sm" {...other}>
       <Card sx={{ mb: 2 }}>
@@ -89,12 +100,21 @@ const TeacherAttendanceStep = (props) => {
             training course NAME OF THE COURSE, from the DATE OF START to the
             DATE OF END.
           </Typography>
+          {notSignedAlert && (
+            <Box sx={{ mt: 2 }}>
+              <Alert severity="error">
+                <Typography variant="caption">
+                  <div>🤷‍♂️ You must signed first.</div>
+                </Typography>
+              </Alert>
+            </Box>
+          )}
         </CardContent>
         <CardActions>
           <Button
             sx={{ mr: "auto" }}
             endIcon={<ArrowRight fontSize="small" />}
-            onClick={onNext}
+            onClick={canGoNext}
             variant="contained"
           >
             Continue
@@ -578,15 +598,15 @@ const TeacherAttendanceSession = (props) => {
 
   const handleNext = () => {
     if (activeStep == 0) {
-      // console.log(padRef.current.toData())
       setPadData(padRef.current.toData());
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    } else {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    // if(activeStep == 0) padRef.current.fromData(padData);
   };
 
   const handleComplete = () => {
