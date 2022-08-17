@@ -21,6 +21,7 @@ import {
   TimelineSeparator,
 } from "@mui/lab";
 import { AccessTime, CheckRounded } from "@mui/icons-material";
+import { getInitials } from "@/lib/get-initials";
 
 export const DailyCourses = (props) => {
   const { dailyCourses, ...other } = props;
@@ -33,14 +34,14 @@ export const DailyCourses = (props) => {
       <Timeline position="alternate">
         {dailyCourses && dailyCourses.length > 0 ? (
           dailyCourses.map((activity, index) => (
-            <TimelineItem key={activity.date}>
+            <TimelineItem key={activity.start}>
               <TimelineOppositeContent color="text.secondary">
                 <Typography
                   sx={{ m: "auto 0" }}
                   variant="body2"
                   color="text.secondary"
                 >
-                  {format(activity.date, "p")}
+                  {format(new Date(activity.start), "p")}
                 </Typography>
               </TimelineOppositeContent>
               <TimelineSeparator>
@@ -105,13 +106,10 @@ export const DailyCourses = (props) => {
                       }}
                     >
                       <AvatarGroup max={4}>
-                        {new Array(35).fill(0).map((_, index) => (
-                          <Avatar
-                            key={index}
-                            src={`https://i.pravatar.cc/300?img=${Math.floor(
-                              Math.random() * 30
-                            )}`}
-                          />
+                        {activity.students.map((stu, index) => (
+                          <Avatar key={index}>
+                            {getInitials(stu.user.firstName + " " + stu.user.lastName)}
+                          </Avatar>
                         ))}
                       </AvatarGroup>
                     </Box>

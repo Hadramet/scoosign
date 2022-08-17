@@ -14,60 +14,83 @@ import dynamic from "next/dynamic";
 import { subHours } from "date-fns";
 import { DailyCourses } from "@/components/app/teachers/daily-courses";
 import { useAuth } from "@/hooks/use-auth";
+import useSWR from "swr";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
-const items = [
-  {
-    color: "#4CAF50",
-    label: "Presence",
-    subtitle: "Course attended",
-    value: 85,
-  },
-  {
-    color: "#FF9800",
-    label: "Justify",
-    subtitle: "Justify absence(s)",
-    value: 10,
-  },
-  {
-    color: "#F44336",
-    label: "Absence ",
-    subtitle: "Time(s)",
-    value: 5,
-  },
-];
-const dailyCourses = [
-  {
-    _id: "dqfoidsqfod",
-    name: "4MERN ",
-    room: "D44",
-    description: "description",
-    date: subHours(Date.now(), 22).getTime(),
-    students: [],
-    isSigned: true,
-  },
-  {
-    _id: "dqfoidssqfod",
-    name: "2JAVA",
-    room: "R24",
-    description: "description",
-    date: subHours(Date.now(), 21).getTime(),
-    students: [],
-    isSigned: false,
-  },
-  {
-    _id: "dqfoidssqfozd",
-    name: "R24",
-    description: "descriptgion",
-    date: subHours(Date.now(), 18).getTime(),
-    students: [],
-    isSigned: false,
-  },
-];
+// const items = [
+//   {
+//     color: "#4CAF50",
+//     label: "Presence",
+//     subtitle: "Course attended",
+//     value: 85,
+//   },
+//   {
+//     color: "#FF9800",
+//     label: "Justify",
+//     subtitle: "Justify absence(s)",
+//     value: 10,
+//   },
+//   {
+//     color: "#F44336",
+//     label: "Absence ",
+//     subtitle: "Time(s)",
+//     value: 5,
+//   },
+// ];
+// const dailyCourses = [
+//   {
+//     _id: "dqfoidsqfod",
+//     name: "4MERN ",
+//     room: "D44",
+//     description: "description",
+//     date: subHours(Date.now(), 22).getTime(),
+//     students: [],
+//     isSigned: true,
+//   },
+//   {
+//     _id: "dqfoidssqfod",
+//     name: "2JAVA",
+//     room: "R24",
+//     description: "description",
+//     date: subHours(Date.now(), 21).getTime(),
+//     students: [],
+//     isSigned: false,
+//   },
+//   {
+//     _id: "dqfoidssqfozd",
+//     name: "R24",
+//     description: "descriptgion",
+//     date: subHours(Date.now(), 18).getTime(),
+//     students: [],
+//     isSigned: false,
+//   },
+// ];
 
 export const TeacherDashboard = (props) => {
   const theme = useTheme();
   const { user } = useAuth();
+  const accessToken = globalThis.localStorage.getItem("accessToken");
+  const { data: stats, error: statsError } = useSWR([
+    `/api/v1/teachers/stats/basic`,
+    {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+        "X-Scoosign-Authorization": `Bearer ${accessToken}`,
+      },
+    },
+  ]);
+  const { data: dailyCourses, error: dailyCoursesError } = useSWR([
+    `/api/v1/teachers/courses/daily`,
+    {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+        "X-Scoosign-Authorization": `Bearer ${accessToken}`,
+      },
+    },
+  ]);
+
   const chartOptions = {
     chart: {
       background: "transparent",
@@ -161,37 +184,45 @@ export const TeacherDashboard = (props) => {
             </RoleGuard>
           </Grid>
         </Grid>
-        {items.map((item) => (
-          <Grid item key={item.label} md={4} xs={12}>
-            <Card
-              sx={{
-                alignItems: "center",
-                display: "flex",
-                flexDirection: "column",
-                p: 2,
-              }}
-              variant="elevation"
-            >
-              <Typography sx={{ color: item.color }} variant="h6">
-                {item.label}
-              </Typography>
-              <Chart
-                height={200}
-                options={{
-                  ...chartOptions,
-                  colors: [item.color],
-                }}
-                series={[item.value]}
-                type="radialBar"
-              />
-              <Typography color="textSecondary" variant="caption">
-                {item.subtitle}
-              </Typography>
-            </Card>
-          </Grid>
-        ))}
+        {statsError && "Something went wrong"}
+        {stats
+          ? stats.data.items.map((item) => (
+              <Grid item key={item.label} md={4} xs={12}>
+                <Card
+                  sx={{
+                    alignItems: "center",
+                    display: "flex",
+                    flexDirection: "column",
+                    p: 2,
+                  }}
+                  variant="elevation"
+                >
+                  <Typography sx={{ color: item.color }} variant="h6">
+                    {item.label}
+                  </Typography>
+                  <Chart
+                    height={200}
+                    options={{
+                      ...chartOptions,
+                      colors: [item.color],
+                    }}
+                    series={[item.value]}
+                    type="radialBar"
+                  />
+                  <Typography color="textSecondary" variant="caption">
+                    {item.subtitle}
+                  </Typography>
+                </Card>
+              </Grid>
+            ))
+          : "Loading"}
       </Grid>
-      <DailyCourses dailyCourses={dailyCourses} />
+      {dailyCoursesError && "Something went wrong"}
+      {dailyCourses ? (
+        <DailyCourses dailyCourses={dailyCourses.data.dailyCourses} />
+      ) : (
+        "Loading"
+      )}
     </Box>
   );
 };
