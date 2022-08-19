@@ -74,7 +74,8 @@ export const StudentsAttendanceStep = (props) => {
               >
                 <Warning fontSize="small" />
               </Avatar>
-              <Typography variant="h5">666666</Typography>
+              <Typography variant="h5">
+                    {attendance?.data?.absentCount}</Typography>
             </Box>
             <Typography color="textSecondary" variant="body2">
               Absence
@@ -101,7 +102,8 @@ export const StudentsAttendanceStep = (props) => {
               >
                 <AssignmentTurnedIn fontSize="small" />
               </Avatar>
-              <Typography variant="h5">5555555</Typography>
+              <Typography variant="h5">
+                    {attendance?.data?.presentCount}</Typography>
             </Box>
             <Typography color="textSecondary" variant="body2">
               Present
@@ -128,7 +130,8 @@ export const StudentsAttendanceStep = (props) => {
               >
                 <ErrorOutline fontSize="small" />
               </Avatar>
-              <Typography variant="h5"> 10000</Typography>
+              <Typography variant="h5"> 
+                    {attendance?.data?.justifyCount}</Typography>
             </Box>
             <Typography color="textSecondary" variant="body2">
               Justify
@@ -155,7 +158,8 @@ export const StudentsAttendanceStep = (props) => {
               >
                 <Groups fontSize="small" />
               </Avatar>
-              <Typography variant="h5">25000</Typography>
+              <Typography variant="h5">
+                    {attendance?.data?.total}</Typography>
             </Box>
             <Typography color="textSecondary" variant="body2">
               Total student(s)

@@ -115,8 +115,8 @@ export const DailyCourses = (props) => {
                     </Box>
                   </Box>
                   <CardActions>
-                    <IconButton
-                      href={`/app/teachers/attendances/${activity._id}`}
+                    <IconButton disabled={activity.isSigned}
+                      href={`/app/teachers/attendances/${activity.courseId}`}
                     >
                       <KeyboardArrowRightIcon fontSize="large" />
                     </IconButton>

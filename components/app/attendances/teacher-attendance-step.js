@@ -14,10 +14,21 @@ import { DeleteOutline } from "@mui/icons-material";
 import PropTypes from "prop-types";
 import { ScooSignaturePad } from "./scoo-signature-pad";
 import { useAuth } from "@/hooks/use-auth";
+import { format } from "date-fns";
 
 export const TeacherAttendanceStep = (props) => {
-  const { onBack, onNext, padRef, padData, handleClear, isSigned, ...other } =
-    props;
+  const {
+    onBack,
+    onNext,
+    padRef,
+    padData,
+    handleClear,
+    isSigned,
+    name,
+    start,
+    end,
+    ...other
+  } = props;
   const [notSignedAlert, setNotSigned] = useState(false);
   const { user } = useAuth();
 
@@ -52,8 +63,10 @@ export const TeacherAttendanceStep = (props) => {
             </Card>
             <Typography variant="body2" color="text.secondary" component="div">
               {`I hereby certify that I, as ${user.name} that, am present at the
-            training course NAME OF THE COURSE, from the DATE OF START to the
-            DATE OF END.`}
+            training course ${name}, from the ${format(
+                new Date(start),
+                "MMM d,yyyy, h:mm"
+              )} to the ${format(new Date(end), "MMM d,yyyy, h:mm")}.`}
             </Typography>
             {notSignedAlert && (
               <Box sx={{ mt: 2 }}>
@@ -94,4 +107,7 @@ TeacherAttendanceStep.propTypes = {
   padRef: PropTypes.object.isRequired,
   padData: PropTypes.array.isRequired,
   handleClear: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
+  start: PropTypes.string.isRequired,
+  end: PropTypes.string.isRequired,
 };

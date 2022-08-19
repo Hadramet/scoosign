@@ -24,24 +24,24 @@ export function getSections(t) {
           icon: <HomeIcon fontSize="small" />,
           permissions: ["all"],
         },
-        {
-          title: "History",
-          path: "/app/history",
-          icon: <HistoryIcon fontSize="small" />,
-          permissions: ["all"],
-        },
-        {
-          title: "Account",
-          path: "/app/account",
-          icon: <UserCircleIcon fontSize="small" />,
-          permissions: ["all"],
-        },
-        {
-          title: "Calendar",
-          path: "/app/calendar",
-          icon: <CalendarIcon fontSize="small" />,
-          permissions: ["all"],
-        }
+        // {
+        //   title: "History",
+        //   path: "/app/history",
+        //   icon: <HistoryIcon fontSize="small" />,
+        //   permissions: ["all"],
+        // },
+        // {
+        //   title: "Account",
+        //   path: "/app/account",
+        //   icon: <UserCircleIcon fontSize="small" />,
+        //   permissions: ["all"],
+        // },
+        // {
+        //   title: "Calendar",
+        //   path: "/app/calendar",
+        //   icon: <CalendarIcon fontSize="small" />,
+        //   permissions: ["all"],
+        // }
 
         // {
         //   title: "Analytics",
