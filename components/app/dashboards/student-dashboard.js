@@ -10,18 +10,20 @@ import {
 import { Reports as ReportsIcon } from "@/components/icons";
 import { RoleGuard } from "@/components/authentication/role-guard";
 import { useTheme } from "@emotion/react";
+import dynamic from "next/dynamic";
 import { subHours } from "date-fns";
 import { DailyCourses } from "@/components/app/teachers/daily-courses";
 import { useAuth } from "@/hooks/use-auth";
 import useSWR from "swr";
 import { Chart } from "./Chart";
 
-export const TeacherDashboard = (props) => {
+// const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
+export const StudentDashboard = (props) => {
   const theme = useTheme();
   const { user } = useAuth();
   const accessToken = globalThis.localStorage.getItem("accessToken");
   const { data: stats, error: statsError } = useSWR([
-    `/api/v1/teachers/stats/basic`,
+    `/api/v1/students/stats/basic`,
     {
       method: "GET",
       headers: {
@@ -30,16 +32,16 @@ export const TeacherDashboard = (props) => {
       },
     },
   ]);
-  const { data: dailyCourses, error: dailyCoursesError } = useSWR([
-    `/api/v1/teachers/courses/daily`,
-    {
-      method: "GET",
-      headers: {
-        "Content-type": "application/json",
-        "X-Scoosign-Authorization": `Bearer ${accessToken}`,
-      },
-    },
-  ]);
+  // const { data: dailyCourses, error: dailyCoursesError } = useSWR([
+  //   `/api/v1/teachers/courses/daily`,
+  //   {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-type": "application/json",
+  //       "X-Scoosign-Authorization": `Bearer ${accessToken}`,
+  //     },
+  //   },
+  // ]);
 
   const chartOptions = {
     chart: {
@@ -136,7 +138,7 @@ export const TeacherDashboard = (props) => {
         </Grid>
         {statsError && "Something went wrong"}
         {stats
-          ? stats.data.items.map((item) => (
+          ? stats.data?.items?.map((item) => (
               <Grid item key={item.label} md={4} xs={12}>
                 <Card
                   sx={{
@@ -167,12 +169,12 @@ export const TeacherDashboard = (props) => {
             ))
           : "Loading"}
       </Grid>
-      {dailyCoursesError && "Something went wrong"}
+      {/* {dailyCoursesError && "Something went wrong"}
       {dailyCourses ? (
         <DailyCourses dailyCourses={dailyCourses.data.dailyCourses} />
       ) : (
         "Loading"
-      )}
+      )} */}
     </Box>
   );
 };
