@@ -101,27 +101,27 @@ export const JWTLogin = (props) => {
             <div>
               {" "}
               <b>Admin :</b> Use <b>admin@scoosign.com</b> and password{" "}
-              <b>Supinf0</b>{" "}
+              <b>Supinf0?</b>{" "}
             </div>
             <div>
               {" "}
               <b>Academic :</b> Use <b>aca@scoosign.com</b> and password{" "}
-              <b>Supinf1</b>{" "}
+              <b>Supinf1?</b>{" "}
             </div>
             <div>
               {" "}
               <b>Student :</b> Use <b>student@scoosign.com</b> and password{" "}
-              <b>Supinf2</b>{" "}
+              <b>Supinf2?</b>{" "}
             </div>
             <div>
               {" "}
               <b>Teacher :</b> Use <b>teach.math@scoosign.com</b> and password{" "}
-              <b>Supinf3</b>{" "}
+              <b>Supinf0?</b>{" "}
             </div>
             <div>
               {" "}
               <b>Parent :</b> Use <b>momanddad@scoosign.com</b> and password{" "}
-              <b>Supinf4</b>{" "}
+              <b>Supinf4?</b>{" "}
             </div>
           </Typography>
         </Alert>
