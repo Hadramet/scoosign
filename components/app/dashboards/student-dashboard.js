@@ -17,7 +17,6 @@ import { useAuth } from "@/hooks/use-auth";
 import useSWR from "swr";
 import { Chart } from "./Chart";
 
-// const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 export const StudentDashboard = (props) => {
   const theme = useTheme();
   const { user } = useAuth();
@@ -32,16 +31,6 @@ export const StudentDashboard = (props) => {
       },
     },
   ]);
-  // const { data: dailyCourses, error: dailyCoursesError } = useSWR([
-  //   `/api/v1/teachers/courses/daily`,
-  //   {
-  //     method: "GET",
-  //     headers: {
-  //       "Content-type": "application/json",
-  //       "X-Scoosign-Authorization": `Bearer ${accessToken}`,
-  //     },
-  //   },
-  // ]);
 
   const chartOptions = {
     chart: {
@@ -169,12 +158,6 @@ export const StudentDashboard = (props) => {
             ))
           : "Loading"}
       </Grid>
-      {/* {dailyCoursesError && "Something went wrong"}
-      {dailyCourses ? (
-        <DailyCourses dailyCourses={dailyCourses.data.dailyCourses} />
-      ) : (
-        "Loading"
-      )} */}
     </Box>
   );
 };
