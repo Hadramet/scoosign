@@ -31,37 +31,6 @@ export function getSections(t) {
           icon: <CalendarMonth fontSize="small" />,
           permissions: ["all"],
         },
-        // {
-        //   title: "Account",
-        //   path: "/app/account",
-        //   icon: <UserCircleIcon fontSize="small" />,
-        //   permissions: ["all"],
-        // },
-        // {
-        //   title: "Calendar",
-        //   path: "/app/calendar",
-        //   icon: <CalendarIcon fontSize="small" />,
-        //   permissions: ["all"],
-        // }
-
-        // {
-        //   title: "Analytics",
-        //   path: "/app/analytics",
-        //   icon: <ChartBarIcon fontSize="small" />,
-        //   permissions: ["all"],
-        // },
-        // {
-        //   title: "Calendar",
-        //   path: "/app/calendar",
-        //   icon: <CalendarIcon fontSize="small" />,
-        //   permissions: ["all"],
-        // },
-        // {
-        //   title: "Documents",
-        //   path: "/app/documents",
-        //   icon: <DocumentTextIcon fontSize="small" />,
-        //   permissions: ["all"],
-        // },
         
       ],
     },

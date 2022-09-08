@@ -13,6 +13,14 @@
     "@emotion/react": "latest",
     "@emotion/server": "latest",
     "@emotion/styled": "latest",
+    "@fullcalendar/common": "^5.11.0",
+    "@fullcalendar/core": "^5.11.0",
+    "@fullcalendar/daygrid": "^5.11.0",
+    "@fullcalendar/interaction": "^5.11.0",
+    "@fullcalendar/list": "^5.11.0",
+    "@fullcalendar/react": "^5.11.1",
+    "@fullcalendar/timegrid": "^5.11.0",
+    "@fullcalendar/timeline": "^5.11.0",
     "@mui/icons-material": "latest",
     "@mui/lab": "^5.0.0-alpha.94",
     "@mui/material": "^5.10.0",
@@ -36,6 +44,7 @@
   "devDependencies": {
     "@faker-js/faker": "^7.3.0",
     "eslint": "latest",
-    "eslint-config-next": "latest"
+    "eslint-config-next": "latest",
+    "next-transpile-modules": "^9.0.0"
   }
 }
