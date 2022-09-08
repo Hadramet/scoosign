@@ -26,7 +26,7 @@
     "@mui/material": "^5.10.0",
     "@mui/x-date-pickers": "^5.0.0-beta.4",
     "apexcharts": "^3.35.4",
-    "date-fns": "^2.29.1",
+    "date-fns": "^2.29.2",
     "formik": "^2.2.9",
     "next": "latest",
     "nprogress": "^0.2.0",
