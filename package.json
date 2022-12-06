@@ -23,7 +23,7 @@
     "@fullcalendar/timeline": "^5.11.0",
     "@mui/icons-material": "latest",
     "@mui/lab": "^5.0.0-alpha.94",
-    "@mui/material": "^5.10.0",
+    "@mui/material": "^5.10.17",
     "@mui/x-date-pickers": "^5.0.0-beta.4",
     "apexcharts": "^3.35.4",
     "date-fns": "^2.29.1",
