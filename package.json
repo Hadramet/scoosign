@@ -45,6 +45,6 @@
     "@faker-js/faker": "^7.3.0",
     "eslint": "latest",
     "eslint-config-next": "latest",
-    "next-transpile-modules": "^9.0.0"
+    "next-transpile-modules": "^10.0.0"
   }
 }
